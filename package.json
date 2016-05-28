@@ -1,0 +1,19 @@
+{
+  "name": "jupiter.server",
+  "version": "1.0.0",
+  "description": "0.0.1",
+  "private": true,
+  "main": "bin/start",
+  "author": "A.Dadukin & A.Pavlov & D.Zamyckov",
+  "license": "ISC",
+  "dependencies": {
+    "logger-utils": "^1.0.0",
+    "mongoose": "^4.4.19"
+  },
+  "devDependencies": {
+    "eslint": "^2.2.0",
+    "babel-eslint": "^5.0.0",
+    "eslint-plugin-react": "^4.1.0",
+    "eslint-config-airbnb": "^6.0.2"
+  }
+}
