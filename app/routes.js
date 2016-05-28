@@ -1,8 +1,8 @@
 'use strict';
 
 class AppRoutes {
-	constructor() {
-
+	constructor(app) {
+		this.app = app;
 	}
 
 	register() {
