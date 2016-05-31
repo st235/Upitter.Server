@@ -12,6 +12,10 @@ class AppServer {
 	constructor() {
 		const app = express();
 		app.listen(httpConfig.PORT, () => mixedLogger.info(`App is started on ${httpConfig.PORT} port`));
+		const managers = new AppDatabase().managers();
+		this.routes = new AppRoutes(app, managers);
+
+		this.start = this.start.bind(this);
 	}
 
 	start() {
