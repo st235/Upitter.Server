@@ -1,1 +1,1 @@
-# Jupitter.Server
+# Upitter.Server
