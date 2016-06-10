@@ -28,7 +28,7 @@ class BaseController {
 	}
 
 	success(res, obj) {
-		mixedLogger.info('The server give back an success:', obj);
+		mixedLogger.info('The server give back an success');
 		res.status(200);
 		res.json(this.responseModel(true, obj));
 	}

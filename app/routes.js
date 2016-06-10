@@ -1,17 +1,18 @@
 'use strict';
-
 const bodyParser = require('body-parser');
+const routesConfig = require('../config/routes');
 
 const AuthorizationController = require('../controllers/authorizationController');
-const routesConfig = require('../config/routes');
 
 class AppRoutes {
 	constructor(app, managers) {
 		this.app = app;
-		this.authorizationController = new AuthorizationController();
 
 		this.register = this.register.bind(this);
 		this.registerParser = this.registerParser.bind(this);
+
+		this.authorizationController = new AuthorizationController(managers.authorization, managers.users);
+
 		this.registerAuthorization = this.registerAuthorization.bind(this);
 	}
 

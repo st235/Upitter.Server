@@ -15,7 +15,13 @@ class AuthorizationController extends BaseController {
 	}
 
 	googleVerify(req, res) {
-		RequestService.get(GOOGLE_TOKEN_INFO, { id_token: req.body.tokenId }).then(console.log).catch(console.log);
+		RequestService
+			.get(GOOGLE_TOKEN_INFO, { id_token: req.body.tokenId })
+			.then(googleResponse =>
+				this.userManager.checkExistence(googleResponse)
+					.then(result => this.success(res, result))
+			.catch(error => this.error(res, error)));
+
 	}
 }
 
