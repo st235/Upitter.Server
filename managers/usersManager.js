@@ -11,6 +11,7 @@ class UsersManager {
 	}
 
 	checkExistence(json) {
+		console.log(json);
 		const data = JSON.parse(json);
 		return this.usersModel.findByEmail(data.email).then((user) => {
 			return !user ? this.create(data) : user;
