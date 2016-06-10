@@ -2,9 +2,6 @@
 
 const request = require('request');
 
-const REQUEST_RESPONSE = 'response';
-const REQUEST_ERROR = 'error';
-
 class RequestService {
 	static post(url, query, body) {
 		return new Promise((resolve, reject) => request({
@@ -12,9 +9,9 @@ class RequestService {
 			qs: query,
 			method: 'POST',
 			body
-		}, (error, response, body) => {
+		}, (error, response, responseBody) => {
 			if (error || response.statusCode !== 200) return reject(error);
-			return resolve(body);
+			return resolve(responseBody);
 		}));
 	}
 
@@ -23,9 +20,9 @@ class RequestService {
 			url,
 			qs: query,
 			method: 'GET'
-		}, (error, response, body) => {
+		}, (error, response, responseBody) => {
 			if (error || response.statusCode !== 200) return reject(error);
-			return resolve(body);
+			return resolve(responseBody);
 		}));
 	}
 }
