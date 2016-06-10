@@ -19,7 +19,7 @@ class AppServer {
 	}
 
 	start() {
-
+		this.routes.register();
 	}
 }
 
