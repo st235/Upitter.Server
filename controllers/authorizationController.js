@@ -26,7 +26,7 @@ class AuthorizationController extends BaseController {
 
 	googleVerify(req, res) {
 		const data = req.body;
-		if (!this.verify(data, 'tokenId')) this.error(res, 'Malformed');
+		if (this.verify(data, 'tokenId')) this.error(res, 'Malformed');
 
 		RequestService
 			.get(TokenInfo.google, { id_token: data.tokenId })
@@ -37,7 +37,7 @@ class AuthorizationController extends BaseController {
 
 	facebookVerify(req, res) {
 		const data = req.body;
-		if (!this.verify(data, 'accessToken')) this.error(res, 'Malformed');
+		if (this.verify(data, 'accessToken')) this.error(res, 'Malformed');
 
 		RequestService
 			.get(TokenInfo.facebook, { access_token: data.accessToken })
@@ -48,7 +48,7 @@ class AuthorizationController extends BaseController {
 
 	twitterVerify(req, res) {
 		const data = req.body;
-		if (!this.verify(data, 'secret')) this.error(res, 'Malformed');
+		if (this.verify(data, 'secret')) this.error(res, 'Malformed');
 
 		socialRequestUtils
 			.getTwitter(req.body.token, data.secret)
