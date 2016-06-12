@@ -1,5 +1,5 @@
 'use strict';
-const counterConfig = require('../config/counterConfig');
+const counterConfig = require('../config/counter');
 
 module.exports = mongoose => {
 	const Schema = mongoose.Schema;
@@ -21,13 +21,13 @@ module.exports = mongoose => {
 		},
 		socialIds: {
 			google: {
-				type: Number
+				type: String
 			},
 			facebook: {
-				type: Number
+				type: String
 			},
 			twitter: {
-				type: Number
+				type: String
 			}
 		}
 	});
@@ -44,18 +44,6 @@ module.exports = mongoose => {
 			})
 			.catch(error => next(error));
 	});
-
-	usersSchema.statics.findByGoogleId = function (googleId) {
-		return this.findOne({ 'socialIds.google': googleId }).exec();
-	};
-
-	usersSchema.statics.findByFacebookId = function (facebookId) {
-		return this.findOne({ 'socialIds.facebook': facebookId }).exec();
-	};
-	
-	usersSchema.statics.findByTwitterId = function (twitterId) {
-		return this.findOne({ 'socialIds.twitter': twitterId }).exec();
-	};
 
 	return mongoose.model('Users', usersSchema);
 };

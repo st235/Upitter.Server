@@ -16,12 +16,13 @@ class UsersManager {
 		const data = JSON.parse(json);
 		const userData = _.pick(data, 'email', 'name', 'picture');
 		userData.socialIds = {
-			google: +data.id
+			google: data.kid
 		};
-		userData.socialIds.google = data.id;
-		return this.usersModel
-			.findByGoogleId(userData.socialIds.google)
-			.then(user => (!user ? this.create(userData) : user));
+		return this
+			.usersModel
+			.findOne({ 'socialIds.google': userData.socialIds.google })
+			.exec()
+			.then(user => !user ? this.create(userData) : user);
 	}
 
 
@@ -29,30 +30,30 @@ class UsersManager {
 		const data = JSON.parse(json);
 		const userData = _.pick(data, 'email', 'name');
 		userData.socialIds = {
-			facebook: +data.id
+			facebook: data.id
 		};
-		return this.usersModel
-			.findByFacebookId(userData.socialIds.facebook)
-			.then((user) => (!user ? this.create(userData) : user));
+		return this
+			.usersModel
+			.findOne({ 'socialIds.facebook': userData.socialIds.facebook })
+			.exec()
+			.then(user => !user ? this.create(userData) : user);
 	}
 
 	twitterCheckExistence(data) {
 		const userData = _.pick(data, 'email', 'name');
 		userData.socialIds = {
-			twitter: +data.id
+			twitter: data.id
 		};
-		console.log(userData);
-		return this.usersModel
-			.findByTwitterId(userData.socialIds.twitter)
-			.then((user) => (!user ? this.create(userData) : user));
+		return this
+			.usersModel
+			.findOne({ 'socialIds.twitter': userData.socialIds.twitter })
+			.exec()
+			.then(user => !user ? this.create(userData) : user);
 	}
 
 	create(data) {
-		const user = this.usersModel(data);
-		return user.save((error, newUser) => {
-			if (error) throw error;
-			return newUser;
-		});
+		const user = new this.usersModel(data);
+		return user.save();
 	}
 }
 

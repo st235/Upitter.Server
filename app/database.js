@@ -5,10 +5,10 @@ const databaseConfig = require('../config/database');
 
 const { mixedLogger } = require('../utils/loggerUtils');
 
-const UsersModel = require('../models/usersModel');
-const BusinessUserModel = require('../models/businessUsersModel');
-const AccessTokensModel = require('../models/accessTokensModel');
-const CounterModel = require('../models/counterModel');
+const usersModel = require('../models/usersModel');
+const businessUserModel = require('../models/businessUsersModel');
+const accessTokensModel = require('../models/accessTokensModel');
+const counterModel = require('../models/counterModel');
 
 const UsersManager = require('../managers/usersManager');
 const AuthorizationManager = require('../managers/authorizationManager');
@@ -17,10 +17,11 @@ class AppDatabase {
 	constructor() {
 		this.bind();
 		mongoose.connect(databaseConfig.uri, databaseConfig.options, this.onStart);
-		this.usersModel = UsersModel(mongoose);
-		this.businessUserModel = BusinessUserModel(mongoose);
-		this.accessTokenModel = AccessTokensModel(mongoose);
-		this.counterModel = CounterModel(mongoose);
+
+		this.usersModel = usersModel(mongoose);
+		this.businessUserModel = businessUserModel(mongoose);
+		this.accessTokenModel = accessTokensModel(mongoose);
+		this.counterModel = counterModel(mongoose);
 
 		this.usersManager = new UsersManager(this.usersModel);
 		this.authorizationManager = new AuthorizationManager();
@@ -49,7 +50,8 @@ class AppDatabase {
 	}
 
 	onStart() {
-		this.counterModel
+		this
+			.counterModel
 			.create()
 			.then(model => mixedLogger.info(`Created ${model}`))
 			.catch(error => mixedLogger.error(error));
