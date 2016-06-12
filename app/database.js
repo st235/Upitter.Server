@@ -44,7 +44,7 @@ class AppDatabase {
 	managers() {
 		return {
 			users: this.usersManager,
-			authorization: this.authorizationManager
+			authorization: this.authorizationManager,
 		};
 	}
 

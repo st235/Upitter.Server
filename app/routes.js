@@ -26,8 +26,10 @@ class AppRoutes {
 		app.use(bodyParser.urlencoded({ extended: true }));
 	}
 
-	registerAuthorization(app, paths, controller) {
-		app.post(paths.googleVerify, controller.googleVerify);
+	registerAuthorization(app, path, controller) {
+		app.post(path.googleVerify, controller.googleVerify);
+		app.post(path.facebookVerify, controller.facebookVerify);
+		app.post(path.twitterVerify, controller.twitterVerify);
 	}
 }
 

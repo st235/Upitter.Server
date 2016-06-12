@@ -10,8 +10,7 @@ module.exports = mongoose => {
 		},
 		email: {
 			type: String,
-			unique: true,
-			required: true
+			unique: true
 		},
 		name: {
 			type: String,
@@ -19,6 +18,17 @@ module.exports = mongoose => {
 		},
 		picture: {
 			type: String
+		},
+		socialIds: {
+			google: {
+				type: Number
+			},
+			facebook: {
+				type: Number
+			},
+			twitter: {
+				type: Number
+			}
 		}
 	});
 
@@ -35,11 +45,17 @@ module.exports = mongoose => {
 			.catch(error => next(error));
 	});
 
-	usersSchema.statics.findByEmail = function (email) {
-		return this.findOne({ email: email }).exec();
+	usersSchema.statics.findByGoogleId = function (googleId) {
+		return this.findOne({ 'socialIds.google': googleId }).exec();
+	};
+
+	usersSchema.statics.findByFacebookId = function (facebookId) {
+		return this.findOne({ 'socialIds.facebook': facebookId }).exec();
+	};
+	
+	usersSchema.statics.findByTwitterId = function (twitterId) {
+		return this.findOne({ 'socialIds.twitter': twitterId }).exec();
 	};
 
 	return mongoose.model('Users', usersSchema);
 };
-
-
