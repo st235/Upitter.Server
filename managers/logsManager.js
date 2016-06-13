@@ -20,9 +20,7 @@ class LogsManager {
 			});
 	}
 
-	getLogs(limit, offset) {
-		!limit ? limit = 20 : limit;
-
+	getLogs(limit = 20, offset) {
 		return this
 			.logsModel
 			.getLogs(limit, offset)
