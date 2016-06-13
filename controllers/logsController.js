@@ -12,6 +12,7 @@ class LogsController extends BaseController {
 	}
 
 	log(req, res) {
+		//  TODO add accessToken and validatron
 		const params = req.params;
 		const body = req.body;
 
@@ -23,16 +24,15 @@ class LogsController extends BaseController {
 	}
 
 	getLogs(req, res) {
+		//  TODO add accessToken and validatron
 		const query = req.query;
 
 		this
 			.logsManager
-			.getLogs(query.limit, query.offset)
+			.getLogs(parseInt(query.limit), parseInt(query.offset))
 			.then(log => this.success(res, log))
 			.catch(error => this.error(res, error));
 	}
-
-	//TODO add acessToken
 }
 
 module.exports = LogsController;
