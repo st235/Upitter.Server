@@ -3,19 +3,20 @@
 class LogsManager {
 	constructor(logsModel) {
 		this.logsModel = logsModel;
-
-		this.logSave = this.logSave.bind(this);
-		this.getLogs = this.getLogs.bind(this);
+		this.trySave = this.trySave.bind(this);
 	}
 
-	logSave(data) {
-		const log = new this.logsModel(data);
-		console.log(data);
-		return log.save();
-	}
+	trySave(logId, systemType, log) {
+		const data = { logId, systemType, log };
 
-	getLogs(data) {
-		
+		return this
+			.logsModel
+			.findUnique(logId, systemType)
+			.then(log => {
+				if (log) throw new Error(500);
+				const model = new this.logsModel(data);
+				return model.save();
+			});
 	}
 }
 

@@ -7,7 +7,6 @@ const { mixedLogger } = require('../utils/loggerUtils');
 
 const usersModel = require('../models/usersModel');
 const businessUserModel = require('../models/businessUsersModel');
-const accessTokensModel = require('../models/accessTokensModel');
 const counterModel = require('../models/counterModel');
 const logsModel = require('../models/logsModel');
 
@@ -23,7 +22,6 @@ class AppDatabase {
 		this.counterModel = counterModel(mongoose);
 		this.usersModel = usersModel(mongoose);
 		this.businessUserModel = businessUserModel(mongoose);
-		this.accessTokenModel = accessTokensModel(mongoose);
 		this.logsModel = logsModel(mongoose);
 
 		this.usersManager = new UsersManager(this.usersModel);
@@ -37,21 +35,20 @@ class AppDatabase {
 		this.onStart = this.onStart.bind(this);
 	}
 
-	models() {
-		return {
-			user: this.usersModel,
-			businessUser: this.businessUserModel,
-			accessToken: this.accessTokenModel,
-			counter: this.counterModel,
-			logs: this.logsModel
-		};
-	}
-
 	managers() {
 		return {
 			users: this.usersManager,
 			authorization: this.authorizationManager,
 			logs: this.logsManager
+		};
+	}
+
+	models() {
+		return {
+			user: this.usersModel,
+			businessUser: this.businessUserModel,
+			counter: this.counterModel,
+			logs: this.logsModel
 		};
 	}
 

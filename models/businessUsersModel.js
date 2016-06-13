@@ -2,6 +2,7 @@
 
 module.exports = mongoose => {
 	const Schema = mongoose.Schema;
+
 	const BusinessUsersSchema = new Schema({
 		customId: {
 			type: String,
@@ -48,5 +49,6 @@ module.exports = mongoose => {
 			type: String
 		}
 	});
+
 	return mongoose.model('BusinessUsers', BusinessUsersSchema);
 };

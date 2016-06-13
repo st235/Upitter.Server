@@ -36,9 +36,7 @@ class AppRoutes {
 	}
 
 	registerLogs(app, path, controller) {
-		app.post(path.androidLog, controller.androidLogSave);
-		app.post(path.iosLog, controller.iosLogSave);
-		//app.get(path.getLogs, controller.getLogs);
+		app.post(path.log, controller.log);
 	}
 }
 

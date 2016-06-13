@@ -7,27 +7,18 @@ class LogsController extends BaseController {
 		super();
 		this.logsManager = logsManager;
 
-		this.androidLogSave = this.androidLogSave.bind(this);
-		this.iosLogSave = this.iosLogSave.bind(this);
+		this.log = this.log.bind(this);
 		//this.getLogs = this.getLogs(this);
 	}
 
-	androidLogSave(req, res) {
-		const data = req.body;
-		data.systemType = 0;
+	log(req, res) {
+		const params = req.params;
+		const body = req.body;
+		console.log(body, params);
 
-		this.logsManager
-			.logSave(data)
-			.then(log => this.success(res, log))
-			.catch(error => this.error(res, error));
-	}
-
-	iosLogSave(req, res) {
-		const data = req.body;
-		data.systemType = 1;
-
-		this.logsManager
-			.logSave(data)
+		this
+			.logsManager
+			.trySave(params.id, params.systemType, body.log)
 			.then(log => this.success(res, log))
 			.catch(error => this.error(res, error));
 	}

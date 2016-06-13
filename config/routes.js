@@ -6,8 +6,7 @@ module.exports = {
 	},
 	support: {
 		support: '/support',
-		androidLog: '/support/log/android',
-		iosLog: '/support/log/ios',
+		log: '/support/:systemType/:id',
 		getLogs: '/support/log/get'
 	}
 };
