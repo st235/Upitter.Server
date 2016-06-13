@@ -13,9 +13,14 @@
     "mongoose": "^4.4.19",
     "node-twitter-api": "^1.7.2",
     "request": "^2.72.0",
+<<<<<<< HEAD
+    "underscore": "^1.8.3",
+    "unirest": "^0.5.0"
+=======
     "thunk-redis": "^1.6.5",
     "underscore": "^1.8.3",
     "validatron": "^0.8.0"
+>>>>>>> 8debcd4b387555254ccf38c6744da0ba45468226
   },
   "devDependencies": {
     "eslint": "^2.2.0",
