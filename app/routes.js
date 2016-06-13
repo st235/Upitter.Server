@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const routesConfig = require('../config/routes');
 
 const AuthorizationController = require('../controllers/authorizationController');
+const LogsController = require('../controllers/logsController');
 
 class AppRoutes {
 	constructor(app, managers) {
@@ -12,6 +13,7 @@ class AppRoutes {
 		this.registerParser = this.registerParser.bind(this);
 
 		this.authorizationController = new AuthorizationController(managers.authorization, managers.users);
+		this.logsController = new LogsController(managers.logs);
 
 		this.registerAuthorization = this.registerAuthorization.bind(this);
 	}
@@ -19,6 +21,7 @@ class AppRoutes {
 	register() {
 		this.registerParser(this.app);
 		this.registerAuthorization(this.app, routesConfig.authorization, this.authorizationController);
+		this.registerLogs(this.app, routesConfig.support, this.logsController);
 	}
 
 	registerParser(app) {
@@ -30,6 +33,12 @@ class AppRoutes {
 		app.post(path.googleVerify, controller.googleVerify);
 		app.post(path.facebookVerify, controller.facebookVerify);
 		app.post(path.twitterVerify, controller.twitterVerify);
+	}
+
+	registerLogs(app, path, controller) {
+		app.post(path.androidLog, controller.androidLogSave);
+		app.post(path.iosLog, controller.iosLogSave);
+		//app.get(path.getLogs, controller.getLogs);
 	}
 }
 

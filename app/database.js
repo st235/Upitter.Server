@@ -9,22 +9,26 @@ const usersModel = require('../models/usersModel');
 const businessUserModel = require('../models/businessUsersModel');
 const accessTokensModel = require('../models/accessTokensModel');
 const counterModel = require('../models/counterModel');
+const logsModel = require('../models/logsModel');
 
 const UsersManager = require('../managers/usersManager');
 const AuthorizationManager = require('../managers/authorizationManager');
+const LogsManager = require('../managers/logsManager');
 
 class AppDatabase {
 	constructor() {
 		this.bind();
 		mongoose.connect(databaseConfig.uri, databaseConfig.options, this.onStart);
 
+		this.counterModel = counterModel(mongoose);
 		this.usersModel = usersModel(mongoose);
 		this.businessUserModel = businessUserModel(mongoose);
 		this.accessTokenModel = accessTokensModel(mongoose);
-		this.counterModel = counterModel(mongoose);
+		this.logsModel = logsModel(mongoose);
 
 		this.usersManager = new UsersManager(this.usersModel);
 		this.authorizationManager = new AuthorizationManager();
+		this.logsManager = new LogsManager(this.logsModel);
 	}
 
 	bind() {
@@ -38,7 +42,8 @@ class AppDatabase {
 			user: this.usersModel,
 			businessUser: this.businessUserModel,
 			accessToken: this.accessTokenModel,
-			counter: this.counterModel
+			counter: this.counterModel,
+			logs: this.logsModel
 		};
 	}
 
@@ -46,6 +51,7 @@ class AppDatabase {
 		return {
 			users: this.usersManager,
 			authorization: this.authorizationManager,
+			logs: this.logsManager
 		};
 	}
 
