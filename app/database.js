@@ -9,10 +9,12 @@ const usersModel = require('../models/usersModel');
 const businessUserModel = require('../models/businessUsersModel');
 const counterModel = require('../models/counterModel');
 const logsModel = require('../models/logsModel');
+const feedbacsModel = require('../models/feedbaksModel');
 
 const UsersManager = require('../managers/usersManager');
 const AuthorizationManager = require('../managers/authorizationManager');
 const LogsManager = require('../managers/logsManager');
+const FeedbacksManager = require('../managers/feedbacksManager');
 
 class AppDatabase {
 	constructor() {
@@ -23,10 +25,12 @@ class AppDatabase {
 		this.usersModel = usersModel(mongoose);
 		this.businessUserModel = businessUserModel(mongoose);
 		this.logsModel = logsModel(mongoose);
+		this.feedbacksModel = feedbacsModel(mongoose);
 
 		this.usersManager = new UsersManager(this.usersModel);
 		this.authorizationManager = new AuthorizationManager();
 		this.logsManager = new LogsManager(this.logsModel);
+		this.feedbacksManager = new FeedbacksManager(this.feedbacksModel);
 	}
 
 	bind() {
@@ -39,7 +43,8 @@ class AppDatabase {
 		return {
 			users: this.usersManager,
 			authorization: this.authorizationManager,
-			logs: this.logsManager
+			logs: this.logsManager,
+			feedbacks: this.feedbacksManager
 		};
 	}
 
@@ -48,7 +53,8 @@ class AppDatabase {
 			user: this.usersModel,
 			businessUser: this.businessUserModel,
 			counter: this.counterModel,
-			logs: this.logsModel
+			logs: this.logsModel,
+			feedbacks: this.feedbacksModel
 		};
 	}
 

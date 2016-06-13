@@ -7,6 +7,8 @@ module.exports = {
 	support: {
 		support: '/support',
 		log: '/support/:systemType/:id',
-		getLogs: '/support/log/get'
+		getLogs: '/support/log/get',
+		feedback: '/support/feedback',
+		getFeedbacks: '/support/feedback/get'
 	}
 };
