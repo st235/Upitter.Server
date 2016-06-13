@@ -10,15 +10,27 @@ module.exports = mongoose => {
 		},
 		email: {
 			type: String,
-			unique: true,
-			required: true
+			sparse: true,
+			unique: true
 		},
 		name: {
 			type: String,
+			sparse: true,
 			required: true
 		},
 		picture: {
 			type: String
+		},
+		socialIds: {
+			google: {
+				type: String
+			},
+			facebook: {
+				type: String
+			},
+			twitter: {
+				type: String
+			}
 		}
 	});
 
@@ -35,11 +47,5 @@ module.exports = mongoose => {
 			.catch(error => next(error));
 	});
 
-	usersSchema.statics.findByEmail = function (email) {
-		return this.findOne({ email: email }).exec();
-	};
-
 	return mongoose.model('Users', usersSchema);
 };
-
-
