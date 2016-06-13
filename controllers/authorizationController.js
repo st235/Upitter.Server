@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('underscore');
 const ValidationGenerator = require('validatron');
 
 const BaseController = require('./baseController');
@@ -30,24 +31,23 @@ class AuthorizationController extends BaseController {
 		const data = req.body;
 		if (this.verify(data, 'tokenId')) this.error(res, 'Malformed');
 
-		let user;
+		let userModel;
 
 		RequestService
 			.get(TokenInfo.google, { id_token: data.tokenId })
 			.then(this.userManager.googleCheckExistence)
-			.then(userModel => {
-				user = userModel;
-				return user;
+			.then(user => {
+				userModel = _.pick(user, 'customId', 'email', 'name', 'picture');
+				return userModel;
 			})
 			.then(user => secretUtils.getUniqueHash(user.customId))
 			.then(token => {
-				user.token = token;
-				console.log(token);
-				return this.authorizationClient.set(token, user.customId);
+				userModel.token = token;
+				return this.authorizationClient.set(token, userModel.customId);
 			})
 			.then(token => {
-				console.log(token);
-				this.success(res, user);
+				console.log(userModel);
+				this.success(res, userModel);
 			})
 			.catch(error => this.error(res, error));
 	}
