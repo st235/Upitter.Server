@@ -7,7 +7,7 @@ const BaseController = require('./baseController');
 const RequestService = require('../services/requestService');
 const RedisService = require('../services/redisService');
 
-const secretUtils = require('../utils/secretUtils');
+const tokenUtils = require('../utils/tokenUtils');
 const socialRequestUtils = require('../utils/socialRequestUtils');
 const TokenInfo = require('../config/methods');
 
@@ -40,15 +40,12 @@ class AuthorizationController extends BaseController {
 				userModel = _.pick(user, 'customId', 'email', 'name', 'picture');
 				return userModel;
 			})
-			.then(user => secretUtils.getUniqueHash(user.customId))
+			.then(user => tokenUtils.createToken(this.authorizationClient, user.customId))
 			.then(token => {
 				userModel.token = token;
-				return this.authorizationClient.set(token, userModel.customId);
+				return userModel;
 			})
-			.then(token => {
-				console.log(userModel);
-				this.success(res, userModel);
-			})
+			.then(() => this.success(res, userModel))
 			.catch(error => this.error(res, error));
 	}
 
@@ -56,9 +53,21 @@ class AuthorizationController extends BaseController {
 		const data = req.body;
 		if (this.verify(data, 'accessToken')) this.error(res, 'Malformed');
 
+		let userModel;
+
 		RequestService
 			.get(TokenInfo.facebook, { access_token: data.accessToken })
 			.then(this.userManager.facebookCheckExistence)
+			.then(user => {
+				userModel = _.pick(user, 'customId', 'email', 'name', 'picture');
+				return userModel;
+			})
+			.then(user => tokenUtils.createToken(this.authorizationClient, user.customId))
+			.then(token => {
+				console.log(token);
+				userModel.token = token;
+				return userModel;
+			})
 			.then(user => this.success(res, user))
 			.catch(error => this.error(res, error));
 	}
@@ -67,9 +76,21 @@ class AuthorizationController extends BaseController {
 		const data = req.body;
 		if (this.verify(data, 'secret')) this.error(res, 'Malformed');
 
+		let userModel;
+
 		socialRequestUtils
 			.getTwitter(req.body.token, data.secret)
 			.then(this.userManager.twitterCheckExistence)
+			.then(user => {
+				userModel = _.pick(user, 'customId', 'email', 'name', 'picture');
+				return userModel;
+			})
+			.then(user => tokenUtils.createToken(this.authorizationClient, user.customId))
+			.then(token => {
+				console.log(token);
+				userModel.token = token;
+				return userModel;
+			})
 			.then(user => this.success(res, user))
 			.catch(error => this.error(res, error));
 	}

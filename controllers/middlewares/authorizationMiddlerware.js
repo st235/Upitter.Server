@@ -12,11 +12,15 @@ class AuthorizationMiddleware {
 		const accessToken = req.query.accessToken || req.body.accessToken;
 		if (!accessToken) return next('Unauthorize');
 
-		this.authorizationClient.get(accessToken).then(userId => {
-			if (!userId) return next('Unauthorize');
-			req.userId = userId;
-			return next();
-		}).catch(next);
+		this
+			.authorizationClient
+			.get(accessToken)
+			.then(userId => {
+				if (!userId) return next('Unauthorize');
+				req.userId = userId;
+				return next();
+			})
+			.catch(next);
 	}
 }
 

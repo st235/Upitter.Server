@@ -11,7 +11,7 @@ const FeedbacksController = require('../controllers/feedbacksController');
 class AppRoutes {
 	constructor(app, managers) {
 		this.app = app;
-		this.authorizationMiddleware = new AuthorizationMiddleware();
+		this.checkAuthorization = new AuthorizationMiddleware().authorize;
 
 		this.authorizationController = new AuthorizationController(managers.authorization, managers.users);
 		this.logsController = new LogsController(managers.logs);
@@ -41,13 +41,13 @@ class AppRoutes {
 	}
 
 	registerLogs(app, path, controller) {
-		app.post(path.log, this.authorizationMiddleware.authorize, controller.log);
-		app.get(path.getLogs, this.authorizationMiddleware.authorize, controller.getLogs);
+		app.post(path.log, this.checkAuthorization, controller.log);
+		app.get(path.getLogs, this.checkAuthorization, controller.getLogs);
 	}
 
 	registerFeedbacks(app, path, controller) {
-		app.post(path.feedback, this.authorizationMiddleware.authorize, controller.feedback);
-		app.get(path.getFeedbacks, this.authorizationMiddleware.authorize, controller.getFeedbacks);
+		app.post(path.feedback, this.checkAuthorization, controller.feedback);
+		app.get(path.getFeedbacks, this.checkAuthorization, controller.getFeedbacks);
 	}
 }
 
