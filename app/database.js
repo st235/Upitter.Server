@@ -12,7 +12,6 @@ const logsModel = require('../models/logsModel');
 const feedbacsModel = require('../models/feedbaksModel');
 
 const UsersManager = require('../managers/usersManager');
-const AuthorizationManager = require('../managers/authorizationManager');
 const LogsManager = require('../managers/logsManager');
 const FeedbacksManager = require('../managers/feedbacksManager');
 
@@ -28,7 +27,6 @@ class AppDatabase {
 		this.feedbacksModel = feedbacsModel(mongoose);
 
 		this.usersManager = new UsersManager(this.usersModel);
-		this.authorizationManager = new AuthorizationManager();
 		this.logsManager = new LogsManager(this.logsModel);
 		this.feedbacksManager = new FeedbacksManager(this.feedbacksModel);
 	}
@@ -42,7 +40,6 @@ class AppDatabase {
 	managers() {
 		return {
 			users: this.usersManager,
-			authorization: this.authorizationManager,
 			logs: this.logsManager,
 			feedbacks: this.feedbacksManager
 		};

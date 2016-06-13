@@ -4,7 +4,9 @@ const ValidationGenerator = require('validatron');
 
 const BaseController = require('./baseController');
 const RequestService = require('../services/requestService');
+const RedisService = require('../services/redisService');
 
+const secretUtils = require('../utils/secretUtils');
 const socialRequestUtils = require('../utils/socialRequestUtils');
 const TokenInfo = require('../config/methods');
 
@@ -13,9 +15,9 @@ class AuthorizationController extends BaseController {
 	constructor(authorizationManager, userManager) {
 		super();
 		socialRequestUtils.init();
+		this.authorizationClient = RedisService.getClientByName('authorizations');
 		this.validationService = ValidationGenerator.createValidator({});
 
-		this.authorizationManager = authorizationManager;
 		this.userManager = userManager;
 
 		this.verify = this.verify.bind(this);
@@ -28,10 +30,25 @@ class AuthorizationController extends BaseController {
 		const data = req.body;
 		if (this.verify(data, 'tokenId')) this.error(res, 'Malformed');
 
+		let user;
+
 		RequestService
 			.get(TokenInfo.google, { id_token: data.tokenId })
 			.then(this.userManager.googleCheckExistence)
-			.then(user => this.success(res, user))
+			.then(userModel => {
+				user = userModel;
+				return user;
+			})
+			.then(user => secretUtils.getUniqueHash(user.customId))
+			.then(token => {
+				user.token = token;
+				console.log(token);
+				return this.authorizationClient.set(token, user.customId);
+			})
+			.then(token => {
+				console.log(token);
+				this.success(res, user);
+			})
 			.catch(error => this.error(res, error));
 	}
 

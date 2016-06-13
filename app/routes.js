@@ -2,6 +2,8 @@
 const bodyParser = require('body-parser');
 const routesConfig = require('../config/routes');
 
+const AuthorizationMiddleware = require('../controllers/middlewares/authorizationMiddlerware');
+
 const AuthorizationController = require('../controllers/authorizationController');
 const LogsController = require('../controllers/logsController');
 const FeedbacksController = require('../controllers/feedbacksController');
@@ -9,14 +11,14 @@ const FeedbacksController = require('../controllers/feedbacksController');
 class AppRoutes {
 	constructor(app, managers) {
 		this.app = app;
-
-		this.register = this.register.bind(this);
-		this.registerParser = this.registerParser.bind(this);
+		this.authorizationMiddleware = new AuthorizationMiddleware();
 
 		this.authorizationController = new AuthorizationController(managers.authorization, managers.users);
 		this.logsController = new LogsController(managers.logs);
 		this.feedbacksController = new FeedbacksController(managers.feedbacks);
 
+		this.register = this.register.bind(this);
+		this.registerParser = this.registerParser.bind(this);
 		this.registerAuthorization = this.registerAuthorization.bind(this);
 	}
 
@@ -39,13 +41,13 @@ class AppRoutes {
 	}
 
 	registerLogs(app, path, controller) {
-		app.post(path.log, controller.log);
-		app.get(path.getLogs, controller.getLogs);
+		app.post(path.log, this.authorizationMiddleware.authorize, controller.log);
+		app.get(path.getLogs, this.authorizationMiddleware.authorize, controller.getLogs);
 	}
 
 	registerFeedbacks(app, path, controller) {
-		app.post(path.feedback, controller.feedback);
-		app.get(path.getFeedbacks, controller.getFeedbacks);
+		app.post(path.feedback, this.authorizationMiddleware.authorize, controller.feedback);
+		app.get(path.getFeedbacks, this.authorizationMiddleware.authorize, controller.getFeedbacks);
 	}
 }
 

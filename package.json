@@ -13,6 +13,7 @@
     "mongoose": "^4.4.19",
     "node-twitter-api": "^1.7.2",
     "request": "^2.72.0",
+    "thunk-redis": "^1.6.5",
     "underscore": "^1.8.3",
     "validatron": "^0.8.0"
   },
