@@ -16,8 +16,9 @@ class UsersManager {
 		const data = JSON.parse(json);
 		const userData = _.pick(data, 'email', 'name', 'picture');
 		userData.socialIds = {
-			google: data.kid
+			google: userData.email
 		};
+
 		return this
 			.usersModel
 			.findOne({ 'socialIds.google': userData.socialIds.google })

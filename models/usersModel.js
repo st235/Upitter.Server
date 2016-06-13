@@ -10,10 +10,12 @@ module.exports = mongoose => {
 		},
 		email: {
 			type: String,
+			sparse: true,
 			unique: true
 		},
 		name: {
 			type: String,
+			sparse: true,
 			required: true
 		},
 		picture: {

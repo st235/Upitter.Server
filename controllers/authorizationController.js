@@ -30,7 +30,7 @@ class AuthorizationController extends BaseController {
 
 		RequestService
 			.get(TokenInfo.google, { id_token: data.tokenId })
-			.then(googleResponse => this.userManager.googleCheckExistence(googleResponse))
+			.then(this.userManager.googleCheckExistence)
 			.then(user => this.success(res, user))
 			.catch(error => this.error(res, error));
 	}
@@ -41,7 +41,7 @@ class AuthorizationController extends BaseController {
 
 		RequestService
 			.get(TokenInfo.facebook, { access_token: data.accessToken })
-			.then(facebookResponse => this.userManager.facebookCheckExistence(facebookResponse))
+			.then(this.userManager.facebookCheckExistence)
 			.then(user => this.success(res, user))
 			.catch(error => this.error(res, error));
 	}
@@ -52,7 +52,7 @@ class AuthorizationController extends BaseController {
 
 		socialRequestUtils
 			.getTwitter(req.body.token, data.secret)
-			.then(twitterResponse => this.userManager.twitterCheckExistence(twitterResponse))
+			.then(this.userManager.twitterCheckExistence)
 			.then(user => this.success(res, user))
 			.catch(error => this.error(res, error));
 	}
