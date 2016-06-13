@@ -14,7 +14,6 @@ class LogsController extends BaseController {
 	log(req, res) {
 		const params = req.params;
 		const body = req.body;
-		console.log(body, params);
 
 		this
 			.logsManager
