@@ -8,13 +8,12 @@ class LogsController extends BaseController {
 		this.logsManager = logsManager;
 
 		this.log = this.log.bind(this);
-		//this.getLogs = this.getLogs(this);
+		this.getLogs = this.getLogs.bind(this);
 	}
 
 	log(req, res) {
 		const params = req.params;
 		const body = req.body;
-		console.log(body, params);
 
 		this
 			.logsManager
@@ -23,14 +22,17 @@ class LogsController extends BaseController {
 			.catch(error => this.error(res, error));
 	}
 
-	// getLogs(req, res) {
-	// 	const data = req.query;
-	//
-	// 	this.logsManager
-	// 		.getLogs(data)
-	// 		.then(log => this.success(res, log))
-	// 		.catch(error => this.error(res, error));
-	// }
+	getLogs(req, res) {
+		const query = req.query;
+
+		this
+			.logsManager
+			.getLogs(query.limit, query.offset)
+			.then(log => this.success(res, log))
+			.catch(error => this.error(res, error));
+	}
+
+	//TODO add acessToken
 }
 
 module.exports = LogsController;

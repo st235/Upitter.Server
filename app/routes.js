@@ -37,6 +37,7 @@ class AppRoutes {
 
 	registerLogs(app, path, controller) {
 		app.post(path.log, controller.log);
+		app.get(path.getLogs, controller.getLogs);
 	}
 }
 

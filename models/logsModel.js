@@ -20,11 +20,19 @@ module.exports = mongoose => {
 		createdDate: {
 			type: Date,
 			default: Date.now()
+		},
+		resolved: {
+			type: Boolean,
+			default: false
 		}
 	});
 
 	logSchema.statics.findUnique = function (logId, systemType) {
 		return this.findOne({ logId, systemType }).exec();
+	};
+
+	logSchema.statics.getLogs = function (limit, offset) {
+		return this.find().sort({ createdDate: -1 }).skip(parseFloat(offset)).limit(limit).exec();
 	};
 
 	return mongoose.model('Logs', logSchema);
