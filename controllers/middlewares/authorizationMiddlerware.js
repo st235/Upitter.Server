@@ -10,13 +10,14 @@ class AuthorizationMiddleware {
 
 	authorize(req, res, next) {
 		const accessToken = req.query.accessToken || req.body.accessToken;
-		if (!accessToken) return next('Unauthorize');
+		if (!accessToken) return next('UNAUTHORIZED');
 
 		this
 			.authorizationClient
 			.get(accessToken)
 			.then(userId => {
-				if (!userId) return next('Unauthorize');
+				console.log(userId);
+				if (!userId) return next('UNAUTHORIZED');
 				req.userId = userId;
 				return next();
 			})

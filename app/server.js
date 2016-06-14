@@ -5,6 +5,7 @@ const express = require('express');
 const AppRoutes = require('./routes');
 const AppDatabase = require('./database');
 
+const ErrorService = require('../services/errorService');
 const RedisService = require('../services/redisService');
 const { mixedLogger } = require('../utils/loggerUtils');
 const redisConfig = require('../config/redis');
@@ -15,11 +16,16 @@ class AppServer {
 		const app = express();
 		app.listen(httpConfig.PORT, () => mixedLogger.info(`App is started on ${httpConfig.PORT} port`));
 
-		RedisService.init(redisConfig);
+		this.init();
 		const managers = new AppDatabase().managers();
 		this.routes = new AppRoutes(app, managers);
 
 		this.start = this.start.bind(this);
+	}
+
+	init() {
+		RedisService.init(redisConfig);
+		ErrorService.init();
 	}
 
 	start() {

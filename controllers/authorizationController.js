@@ -64,7 +64,6 @@ class AuthorizationController extends BaseController {
 			})
 			.then(user => tokenUtils.createToken(this.authorizationClient, user.customId))
 			.then(token => {
-				console.log(token);
 				userModel.token = token;
 				return userModel;
 			})
@@ -87,7 +86,6 @@ class AuthorizationController extends BaseController {
 			})
 			.then(user => tokenUtils.createToken(this.authorizationClient, user.customId))
 			.then(token => {
-				console.log(token);
 				userModel.token = token;
 				return userModel;
 			})

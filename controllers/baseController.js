@@ -17,9 +17,7 @@ class BaseController {
 	}
 
 	error(res, error) {
-		mixedLogger.info('The server give back an error:', error);
-		res.status(500);
-		res.json(this.responseModel(false, error));
+		res.json(this.responseModel(false, error, true));
 	}
 
 	publish(res, status, obj) {
@@ -28,12 +26,12 @@ class BaseController {
 	}
 
 	success(res, obj) {
-		mixedLogger.info('The server give back an success');
 		res.status(200);
 		res.json(this.responseModel(true, obj));
 	}
 
-	responseModel(success, response) {
+	responseModel(success, response, isError = false) {
+		if (isError) return { success, error: response };
 		return { success, response };
 	}
 }

@@ -1,0 +1,10 @@
+module.exports = {
+	UNKNOWN_ERROR: {
+		INNER_CODE: 0,
+		EXTERNAL_CODE: 500
+	},
+	UNAUTHORIZED: {
+		INNER_CODE: 1,
+		EXTERNAL_CODE: 403
+	}
+};
