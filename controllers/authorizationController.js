@@ -2,6 +2,7 @@
 
 const _ = require('underscore');
 const ValidationGenerator = require('validatron');
+const userResponse = require('../models/response/userResponse');
 
 const BaseController = require('./baseController');
 const RequestService = require('../services/requestService');
@@ -45,7 +46,8 @@ class AuthorizationController extends BaseController {
 				userModel.token = token;
 				return userModel;
 			})
-			.then(() => this.success(res, userModel))
+			.then(user => userResponse(user))
+			.then(response => this.success(res, response))
 			.catch(error => this.error(res, error));
 	}
 
@@ -67,7 +69,8 @@ class AuthorizationController extends BaseController {
 				userModel.token = token;
 				return userModel;
 			})
-			.then(user => this.success(res, user))
+			.then(user => userResponse(user))
+			.then(response => this.success(res, response))
 			.catch(error => this.error(res, error));
 	}
 
@@ -89,7 +92,8 @@ class AuthorizationController extends BaseController {
 				userModel.token = token;
 				return userModel;
 			})
-			.then(user => this.success(res, user))
+			.then(user => userResponse(user))
+			.then(response => this.success(res, response))
 			.catch(error => this.error(res, error));
 	}
 
