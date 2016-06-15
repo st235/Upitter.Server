@@ -1,5 +1,7 @@
 module.exports = {
 	authorization: {
+		verifyToken: '/authorization/token/verify/:token',
+		refreshToken: '/authorization/token/refresh/:token',
 		googleVerify: '/authorization/google/verify',
 		facebookVerify: '/authorization/facebook/verify',
 		twitterVerify: '/authorization/twitter/verify'

@@ -1,7 +1,7 @@
 'use strict';
 
-const bodyParser = require('body-parser');
 const cors = require('cors');
+const bodyParser = require('body-parser');
 const routesConfig = require('../config/routes');
 
 const AuthorizationMiddleware = require('../controllers/middlewares/authorizationMiddlerware');
@@ -52,20 +52,22 @@ class AppRoutes {
 		app.use(this.errorHandler.handleError);
 	}
 
-	registerAuthorization(app, path, controller) {
-		app.post(path.googleVerify, controller.googleVerify);
-		app.post(path.facebookVerify, controller.facebookVerify);
-		app.post(path.twitterVerify, controller.twitterVerify);
+	registerAuthorization(app, paths, controller) {
+		app.get(paths.verifyToken, controller.verifyToken);
+		app.get(paths.refreshToken, controller.refreshToken);
+		app.post(paths.googleVerify, controller.googleVerify);
+		app.post(paths.facebookVerify, controller.facebookVerify);
+		app.post(paths.twitterVerify, controller.twitterVerify);
 	}
 
-	registerLogs(app, path, controller) {
-		app.post(path.log, this.checkAuthorization, controller.log);
-		app.get(path.getLogs, this.checkAuthorization, controller.getLogs);
+	registerLogs(app, paths, controller) {
+		app.post(paths.log, this.checkAuthorization, controller.log);
+		app.get(paths.getLogs, this.checkAuthorization, controller.getLogs);
 	}
 
-	registerFeedbacks(app, path, controller) {
-		app.post(path.feedback, this.checkAuthorization, controller.feedback);
-		app.get(path.getFeedbacks, this.checkAuthorization, controller.getFeedbacks);
+	registerFeedbacks(app, paths, controller) {
+		app.post(paths.feedback, this.checkAuthorization, controller.feedback);
+		app.get(paths.getFeedbacks, this.checkAuthorization, controller.getFeedbacks);
 	}
 }
 

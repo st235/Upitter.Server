@@ -23,16 +23,51 @@ class AuthorizationController extends BaseController {
 		this.userManager = userManager;
 
 		this.verify = this.verify.bind(this);
+		this.verifyToken = this.verifyToken.bind(this);
+		this.refreshToken = this.refreshToken.bind(this);
 		this.googleVerify = this.googleVerify.bind(this);
 		this.facebookVerify = this.facebookVerify.bind(this);
 		this.twitterVerify = this.twitterVerify.bind(this);
+	}
+
+	verifyToken(req, res, next) {
+		const token = req.params.token;
+
+		this
+			.authorizationClient
+			.get(token)
+			.then(userId => {
+				if (!userId) return this.success(res, false);
+				this.success(res, true);
+			})
+			.catch(error => next('UNKNOWN_ERROR'));
+	}
+
+	refreshToken(req, res, next) {
+		const token = req.params.token;
+		let refreshToken = null;
+
+		this
+			.authorizationClient
+			.get(token)
+			.then(userId => {
+				if (!userId) return next('UNAUTHORIZED');
+				return userId;
+			})
+			.then(userId => tokenUtils.createToken(this.authorizationClient, userId))
+			.then(refresh => {
+				refreshToken = refresh;
+				return this.authorizationClient.remove(token);
+			})
+			.then(() => this.success(res, { refreshToken }))
+			.catch(() => next('UNKNOWN_ERROR'));
 	}
 
 	googleVerify(req, res) {
 		const data = req.body;
 		if (this.verify(data, 'tokenId')) this.error(res, 'Malformed');
 
-		let userModel;
+		let userModel = null;
 
 		RequestService
 			.get(TokenInfo.google, { id_token: data.tokenId })
@@ -55,7 +90,7 @@ class AuthorizationController extends BaseController {
 		const data = req.body;
 		if (this.verify(data, 'accessToken')) this.error(res, 'Malformed');
 
-		let userModel;
+		let userModel = null;
 
 		RequestService
 			.get(TokenInfo.facebook, { access_token: data.accessToken })
@@ -78,7 +113,7 @@ class AuthorizationController extends BaseController {
 		const data = req.body;
 		if (this.verify(data, 'secret')) this.error(res, 'Malformed');
 
-		let userModel;
+		let userModel = null;
 
 		socialRequestUtils
 			.getTwitter(req.body.token, data.secret)
