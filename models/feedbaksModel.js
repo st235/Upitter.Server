@@ -10,7 +10,7 @@ module.exports = mongoose => {
 		},
 		userId: {
 			type: String,
-			//required: true
+			required: true
 		},
 		message: {
 			type: String
@@ -35,7 +35,7 @@ module.exports = mongoose => {
 	});
 
 	feedbacksSchema.statics.getFeedbacks = function (limit, offset) {
-		return this.find().sort({ createdDate: -1 }).skip(offset).limit(limit).exec();
+		return this.find().sort({ createdDate: -1 }).sort({ createDate: -1 }).skip(offset).limit(limit).exec();
 	};
 
 	return mongoose.model('Feedbacks', feedbacksSchema);

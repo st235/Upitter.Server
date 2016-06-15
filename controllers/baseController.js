@@ -30,7 +30,7 @@ class BaseController {
 		res.json(this.responseModel(true, obj));
 	}
 
-		responseModel(success, response, isError = false) {
+	responseModel(success, response, isError = false) {
 		if (isError) return { success, error: response };
 		return { success, response };
 	}
