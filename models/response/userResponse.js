@@ -1,7 +1,6 @@
 'use strict';
 
 module.exports = user => {
-	console.log(user);
 	const userResponse = {
 		customId: user.customId,
 		nickname: user.nickname,
@@ -15,6 +14,5 @@ module.exports = user => {
 	if (user.picture) userResponse.picture = user.picture;
 	if (user.subscriptions) userResponse.subscriptions = user.subscriptions;
 	if (user.token) userResponse.accessToken = user.token;
-	console.log(userResponse);
 	return userResponse;
 };
