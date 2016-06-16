@@ -1,12 +1,10 @@
 'use strict';
 
 const BaseController = require('./baseController');
-const RedisService = require('../services/redisService');
 
 class FeedbacksController extends BaseController {
 	constructor(feedbacksManager) {
 		super();
-		this.authorizationClient = RedisService.getClientByName('authorizations');
 		this.feedbacksManager = feedbacksManager;
 
 		this.feedback = this.feedback.bind(this);
@@ -14,11 +12,9 @@ class FeedbacksController extends BaseController {
 	}
 
 	feedback(req, res) {
-		const accessToken = req.query.accessToken || req.body.accessToken;
 		this
-			.authorizationClient
-			.get(accessToken)
-			.then(userId => this.feedbacksManager.trySave(userId, req.body.message))
+			.feedbacksManager
+			.trySave(req.userId, req.body.message)
 			.then(feedback => this.success(res, feedback))
 			.catch(error => this.error(res, error));
 	}

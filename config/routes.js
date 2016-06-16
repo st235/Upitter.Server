@@ -12,5 +12,8 @@ module.exports = {
 		getLogs: '/support/log/get',
 		feedback: '/support/feedback',
 		getFeedbacks: '/support/feedback/get'
+	},
+	user: {
+		edit: '/user/edit'
 	}
 };

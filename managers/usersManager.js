@@ -1,5 +1,6 @@
 'use strict';
 
+const _ = require('underscore');
 
 class UsersManager {
 	constructor(usersModel) {
@@ -9,6 +10,7 @@ class UsersManager {
 		this.facebookCheckExistence = this.facebookCheckExistence.bind(this);
 		this.twitterCheckExistence = this.twitterCheckExistence.bind(this);
 		this.create = this.create.bind(this);
+		this.edit = this.edit.bind(this);
 	}
 
 	googleCheckExistence(json) {
@@ -63,6 +65,17 @@ class UsersManager {
 	create(data) {
 		const user = new this.usersModel(data);
 		return user.save();
+	}
+
+	edit(userId, data) {
+		return this
+			.usersModel
+			.findOne({ customId: userId })
+			.then(user => {
+				if (!user) throw new Error(500);
+				_.extend(user, data);
+				return user.save();
+		});
 	}
 }
 

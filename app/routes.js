@@ -11,6 +11,7 @@ const ErrorMiddleware = require('../controllers/middlewares/errorMiddleware');
 const AuthorizationController = require('../controllers/authorizationController');
 const LogsController = require('../controllers/logsController');
 const FeedbacksController = require('../controllers/feedbacksController');
+const UsersController = require('../controllers/usersController')
 
 class AppRoutes {
 	constructor(app, managers) {
@@ -23,6 +24,7 @@ class AppRoutes {
 		this.authorizationController = new AuthorizationController(managers.authorization, managers.users);
 		this.logsController = new LogsController(managers.logs);
 		this.feedbacksController = new FeedbacksController(managers.feedbacks);
+		this.usersController = new UsersController(managers.users);
 
 		this.register = this.register.bind(this);
 		this.registerHeader = this.registerHeader.bind(this);
@@ -37,6 +39,7 @@ class AppRoutes {
 		this.registerAuthorization(this.app, routesConfig.authorization, this.authorizationController);
 		this.registerLogs(this.app, routesConfig.support, this.logsController);
 		this.registerFeedbacks(this.app, routesConfig.support, this.feedbacksController);
+		this.registerUsers(this.app, routesConfig.user, this.usersController);
 		this.registerFooter(this.app);
 	}
 
@@ -68,6 +71,10 @@ class AppRoutes {
 	registerFeedbacks(app, paths, controller) {
 		app.post(paths.feedback, this.checkAuthorization, controller.feedback);
 		app.get(paths.getFeedbacks, this.checkAuthorization, controller.getFeedbacks);
+	}
+
+	registerUsers(app, paths, controller) {
+		app.post(paths.edit, this.checkAuthorization, controller.edit);
 	}
 }
 

@@ -25,7 +25,8 @@ module.exports = mongoose => {
 			unique: true
 		},
 		sex: {
-			type: Number
+			type: Number,
+			default: 2
 		},
 		picture: {
 			type: String
@@ -58,6 +59,7 @@ module.exports = mongoose => {
 			})
 			.catch(error => next(error));
 	});
+
 
 	return mongoose.model('Users', usersSchema);
 };
