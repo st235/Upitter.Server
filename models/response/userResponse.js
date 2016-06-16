@@ -12,6 +12,7 @@ module.exports = user => {
 	if (user.surname) userResponse.surname = user.surname;
 	if (user.email) userResponse.email = user.email;
 	if (user.picture) userResponse.picture = user.picture;
+	if (user.description) userResponse.description = user.description;
 	if (user.subscriptions) userResponse.subscriptions = user.subscriptions;
 	if (user.token) userResponse.accessToken = user.token;
 

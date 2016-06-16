@@ -31,6 +31,9 @@ module.exports = mongoose => {
 		picture: {
 			type: String
 		},
+		description: {
+			type: String
+		},
 		isVerify: {
 			type: Boolean,
 			default: false
@@ -59,7 +62,6 @@ module.exports = mongoose => {
 			})
 			.catch(error => next(error));
 	});
-
 
 	return mongoose.model('Users', usersSchema);
 };

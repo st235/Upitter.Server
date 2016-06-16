@@ -10,6 +10,9 @@ const businessUserModel = require('../models/businessUsersModel');
 const counterModel = require('../models/counterModel');
 const logsModel = require('../models/logsModel');
 const feedbacsModel = require('../models/feedbaksModel');
+const categoriesModel = require('../models/categoriesModel');
+const postsModel = require('../models/postsModel');
+const votesModel = require('../models/votesModel');
 
 const UsersManager = require('../managers/usersManager');
 const LogsManager = require('../managers/logsManager');
@@ -25,6 +28,9 @@ class AppDatabase {
 		this.businessUserModel = businessUserModel(mongoose);
 		this.logsModel = logsModel(mongoose);
 		this.feedbacksModel = feedbacsModel(mongoose);
+		this.categoriesModel = categoriesModel(mongoose);
+		this.postsModel = postsModel(mongoose);
+		this.votesModel = votesModel(mongoose);
 
 		this.usersManager = new UsersManager(this.usersModel);
 		this.logsManager = new LogsManager(this.logsModel);
@@ -51,7 +57,10 @@ class AppDatabase {
 			businessUser: this.businessUserModel,
 			counter: this.counterModel,
 			logs: this.logsModel,
-			feedbacks: this.feedbacksModel
+			feedbacks: this.feedbacksModel,
+			categoriesModel: this.categoriesModel,
+			posts: this.postsModel,
+			votes: this.votesModel
 		};
 	}
 

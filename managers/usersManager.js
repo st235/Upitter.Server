@@ -27,7 +27,16 @@ class UsersManager {
 			.usersModel
 			.findOne({ socialId: userData.socialId })
 			.exec()
-			.then(user => !user ? this.create(userData) : user);
+			.then(user => {
+				if (!user && userData.email) {
+					return this
+						.usersModel
+						.findOne({ email: userData.email }).exec()
+						.then(userModel => !userModel ? this.create(userData) : userModel);
+				} else {
+					return user;
+				}
+			});
 	}
 
 
@@ -44,7 +53,16 @@ class UsersManager {
 			.usersModel
 			.findOne({ socialId: userData.socialId })
 			.exec()
-			.then(user => !user ? this.create(userData) : user);
+			.then(user => {
+				if (!user && userData.email) {
+					return this
+						.usersModel
+						.findOne({ email: userData.email }).exec()
+						.then(userModel => !userModel ? this.create(userData) : userModel);
+				} else {
+					return user;
+				}
+			});
 	}
 
 	twitterCheckExistence(data) {
@@ -59,7 +77,16 @@ class UsersManager {
 			.usersModel
 			.findOne({ socialId: userData.socialId })
 			.exec()
-			.then(user => !user ? this.create(userData) : user);
+			.then(user => {
+				if (!user && userData.email) {
+					return this
+						.usersModel
+						.findOne({ email: userData.email }).exec()
+						.then(userModel => !userModel ? this.create(userData) : userModel);
+				} else {
+					return user;
+				}
+			});
 	}
 
 	create(data) {
