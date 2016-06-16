@@ -13,6 +13,9 @@ const feedbacsModel = require('../models/feedbaksModel');
 const categoriesModel = require('../models/categoriesModel');
 const postsModel = require('../models/postsModel');
 const votesModel = require('../models/votesModel');
+const notificationsModel = require('../models/notificationsModel');
+const mediaModel = require('../models/mediaModel');
+const coordinatesModel = require('../models/coordinatesModel');
 
 const UsersManager = require('../managers/usersManager');
 const LogsManager = require('../managers/logsManager');
@@ -31,6 +34,9 @@ class AppDatabase {
 		this.categoriesModel = categoriesModel(mongoose);
 		this.postsModel = postsModel(mongoose);
 		this.votesModel = votesModel(mongoose);
+		this.notificationsModel = notificationsModel(mongoose);
+		this.mediaModel = mediaModel(mongoose);
+		this.coordinatesModel = coordinatesModel(mongoose);
 
 		this.usersManager = new UsersManager(this.usersModel);
 		this.logsManager = new LogsManager(this.logsModel);
@@ -60,7 +66,10 @@ class AppDatabase {
 			feedbacks: this.feedbacksModel,
 			categoriesModel: this.categoriesModel,
 			posts: this.postsModel,
-			votes: this.votesModel
+			votes: this.votesModel,
+			notifications: this.notificationsModel,
+			media: this.mediaModel,
+			coordinates: this.coordinatesModel
 		};
 	}
 

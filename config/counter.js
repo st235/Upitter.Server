@@ -22,5 +22,13 @@ module.exports = {
 	notifications: {
 		name: 'Notifications',
 		defaultIndex: 0
+	},
+	media: {
+		name: 'Media',
+		defaultIndex: 0
+	},
+	coordinates: {
+		name: 'Coords',
+		defaultIndex: 0
 	}
 };
