@@ -18,8 +18,7 @@ module.exports = mongoose => {
 			required: true
 		},
 		createdDate: {
-			type: Date,
-			default: Date.now()
+			type: Date
 		},
 		resolved: {
 			type: Boolean,

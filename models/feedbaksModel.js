@@ -16,8 +16,7 @@ module.exports = mongoose => {
 			type: String
 		},
 		createdDate: {
-			type: Date,
-			default: Date.now()
+			type: Date
 		}
 	});
 

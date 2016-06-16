@@ -8,7 +8,7 @@ class LogsManager {
 	}
 
 	trySave(logId, systemType, log) {
-		const data = { logId, systemType, log };
+		const data = { logId, systemType, log, createdDate: Date.now() };
 
 		return this
 			.logsModel

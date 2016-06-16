@@ -8,29 +8,40 @@ module.exports = mongoose => {
 			type: Number,
 			unique: true
 		},
+		nickname: {
+			type: String,
+			sparse: true,
+			required: true
+		},
+		name: {
+			type: String
+		},
+		surname: {
+			type: String
+		},
 		email: {
 			type: String,
 			sparse: true,
 			unique: true
 		},
-		name: {
-			type: String,
-			sparse: true,
-			required: true
+		sex: {
+			type: Number
 		},
 		picture: {
 			type: String
 		},
-		socialIds: {
-			google: {
-				type: String
-			},
-			facebook: {
-				type: String
-			},
-			twitter: {
-				type: String
-			}
+		isVerify: {
+			type: Boolean
+		},
+		subscriptions: {
+			type: [String]
+		},
+		createdDate: {
+			type: Date
+		},
+		socialId: {
+			type: String,
+			unique: true
 		}
 	});
 

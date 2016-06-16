@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('underscore');
 
 class UsersManager {
 	constructor(usersModel) {
@@ -14,9 +13,12 @@ class UsersManager {
 
 	googleCheckExistence(json) {
 		const data = JSON.parse(json);
-		const userData = _.pick(data, 'email', 'name', 'picture');
-		userData.socialIds = {
-			google: userData.email
+		const userData = {
+			email: data.email,
+			picture: data.picture,
+			nickname: data.name,
+			createdDate: Date.now(),
+			socialIds: `google_${data.email}`
 		};
 
 		return this
@@ -29,10 +31,13 @@ class UsersManager {
 
 	facebookCheckExistence(json) {
 		const data = JSON.parse(json);
-		const userData = _.pick(data, 'email', 'name');
-		userData.socialIds = {
-			facebook: data.id
+		const userData = {
+			email: data.email,
+			nickname: data.name,
+			createdDate: Date.now(),
+			socialIds: `facebook_${data.id}`
 		};
+
 		return this
 			.usersModel
 			.findOne({ 'socialIds.facebook': userData.socialIds.facebook })
@@ -41,10 +46,13 @@ class UsersManager {
 	}
 
 	twitterCheckExistence(data) {
-		const userData = _.pick(data, 'email', 'name');
-		userData.socialIds = {
-			twitter: data.id
+		const userData = {
+			email: data.email,
+			nickname: data.name,
+			createdDate: Date.now(),
+			socialIds: `twitter_${data.id}`
 		};
+
 		return this
 			.usersModel
 			.findOne({ 'socialIds.twitter': userData.socialIds.twitter })

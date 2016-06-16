@@ -8,7 +8,7 @@ class FeedbacksManager {
 	}
 
 	trySave(userId, message) {
-		const data = { userId, message };
+		const data = { userId, message, createdDate: Date.now() };
 		const feedback = new this.feedbacksModel(data);
 		return feedback.save();
 	}
