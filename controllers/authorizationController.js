@@ -111,14 +111,16 @@ class AuthorizationController extends BaseController {
 
 	twitterVerify(req, res) {
 		const data = req.body;
-		if (this.verify(data, 'secret')) this.error(res, 'Malformed');
+		if (this.verify(data, 'secret') || this.verify(data, 'token')) this.error(res, 'Malformed');
 
+		console.log(data);
 		let userModel = null;
 
 		socialRequestUtils
-			.getTwitter(req.body.token, data.secret)
+			.getTwitter(data.token, data.secret)
 			.then(this.userManager.twitterCheckExistence)
 			.then(user => {
+				console.log(user);
 				userModel = user;
 				return userModel;
 			})

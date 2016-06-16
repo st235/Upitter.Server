@@ -78,14 +78,13 @@ class UsersManager {
 			.findOne({ socialId: userData.socialId })
 			.exec()
 			.then(user => {
-				if (!user && userData.email) {
-					return this
+				if (user) return user;
+
+				return this
 						.usersModel
-						.findOne({ email: userData.email }).exec()
+						.findOne({ email: userData.email })
+						.exec()
 						.then(userModel => !userModel ? this.create(userData) : userModel);
-				} else {
-					return user;
-				}
 			});
 	}
 
