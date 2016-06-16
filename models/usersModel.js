@@ -31,7 +31,8 @@ module.exports = mongoose => {
 			type: String
 		},
 		isVerify: {
-			type: Boolean
+			type: Boolean,
+			default: false
 		},
 		subscriptions: {
 			type: [String]

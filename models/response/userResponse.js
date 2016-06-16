@@ -3,10 +3,16 @@
 module.exports = user => {
 	const userResponse = {
 		customId: user.customId,
-		name: user.name
+		nickname: user.nickname,
+		isVerify: user.isVerify
 	};
 
+	if (user.name) userResponse.name = user.name;
+	if (user.surname) userResponse.surname = user.surname;
+	if (user.email) userResponse.accessToken = user.email;
+	if (user.sex) userResponse.sex = user.sex;
 	if (user.picture) userResponse.picture = user.picture;
+	if (user.subscriptions) userResponse.subscriptions = user.subscriptions;
 	if (user.token) userResponse.accessToken = user.token;
 
 	return userResponse;
