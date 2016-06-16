@@ -73,7 +73,7 @@ class AuthorizationController extends BaseController {
 			.get(TokenInfo.google, { id_token: data.tokenId })
 			.then(this.userManager.googleCheckExistence)
 			.then(user => {
-				userModel = _.pick(user, 'customId', 'email', 'name', 'picture');
+				userModel = user;
 				return userModel;
 			})
 			.then(user => tokenUtils.createToken(this.authorizationClient, user.customId))
@@ -96,7 +96,7 @@ class AuthorizationController extends BaseController {
 			.get(TokenInfo.facebook, { access_token: data.accessToken })
 			.then(this.userManager.facebookCheckExistence)
 			.then(user => {
-				userModel = _.pick(user, 'customId', 'email', 'name', 'picture');
+				userModel = user;
 				return userModel;
 			})
 			.then(user => tokenUtils.createToken(this.authorizationClient, user.customId))
@@ -119,7 +119,7 @@ class AuthorizationController extends BaseController {
 			.getTwitter(req.body.token, data.secret)
 			.then(this.userManager.twitterCheckExistence)
 			.then(user => {
-				userModel = _.pick(user, 'customId', 'email', 'name', 'picture');
+				userModel = user;
 				return userModel;
 			})
 			.then(user => tokenUtils.createToken(this.authorizationClient, user.customId))

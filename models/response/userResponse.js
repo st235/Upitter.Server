@@ -14,5 +14,6 @@ module.exports = user => {
 	if (user.picture) userResponse.picture = user.picture;
 	if (user.subscriptions) userResponse.subscriptions = user.subscriptions;
 	if (user.token) userResponse.accessToken = user.token;
+
 	return userResponse;
 };

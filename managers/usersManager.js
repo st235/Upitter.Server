@@ -20,12 +20,12 @@ class UsersManager {
 			picture: data.picture,
 			nickname: data.name,
 			createdDate: Date.now(),
-			socialIds: `google_${data.email}`
+			socialId: `google_${data.email}`
 		};
 
 		return this
 			.usersModel
-			.findOne({ 'socialIds.google': userData.socialIds.google })
+			.findOne({ socialId: userData.socialId })
 			.exec()
 			.then(user => !user ? this.create(userData) : user);
 	}
@@ -37,12 +37,12 @@ class UsersManager {
 			email: data.email,
 			nickname: data.name,
 			createdDate: Date.now(),
-			socialIds: `facebook_${data.id}`
+			socialId: `facebook_${data.id}`
 		};
 
 		return this
 			.usersModel
-			.findOne({ 'socialIds.facebook': userData.socialIds.facebook })
+			.findOne({ socialId: userData.socialId })
 			.exec()
 			.then(user => !user ? this.create(userData) : user);
 	}
@@ -52,12 +52,12 @@ class UsersManager {
 			email: data.email,
 			nickname: data.name,
 			createdDate: Date.now(),
-			socialIds: `twitter_${data.id}`
+			socialId: `twitter_${data.id}`
 		};
 
 		return this
 			.usersModel
-			.findOne({ 'socialIds.twitter': userData.socialIds.twitter })
+			.findOne({ socialId: userData.socialId })
 			.exec()
 			.then(user => !user ? this.create(userData) : user);
 	}
