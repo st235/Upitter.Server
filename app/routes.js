@@ -13,6 +13,7 @@ const LogsController = require('../controllers/logsController');
 const FeedbacksController = require('../controllers/feedbacksController');
 const UsersController = require('../controllers/usersController');
 const PostsController = require('../controllers/postsController');
+const CommentController = require('../controllers/commentsController');
 
 class AppRoutes {
 	constructor(app, managers) {
@@ -27,6 +28,7 @@ class AppRoutes {
 		this.feedbacksController = new FeedbacksController(managers.feedbacks);
 		this.usersController = new UsersController(managers.users);
 		this.postsController = new PostsController(managers.posts);
+		this.commentsController = new CommentController(managers.comments);
 
 		this.register = this.register.bind(this);
 		this.registerHeader = this.registerHeader.bind(this);
@@ -43,6 +45,7 @@ class AppRoutes {
 		this.registerFeedbacks(this.app, routesConfig.support, this.feedbacksController);
 		this.registerUsers(this.app, routesConfig.user, this.usersController);
 		this.registerPosts(this.app, routesConfig.post, this.postsController);
+		this.registerComments(this.app, routesConfig.comment, this.commentsController);
 		this.registerFooter(this.app);
 	}
 
@@ -83,6 +86,12 @@ class AppRoutes {
 	registerPosts(app, paths, controller) {
 		app.post(paths.create, controller.create);
 		app.post(paths.edit, controller.edit);
+		app.get(paths.remove, controller.remove);
+		app.get(paths.obtain, controller.obtain);
+	}
+
+	registerComments(app, paths, controller) {
+		app.post(paths.create, this.checkAuthorization, controller.create);
 		app.get(paths.remove, controller.remove);
 		app.get(paths.obtain, controller.obtain);
 	}

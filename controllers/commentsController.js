@@ -2,13 +2,12 @@
 
 const BaseController = require('./baseController');
 
-class PostsController extends BaseController {
-	constructor(postsManager) {
+class CommentsController extends BaseController {
+	constructor(commentsManager) {
 		super();
-		this.postsManager = postsManager;
+		this.commentsManager = commentsManager;
 
 		this.create = this.create.bind(this);
-		this.edit = this.edit.bind(this);
 		this.remove = this.remove.bind(this);
 		this.obtain = this.obtain.bind(this);
 	}
@@ -17,19 +16,9 @@ class PostsController extends BaseController {
 		const body = req.body;
 
 		this
-			.postsManager
-			.create(body)
-			.then(post => this.success(res, post))
-			.catch(Error => this.error(res, Error));
-	}
-
-	edit(req, res) {
-		const body = req.body;
-
-		this
-			.postsManager
-			.edit(body.customId, body)
-			.then(post => this.success(res, post))
+			.commentsManager
+			.create(req.userId, body)
+			.then(comment => this.success(res, comment))
 			.catch(Error => this.error(res, Error));
 	}
 
@@ -37,7 +26,7 @@ class PostsController extends BaseController {
 		const postId = req.query.customId;
 
 		this
-			.postsManager
+			.commentsManager
 			.remove(postId)
 			.then(removedId => this.success(res, removedId))
 			.catch(Error => this.error(res, Error));
@@ -47,11 +36,11 @@ class PostsController extends BaseController {
 		const query = req.query;
 
 		this
-			.postsManager
+			.commentsManager
 			.obtain(query.limit, query.offset)
-			.then(posts => this.success(res, posts))
+			.then(comments => this.success(res, comments))
 			.catch(Error => this.error(res, Error));
 	}
 }
 
-module.exports = PostsController;
+module.exports = CommentsController;

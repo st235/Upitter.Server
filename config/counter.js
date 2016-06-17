@@ -30,5 +30,9 @@ module.exports = {
 	coordinates: {
 		name: 'Coords',
 		defaultIndex: 0
+	},
+	comments: {
+		name: 'Comments',
+		defaultIndex: 0
 	}
 };

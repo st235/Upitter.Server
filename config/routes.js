@@ -23,5 +23,10 @@ module.exports = {
 		remove: '/post/remove',
 		like: '/post/like',
 		comment: '/post/comment'
+	},
+	comment: {
+		obtain: '/comments',
+		create: '/comment/create',
+		remove: '/comment/remove'
 	}
 };

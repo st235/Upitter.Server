@@ -21,8 +21,8 @@ module.exports = mongoose => {
 		},
 		email: {
 			type: String,
-			sparse: true,
-			unique: true
+			unique: true,
+			sparse: true
 		},
 		sex: {
 			type: Number,

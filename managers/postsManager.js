@@ -17,7 +17,7 @@ class PostsManager {
 		data.createdDate = Date.now();
 		const post = new this.postsModel(data);
 		return post.save().then(post => {
-			if (!post) throw  new Error(500);
+			if (!post) throw new Error(500);
 			return postResponse(post);
 		});
 	}
@@ -30,10 +30,11 @@ class PostsManager {
 				if (!postModel) throw new Error(500);
 				data.updatedDate = Date.now();
 				_.extend(postModel, data);
-				return postModel.save().then(post => {
-					if (!post) throw new Error(500);
-					return postResponse(post);
-				});
+				return postModel.save();
+			})
+			.then(post => {
+				if (!post) throw new Error(500);
+				return postResponse(post);
 			});
 	}
 
@@ -41,12 +42,8 @@ class PostsManager {
 		return this
 			.postsModel
 			.findOneAndUpdate({ customId: postId }, { isRemoved: true }, { new: true })
-			.then(post => {
-				return post.save().then(post => {
-					if (!post) throw new Error(500);
-					return postResponse(post);
-				});
-			});
+			.then(post => post.save())
+			.then(post => post.customId);
 	}
 
 	obtain(limit = 20, offset) {
@@ -55,9 +52,7 @@ class PostsManager {
 			.getPosts(parseInt(limit), parseInt(offset))
 			.then(posts => {
 				if (!posts) throw new Error(500);
-				return _.map(posts, (post) => {
-					return postResponse(post);
-				});
+				return _.map(posts, (post) => postResponse(post));
 			});
 	}
 }
