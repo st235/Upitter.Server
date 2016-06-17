@@ -8,7 +8,7 @@ class FeedbacksManager {
 	}
 
 	trySave(userId, message) {
-		const data = { userId, message };
+		const data = { userId, message, createdDate: Date.now() };
 		const feedback = new this.feedbacksModel(data);
 		return feedback.save();
 	}
@@ -16,13 +16,15 @@ class FeedbacksManager {
 	getFeedbacks(limit = 20, offset) {
 		return this
 			.feedbacksModel
-			.getFeedbacks(limit, offset)
+			.getFeedbacks(parseInt(limit), parseInt(offset))
 			.then(feedbacks => {
 				if (!feedbacks) throw new Error(500);
-				return feedbacks;
+				return this.feedbacksModel.count().then(count => {
+					const oSet = count - offset - feedbacks.length;
+					return { offset: oSet, items: feedbacks };
+				});
 			});
 	}
-
 }
 
 module.exports = FeedbacksManager;

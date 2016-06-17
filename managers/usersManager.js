@@ -10,51 +10,98 @@ class UsersManager {
 		this.facebookCheckExistence = this.facebookCheckExistence.bind(this);
 		this.twitterCheckExistence = this.twitterCheckExistence.bind(this);
 		this.create = this.create.bind(this);
+		this.edit = this.edit.bind(this);
 	}
 
 	googleCheckExistence(json) {
 		const data = JSON.parse(json);
-		const userData = _.pick(data, 'email', 'name', 'picture');
-		userData.socialIds = {
-			google: userData.email
+		const userData = {
+			email: data.email,
+			picture: data.picture,
+			nickname: data.name,
+			createdDate: Date.now(),
+			socialId: `google_${data.email}`
 		};
 
 		return this
 			.usersModel
-			.findOne({ 'socialIds.google': userData.socialIds.google })
+			.findOne({ socialId: userData.socialId })
 			.exec()
-			.then(user => !user ? this.create(userData) : user);
+			.then(user => {
+				if (!user && userData.email) {
+					return this
+						.usersModel
+						.findOne({ email: userData.email }).exec()
+						.then(userModel => !userModel ? this.create(userData) : userModel);
+				} else {
+					return user;
+				}
+			});
 	}
 
 
 	facebookCheckExistence(json) {
 		const data = JSON.parse(json);
-		const userData = _.pick(data, 'email', 'name');
-		userData.socialIds = {
-			facebook: data.id
+		const userData = {
+			email: data.email,
+			nickname: data.name,
+			createdDate: Date.now(),
+			socialId: `facebook_${data.id}`
 		};
+
 		return this
 			.usersModel
-			.findOne({ 'socialIds.facebook': userData.socialIds.facebook })
+			.findOne({ socialId: userData.socialId })
 			.exec()
-			.then(user => !user ? this.create(userData) : user);
+			.then(user => {
+				if (!user && userData.email) {
+					return this
+						.usersModel
+						.findOne({ email: userData.email }).exec()
+						.then(userModel => !userModel ? this.create(userData) : userModel);
+				} else {
+					return user;
+				}
+			});
 	}
 
 	twitterCheckExistence(data) {
-		const userData = _.pick(data, 'email', 'name');
-		userData.socialIds = {
-			twitter: data.id
+		const userData = {
+			email: data.email,
+			nickname: data.name,
+			createdDate: Date.now(),
+			socialId: `twitter_${data.id}`
 		};
+
 		return this
 			.usersModel
-			.findOne({ 'socialIds.twitter': userData.socialIds.twitter })
+			.findOne({ socialId: userData.socialId })
 			.exec()
-			.then(user => !user ? this.create(userData) : user);
+			.then(user => {
+				if (user) return user;
+
+				return this
+						.usersModel
+						.findOne({ email: userData.email })
+						.exec()
+						.then(userModel => !userModel ? this.create(userData) : userModel);
+			});
 	}
 
 	create(data) {
 		const user = new this.usersModel(data);
 		return user.save();
+	}
+
+	edit(userId, data) {
+		return this
+			.usersModel
+			.findOne({ customId: userId })
+			.then(user => {
+				if (!user) throw new Error(500);
+				_.extend(user, data);
+				return user.save();
+		});
 	}
 }
 

@@ -16,7 +16,6 @@ class AuthorizationMiddleware {
 			.authorizationClient
 			.get(accessToken)
 			.then(userId => {
-				console.log(userId);
 				if (!userId) return next('UNAUTHORIZED');
 				req.userId = userId;
 				return next();

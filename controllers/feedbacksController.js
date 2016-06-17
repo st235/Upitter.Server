@@ -12,21 +12,18 @@ class FeedbacksController extends BaseController {
 	}
 
 	feedback(req, res) {
-		const body = req.body;
-		//TODO брать userId из accessToken
 		this
 			.feedbacksManager
-			.trySave(body.userId, body.message)
+			.trySave(req.userId, req.body.message)
 			.then(feedback => this.success(res, feedback))
 			.catch(error => this.error(res, error));
 	}
 
 	getFeedbacks(req, res) {
 		const query = req.query;
-
 		this
 			.feedbacksManager
-			.getFeedbacks(parseInt(query.limit), parseInt(query.offset))
+			.getFeedbacks(query.limit, query.offset)
 			.then(feedbacks => this.success(res, feedbacks))
 			.catch(error => this.error(res, error));
 	}

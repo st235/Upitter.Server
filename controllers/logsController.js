@@ -29,7 +29,7 @@ class LogsController extends BaseController {
 
 		this
 			.logsManager
-			.getLogs(parseInt(query.limit), parseInt(query.offset))
+			.getLogs(query.limit, query.offset)
 			.then(log => this.success(res, log))
 			.catch(error => this.error(res, error));
 	}
