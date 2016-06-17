@@ -17,6 +17,10 @@ class SMSService {
 		this.currentText = null;
 	}
 
+	setEnv(env) {
+		this.env = env;
+	}
+
 	addCode(code) {
 		this.currentCode = code;
 		return this;
@@ -37,25 +41,30 @@ class SMSService {
 		return this.providers[providerName];
 	}
 	
-	_isCodeValid(code) {
-		return '/^[0-9]{1, 8}$/'.test(code.toString());
+	_isCodeValid() {
+		return '/^[0-9]{1, 8}$/'.test(this.currentCode.toString());
 	}
 
-	_isNumberValid(number) {
-		return '/^[0-9]+$/'.test(code.toString());
+	_isNumberValid() {
+		return '/^[0-9]+$/'.test(this.currentNumber.toString());
 	}
 
 	_clear() {
-		this.currentNumberOptions = null;
 		this.currentCode = null;
 		this.currentNumber = null;
+		this.currentText = null;
 	}
 
 	sendSMS() {
 		//TODO: Обработка ошибок
 		return new Promise((resolve, reject) => {
+			if (this.env !== 'prod') {
+				console.log(this.currentText);
+				return resolve(this.currentText);
+			}
 			if (!this._isNumberValid()) return reject(new Error('Invalid number'));
-			const Provider = this._getValidProvider(this.currentNumberOptions.code);
+			if (!this._isCodeValid()) return reject(new Error('Invalid number'));
+			const Provider = this._getValidProvider(this.currentCode);
 			if (!provider) return reject(new Error('Country code is not supported'));
 			
 			const provider = Provider.init(
@@ -63,8 +72,10 @@ class SMSService {
 				this.currentNumber,
 				this.currentText
 			);
+
+			this._clear();
 			
-			
+			return provider.sendSMS();
 		});
 
 	}

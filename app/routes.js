@@ -11,7 +11,7 @@ const ErrorMiddleware = require('../controllers/middlewares/errorMiddleware');
 const AuthorizationController = require('../controllers/authorizationController');
 const LogsController = require('../controllers/logsController');
 const FeedbacksController = require('../controllers/feedbacksController');
-const UsersController = require('../controllers/usersController')
+const UsersController = require('../controllers/usersController');
 
 class AppRoutes {
 	constructor(app, managers) {
@@ -21,7 +21,7 @@ class AppRoutes {
 		this.obtainLanguage = new LanguageMiddleware().obtainLanguage;
 		this.errorHandler = new ErrorMiddleware();
 
-		this.authorizationController = new AuthorizationController(managers.authorization, managers.users);
+		this.authorizationController = new AuthorizationController(managers.authorization, managers.users, managers.businessUsers);
 		this.logsController = new LogsController(managers.logs);
 		this.feedbacksController = new FeedbacksController(managers.feedbacks);
 		this.usersController = new UsersController(managers.users);
@@ -61,6 +61,10 @@ class AppRoutes {
 		app.post(paths.googleVerify, controller.googleVerify);
 		app.post(paths.facebookVerify, controller.facebookVerify);
 		app.post(paths.twitterVerify, controller.twitterVerify);
+
+		app.post(paths.authorizeByPhone, controller.authorizeByPhone);
+		app.post(paths.verifyCode, controller.verifyCode);
+		app.post(paths.addInfo, controller.addInfo);
 	}
 
 	registerLogs(app, paths, controller) {

@@ -18,6 +18,7 @@ const mediaModel = require('../models/mediaModel');
 const coordinatesModel = require('../models/coordinatesModel');
 
 const UsersManager = require('../managers/usersManager');
+const BusinessUsersManager = require('../managers/businessUsersManager');
 const LogsManager = require('../managers/logsManager');
 const FeedbacksManager = require('../managers/feedbacksManager');
 
@@ -39,6 +40,7 @@ class AppDatabase {
 		this.coordinatesModel = coordinatesModel(mongoose);
 
 		this.usersManager = new UsersManager(this.usersModel);
+		this.businessUsersManager = new BusinessUsersManager(this.businessUserModel);
 		this.logsManager = new LogsManager(this.logsModel);
 		this.feedbacksManager = new FeedbacksManager(this.feedbacksModel);
 	}
@@ -52,6 +54,7 @@ class AppDatabase {
 	managers() {
 		return {
 			users: this.usersManager,
+			businessUsers: this.businessUsersManager,
 			logs: this.logsManager,
 			feedbacks: this.feedbacksManager
 		};

@@ -6,6 +6,7 @@ const AppRoutes = require('./routes');
 const AppDatabase = require('./database');
 
 const ErrorService = require('../services/errorService');
+const SMSService = require('../services/smsService');
 const RedisService = require('../services/redisService');
 const { mixedLogger } = require('../utils/loggerUtils');
 const redisConfig = require('../config/redis');
@@ -25,6 +26,7 @@ class AppServer {
 
 	init() {
 		ErrorService.init();
+		SMSService.setEnv('dev');
 		this.initRedis();
 	}
 

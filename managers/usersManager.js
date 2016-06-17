@@ -14,6 +14,7 @@ class UsersManager {
 	}
 
 	googleCheckExistence(json) {
+		//TODO Добавить try catch
 		const data = JSON.parse(json);
 		const userData = {
 			email: data.email,
@@ -41,6 +42,7 @@ class UsersManager {
 
 
 	facebookCheckExistence(json) {
+		//TODO Добавить try catch
 		const data = JSON.parse(json);
 		const userData = {
 			email: data.email,

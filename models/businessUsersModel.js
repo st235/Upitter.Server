@@ -38,6 +38,18 @@ module.exports = mongoose => {
 		},
 		createdDate: {
 			type: Date
+		},
+		phone: {
+			body: {
+				type: String
+			},
+			code: {
+				type: String
+			},
+			fullNumber: {
+				type: String,
+				unique: true
+			}
 		}
 	});
 

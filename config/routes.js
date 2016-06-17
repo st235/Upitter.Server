@@ -4,7 +4,11 @@ module.exports = {
 		refreshToken: '/authorization/token/refresh/:token',
 		googleVerify: '/authorization/google/verify',
 		facebookVerify: '/authorization/facebook/verify',
-		twitterVerify: '/authorization/twitter/verify'
+		twitterVerify: '/authorization/twitter/verify',
+
+		authorizeByPhone: '/authorization/phone/set/:number/:countryCode',
+		verifyCode: '/authorization/phone/verify/:number/:countryCode',
+		addInfo: '/authorization/phone/add_info/:number/:countryCode'
 	},
 	support: {
 		support: '/support',
