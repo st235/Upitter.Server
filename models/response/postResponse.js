@@ -3,6 +3,7 @@
 module.exports = post => {
 	const postResponse = {
 		customId: post.customId,
+		author: post.author,
 		title: post.title,
 		text: post.text,
 		createdDate: post.createdDate

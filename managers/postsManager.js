@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('underscore');
+const postResponse = require('../models/response/postResponse');
 
 class PostsManager {
 	constructor(postsModel) {
@@ -17,7 +18,7 @@ class PostsManager {
 		const post = new this.postsModel(data);
 		return post.save().then(post => {
 			if (!post) throw  new Error(500);
-			return post;
+			return postResponse(post);
 		});
 	}
 
@@ -31,7 +32,7 @@ class PostsManager {
 				_.extend(postModel, data);
 				return postModel.save().then(post => {
 					if (!post) throw new Error(500);
-					return post;
+					return postResponse(post);
 				});
 			});
 	}
@@ -43,7 +44,7 @@ class PostsManager {
 			.then(post => {
 				return post.save().then(post => {
 					if (!post) throw new Error(500);
-					return post;
+					return postResponse(post);
 				});
 			});
 	}
@@ -54,7 +55,9 @@ class PostsManager {
 			.getPosts(parseInt(limit), parseInt(offset))
 			.then(posts => {
 				if (!posts) throw new Error(500);
-				return posts;
+				return _.map(posts, (post) => {
+					return postResponse(post);
+				});
 			});
 	}
 }
