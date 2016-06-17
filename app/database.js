@@ -16,11 +16,14 @@ const votesModel = require('../models/votesModel');
 const notificationsModel = require('../models/notificationsModel');
 const mediaModel = require('../models/mediaModel');
 const coordinatesModel = require('../models/coordinatesModel');
+const commentsModel = require('../models/commentsModel');
 
 const UsersManager = require('../managers/usersManager');
 const BusinessUsersManager = require('../managers/businessUsersManager');
 const LogsManager = require('../managers/logsManager');
 const FeedbacksManager = require('../managers/feedbacksManager');
+const PostsManager = require('../managers/postsManager');
+const CommentsManager = require('../managers/commentsManager');
 
 class AppDatabase {
 	constructor() {
@@ -38,11 +41,14 @@ class AppDatabase {
 		this.notificationsModel = notificationsModel(mongoose);
 		this.mediaModel = mediaModel(mongoose);
 		this.coordinatesModel = coordinatesModel(mongoose);
+		this.commentsModel = commentsModel(mongoose);
 
 		this.usersManager = new UsersManager(this.usersModel);
 		this.businessUsersManager = new BusinessUsersManager(this.businessUserModel);
 		this.logsManager = new LogsManager(this.logsModel);
 		this.feedbacksManager = new FeedbacksManager(this.feedbacksModel);
+		this.postsManager = new PostsManager(this.postsModel);
+		this.commentsManager = new CommentsManager(this.commentsModel);
 	}
 
 	bind() {
@@ -56,7 +62,9 @@ class AppDatabase {
 			users: this.usersManager,
 			businessUsers: this.businessUsersManager,
 			logs: this.logsManager,
-			feedbacks: this.feedbacksManager
+			feedbacks: this.feedbacksManager,
+			posts: this.postsManager,
+			comments: this.commentsManager
 		};
 	}
 
@@ -72,7 +80,8 @@ class AppDatabase {
 			votes: this.votesModel,
 			notifications: this.notificationsModel,
 			media: this.mediaModel,
-			coordinates: this.coordinatesModel
+			coordinates: this.coordinatesModel,
+			comments: this.commentsModel
 		};
 	}
 

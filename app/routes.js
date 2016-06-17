@@ -12,6 +12,8 @@ const AuthorizationController = require('../controllers/authorizationController'
 const LogsController = require('../controllers/logsController');
 const FeedbacksController = require('../controllers/feedbacksController');
 const UsersController = require('../controllers/usersController');
+const PostsController = require('../controllers/postsController');
+const CommentController = require('../controllers/commentsController');
 
 class AppRoutes {
 	constructor(app, managers) {
@@ -21,10 +23,12 @@ class AppRoutes {
 		this.obtainLanguage = new LanguageMiddleware().obtainLanguage;
 		this.errorHandler = new ErrorMiddleware();
 
-		this.authorizationController = new AuthorizationController(managers.authorization, managers.users, managers.businessUsers);
+		this.authorizationController = new AuthorizationController(managers.users, managers.businessUsers);
 		this.logsController = new LogsController(managers.logs);
 		this.feedbacksController = new FeedbacksController(managers.feedbacks);
 		this.usersController = new UsersController(managers.users);
+		this.postsController = new PostsController(managers.posts);
+		this.commentsController = new CommentController(managers.comments);
 
 		this.register = this.register.bind(this);
 		this.registerHeader = this.registerHeader.bind(this);
@@ -40,6 +44,8 @@ class AppRoutes {
 		this.registerLogs(this.app, routesConfig.support, this.logsController);
 		this.registerFeedbacks(this.app, routesConfig.support, this.feedbacksController);
 		this.registerUsers(this.app, routesConfig.user, this.usersController);
+		this.registerPosts(this.app, routesConfig.post, this.postsController);
+		this.registerComments(this.app, routesConfig.comment, this.commentsController);
 		this.registerFooter(this.app);
 	}
 
@@ -79,6 +85,19 @@ class AppRoutes {
 
 	registerUsers(app, paths, controller) {
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
+	}
+
+	registerPosts(app, paths, controller) {
+		app.post(paths.create, controller.create);
+		app.post(paths.edit, controller.edit);
+		app.get(paths.remove, controller.remove);
+		app.get(paths.obtain, controller.obtain);
+	}
+
+	registerComments(app, paths, controller) {
+		app.post(paths.create, this.checkAuthorization, controller.create);
+		app.get(paths.remove, controller.remove);
+		app.get(paths.obtain, controller.obtain);
 	}
 }
 

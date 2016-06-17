@@ -13,11 +13,12 @@ class UsersManager {
 		this.edit = this.edit.bind(this);
 	}
 
+	//TODO Объединить 3 метода в 1
+
 	googleCheckExistence(json) {
 		//TODO Добавить try catch
 		const data = JSON.parse(json);
 		const userData = {
-			email: data.email,
 			picture: data.picture,
 			nickname: data.name,
 			createdDate: Date.now(),
@@ -28,24 +29,13 @@ class UsersManager {
 			.usersModel
 			.findOne({ socialId: userData.socialId })
 			.exec()
-			.then(user => {
-				if (!user && userData.email) {
-					return this
-						.usersModel
-						.findOne({ email: userData.email }).exec()
-						.then(userModel => !userModel ? this.create(userData) : userModel);
-				} else {
-					return user;
-				}
-			});
+			.then(user => !user ? this.create(userData) : user);
 	}
-
 
 	facebookCheckExistence(json) {
 		//TODO Добавить try catch
 		const data = JSON.parse(json);
 		const userData = {
-			email: data.email,
 			nickname: data.name,
 			createdDate: Date.now(),
 			socialId: `facebook_${data.id}`
@@ -55,21 +45,11 @@ class UsersManager {
 			.usersModel
 			.findOne({ socialId: userData.socialId })
 			.exec()
-			.then(user => {
-				if (!user && userData.email) {
-					return this
-						.usersModel
-						.findOne({ email: userData.email }).exec()
-						.then(userModel => !userModel ? this.create(userData) : userModel);
-				} else {
-					return user;
-				}
-			});
+			.then(user => !user ? this.create(userData) : user);
 	}
 
 	twitterCheckExistence(data) {
 		const userData = {
-			email: data.email,
 			nickname: data.name,
 			createdDate: Date.now(),
 			socialId: `twitter_${data.id}`
@@ -79,15 +59,7 @@ class UsersManager {
 			.usersModel
 			.findOne({ socialId: userData.socialId })
 			.exec()
-			.then(user => {
-				if (user) return user;
-
-				return this
-						.usersModel
-						.findOne({ email: userData.email })
-						.exec()
-						.then(userModel => !userModel ? this.create(userData) : userModel);
-			});
+			.then(user => !user ? this.create(userData) : user);
 	}
 
 	create(data) {
