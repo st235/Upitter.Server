@@ -20,6 +20,7 @@ const coordinatesModel = require('../models/coordinatesModel');
 const UsersManager = require('../managers/usersManager');
 const LogsManager = require('../managers/logsManager');
 const FeedbacksManager = require('../managers/feedbacksManager');
+const PostsManager = require('../managers/postsManager');
 
 class AppDatabase {
 	constructor() {
@@ -41,6 +42,7 @@ class AppDatabase {
 		this.usersManager = new UsersManager(this.usersModel);
 		this.logsManager = new LogsManager(this.logsModel);
 		this.feedbacksManager = new FeedbacksManager(this.feedbacksModel);
+		this.postsManager = new PostsManager(this.postsModel);
 	}
 
 	bind() {
@@ -53,7 +55,8 @@ class AppDatabase {
 		return {
 			users: this.usersManager,
 			logs: this.logsManager,
-			feedbacks: this.feedbacksManager
+			feedbacks: this.feedbacksManager,
+			posts: this.postsManager
 		};
 	}
 

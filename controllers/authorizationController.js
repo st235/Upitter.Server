@@ -1,6 +1,5 @@
 'use strict';
 
-const _ = require('underscore');
 const ValidationGenerator = require('validatron');
 const userResponse = require('../models/response/userResponse');
 
@@ -14,7 +13,7 @@ const TokenInfo = require('../config/methods');
 
 
 class AuthorizationController extends BaseController {
-	constructor(authorizationManager, userManager) {
+	constructor(userManager) {
 		super();
 		socialRequestUtils.init();
 		this.authorizationClient = RedisService.getClientByName('authorizations');
@@ -40,7 +39,7 @@ class AuthorizationController extends BaseController {
 				if (!userId) return this.success(res, false);
 				this.success(res, true);
 			})
-			.catch(error => next('UNKNOWN_ERROR'));
+			.catch(() => next('UNKNOWN_ERROR'));
 	}
 
 	refreshToken(req, res, next) {

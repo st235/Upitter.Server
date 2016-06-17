@@ -6,7 +6,10 @@ module.exports = mongoose => {
 	const postsSchema = new Schema({
 		customId: {
 			type: String,
-			unique: true,
+			unique: true
+		},
+		author: {
+			type: String,
 			required: true
 		},
 		title: {
@@ -19,6 +22,10 @@ module.exports = mongoose => {
 		},
 		logoUrl: {
 			type: String
+		},
+		isRemoved: {
+			type: Boolean,
+			default: false
 		},
 		createdDate: {
 			type: Date
@@ -40,6 +47,10 @@ module.exports = mongoose => {
 			})
 			.catch(error => next(error));
 	});
+
+	postsSchema.statics.getPosts = function (limit, offset) {
+		return this.find({ isRemoved: false }).sort({ createdDate: -1 }).skip(offset).limit(limit).exec();
+	};
 
 	return mongoose.model('Posts', postsSchema);
 };

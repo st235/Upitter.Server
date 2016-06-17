@@ -15,5 +15,13 @@ module.exports = {
 	},
 	user: {
 		edit: '/user/edit'
+	},
+	post: {
+		obtain: '/posts',
+		create: '/post/create',
+		edit: '/post/edit',
+		remove: '/post/remove',
+		like: '/post/like',
+		comment: '/post/comment'
 	}
 };
