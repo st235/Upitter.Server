@@ -6,6 +6,9 @@
   "main": "bin/start",
   "author": "A.Dadukin & A.Pavlov & D.Zamyckov",
   "license": "ISC",
+  "scripts": {
+    "start": "node bin/start"
+  },
   "dependencies": {
     "body-parser": "^1.15.1",
     "default-locale": "^0.3.1",

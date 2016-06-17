@@ -24,8 +24,25 @@ class AppServer {
 	}
 
 	init() {
-		RedisService.init(redisConfig);
 		ErrorService.init();
+		this.initRedis();
+	}
+
+	initRedis() {
+		RedisService.init(redisConfig);
+
+		let i = 1;
+
+		while (true) {
+			const client = RedisService.getClientByDbNumber(i);
+			if (!client) break;
+
+			client.setConnectionHandler();
+			client.setErrorHandler();
+			client.setEndHandler();
+
+			i++;
+		}
 	}
 
 	start() {
