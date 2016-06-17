@@ -3,16 +3,16 @@
 const request = require('unirest');
 const crypto = require('crypto');
 const _ = require('underscore');
-const smsConfig = require('../config/smsProvider/sms16');
+const smsConfig = require('../../config/smsProvider/sms16');
 
 class SMS16Strategy {
 	_formSuccessResponse(response) {
-		console.log(response);
+		this._clear();
 		return response;
 	}
 
 	_formErrorResponse(error) {
-		console.log(error);
+		this._clear();
 		throw error;
 	}
 
@@ -93,6 +93,7 @@ class SMS16Strategy {
 				.strictSSL(false)
 				.set('Accept', 'application/json')
 				.end(function (res) {
+					this._clear();
 					if (error) {
 						return reject(error);
 					} else if (res.body && res.body.error) {
@@ -112,3 +113,5 @@ class SMS16Strategy {
 			.catch(this._formErrorResponse);
 	}
 }
+
+module.exports = SMS16Strategy;

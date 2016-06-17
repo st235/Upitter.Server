@@ -3,7 +3,7 @@
 const countryCodesConfig = require('../config/countryCodes');
 
 // SMSProviderStrategies
-const sms16  = require('../smsProviders/sms16Strategy');
+const sms16  = require('smsProviders/sms16Strategy');
 
 class SMSService {
 	static init(providers) {
