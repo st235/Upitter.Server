@@ -229,7 +229,6 @@ class AuthorizationController extends BaseController {
 							fullNumber: phone
 						}
 					}));
-
 			})
 			.catch(error => this.error(res, error));
 	}
