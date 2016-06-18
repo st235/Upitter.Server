@@ -1,9 +1,9 @@
 'use strict';
 
-const ValidationGenerator = require('validatron');
 const userResponse = require('../models/response/userResponse');
 
 const BaseController = require('./baseController');
+const ValidationService = require('../services/validationService');
 const RequestService = require('../services/requestService');
 const RedisService = require('../services/redisService');
 const SMSService = require('../services/smsService');
@@ -19,7 +19,7 @@ class AuthorizationController extends BaseController {
 		super();
 		socialRequestUtils.init();
 		this.authorizationClient = RedisService.getClientByName('authorizations');
-		this.validationService = ValidationGenerator.createValidator({});
+		this.validationService = ValidationService;
 
 		this.userManager = userManager;
 		this.businessUserManager = businessUserManager;
@@ -30,6 +30,10 @@ class AuthorizationController extends BaseController {
 		this.googleVerify = this.googleVerify.bind(this);
 		this.facebookVerify = this.facebookVerify.bind(this);
 		this.twitterVerify = this.twitterVerify.bind(this);
+
+		this.authorizeByPhone = this.authorizeByPhone.bind(this);
+		this.verifyCode = this.verifyCode.bind(this);
+		this.addInfo = this.addInfo.bind(this);
 	}
 
 	verifyToken(req, res, next) {
@@ -138,7 +142,8 @@ class AuthorizationController extends BaseController {
 		const invalid = this.validationService
 			.init(req.body, req.query, req.params)
 			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
-			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8);
+			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
+			.validate();
 
 		if (invalid) return this.error(res, invalid);
 		
@@ -163,7 +168,8 @@ class AuthorizationController extends BaseController {
 			.init(req.body, req.query, req.params)
 			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
-			.add('code').should.exist().and.have.type('Number');
+			.add('code').should.exist().and.have.type('Number')
+			.validate();
 		
 		if (invalid) return this.error(res, invalid);
 		
@@ -202,7 +208,8 @@ class AuthorizationController extends BaseController {
 			.add('temporaryToken').should.exist().and.have.type('String')
 			.add('name').should.exist().and.have.type('Number').and.be.in.rangeOf(2, 25)
 			.add('coord').should.exist().and.have.type('Array').and.be.in.rangeOf(2, 2)
-			.add('category').should.exist().and.have.type('String').and.be.in.rangeOf(3, 20);
+			.add('category').should.exist().and.have.type('String').and.be.in.rangeOf(3, 20)
+			.validate();
 
 		if (invalid) return this.error(res, invalid);
 

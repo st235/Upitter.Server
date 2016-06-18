@@ -27,16 +27,13 @@ after(done => {
 });
 
 describe('Testing business account authorization', () => {
-	
 	describe('Set phone number', () => {
 		it('should be okey', done => {
 			request(baseUrl)
-				.get(` /authorization/phone/set/:number/:countryCode}`)
-				.expect('Content-Type', /json/)
+				.post(`/authorization/phone/set/9805117625/7`)
+				// .expect('Content-Type', /json/)
 				.expect(200)
 				.end(function(err, res) {
-					console.log(err);
-					console.log(res);
 					if (err) throw err;
 					done();
 				});
