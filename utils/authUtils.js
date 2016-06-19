@@ -20,7 +20,7 @@ module.exports = {
 
 		return authorizationClient
 			.set(phone, serializedModel)
-			.then(() => authorizationClient.expire(token, TEMPORARY_MODEL_EXPIRE_DATE))
+			.then(() => authorizationClient.expire(phone, TEMPORARY_MODEL_EXPIRE_DATE))
 			.then(() => model);
 	},
 

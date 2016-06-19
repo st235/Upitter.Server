@@ -59,6 +59,7 @@ class SMSService {
 		//TODO: Обработка ошибок
 		return new Promise((resolve, reject) => {
 			if (this.env !== 'prod') {
+				console.log(this.currentText);
 				return resolve(this.currentText);
 			}
 			if (!this._isNumberValid()) return reject(new Error('Invalid number'));

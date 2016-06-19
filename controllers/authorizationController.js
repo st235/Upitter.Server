@@ -168,7 +168,7 @@ class AuthorizationController extends BaseController {
 			.init(req.body, req.query, req.params)
 			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
-			.add('code').should.exist().and.have.type('Number')
+			.add('code').should.exist().and.have.type('String')
 			.validate();
 		
 		if (invalid) return this.error(res, invalid);
@@ -201,12 +201,13 @@ class AuthorizationController extends BaseController {
 
 	addInfo(req, res) {
 		//TODO: Добавить в валидатрон метод length с четким указанием длинны
+		//TODO: Добавить в валидатрон метод should.be.containedBy('body'/'query'/'params')
 		const invalid = this.validationService
 			.init(req.body, req.query, req.params)
 			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
 			.add('temporaryToken').should.exist().and.have.type('String')
-			.add('name').should.exist().and.have.type('Number').and.be.in.rangeOf(2, 25)
+			.add('name').should.exist().and.have.type('String').and.be.in.rangeOf(2, 25)
 			.add('coord').should.exist().and.have.type('Array').and.be.in.rangeOf(2, 2)
 			.add('category').should.exist().and.have.type('String').and.be.in.rangeOf(3, 20)
 			.validate();
@@ -226,7 +227,7 @@ class AuthorizationController extends BaseController {
 				if (model.temporaryToken !== temporaryToken) return this.error(res, 'Supplied token is invalid');
 
 				return this.businessUserManager.checkIfExists(phone)
-					.then(this.businessUserManager.create({
+					.then(() => this.businessUserManager.create({
 						//TODO: проверка категории на существование в нашем списке
 						name,
 						activity: category,
@@ -236,7 +237,8 @@ class AuthorizationController extends BaseController {
 							fullNumber: phone
 						}
 					}));
-			}).then(user => authUtils.createToken(this.authorizationClient, user.customId))
+			})
+			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
 			.then(token => this.success(res, { token }))
 			.catch(error => this.error(res, error));
 	}
