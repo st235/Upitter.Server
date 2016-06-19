@@ -1,10 +1,10 @@
 'use strict';
 
-class FeedbacksManager {
-	constructor(feedbacksModel) {
-		this.feedbacksModel = feedbacksModel;
+class FeedbackManager {
+	constructor(feedbackModel) {
+		this.feedbacksModel = feedbackModel;
 		this.trySave = this.trySave.bind(this);
-		this.getFeedbacks = this.getFeedbacks.bind(this);
+		this.getFeedback = this.getFeedback.bind(this);
 	}
 
 	trySave(userId, message) {
@@ -13,18 +13,21 @@ class FeedbacksManager {
 		return feedback.save();
 	}
 
-	getFeedbacks(limit = 20, offset) {
+	getFeedback(limit = 20, offset) {
 		return this
 			.feedbacksModel
-			.getFeedbacks(parseInt(limit), parseInt(offset))
-			.then(feedbacks => {
-				if (!feedbacks) throw new Error(500);
-				return this.feedbacksModel.count().then(count => {
-					const oSet = count - offset - feedbacks.length;
-					return { offset: oSet, items: feedbacks };
-				});
+			.getFeedback(parseInt(limit, 10), parseInt(offset, 10))
+			.then(feedback => {
+				if (!feedback) throw new Error(500);
+				return this
+					.feedbacksModel
+					.count()
+					.then(count => {
+						const oSet = count - offset - feedback.length;
+						return { offset: oSet, items: feedback };
+					});
 			});
 	}
 }
 
-module.exports = FeedbacksManager;
+module.exports = FeedbackManager;

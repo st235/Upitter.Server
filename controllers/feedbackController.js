@@ -8,7 +8,7 @@ class FeedbackController extends BaseController {
 		this.feedbacksManager = feedbackManager;
 
 		this.feedback = this.feedback.bind(this);
-		this.getFeedbacks = this.getFeedbacks.bind(this);
+		this.getFeedback = this.getFeedback.bind(this);
 	}
 
 	feedback(req, res) {
@@ -23,7 +23,7 @@ class FeedbackController extends BaseController {
 		const query = req.query;
 		this
 			.feedbacksManager
-			.getFeedbacks(query.limit, query.offset)
+			.getFeedback(query.limit, query.offset)
 			.then(feedback => this.success(res, feedback))
 			.catch(error => this.error(res, error));
 	}
