@@ -193,7 +193,7 @@ class AuthorizationController extends BaseController {
 				model.code = null;
 				model.attempts = null;
 				return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
-					.then(model => this.success(res, { temporaryToken }));
+					.then(model => this.success(res, { temporaryToken: model.temporaryToken }));
 
 			})
 			.catch(error => this.error(res, error));
@@ -236,7 +236,8 @@ class AuthorizationController extends BaseController {
 							fullNumber: phone
 						}
 					}));
-			})
+			}).then(user => authUtils.createToken(this.authorizationClient, user.customId))
+			.then(token => this.success(res, { token }))
 			.catch(error => this.error(res, error));
 	}
 

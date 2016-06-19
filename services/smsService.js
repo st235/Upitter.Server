@@ -42,11 +42,11 @@ class SMSService {
 	}
 	
 	_isCodeValid() {
-		return '/^[0-9]{1, 8}$/'.test(this.currentCode.toString());
+		return /^[0-9]{1,8}$/.test(this.currentCode.toString());
 	}
 
 	_isNumberValid() {
-		return '/^[0-9]+$/'.test(this.currentNumber.toString());
+		return /^[0-9]+$/.test(this.currentNumber.toString());
 	}
 
 	_clear() {
@@ -59,13 +59,12 @@ class SMSService {
 		//TODO: Обработка ошибок
 		return new Promise((resolve, reject) => {
 			if (this.env !== 'prod') {
-				console.log(this.currentText);
 				return resolve(this.currentText);
 			}
 			if (!this._isNumberValid()) return reject(new Error('Invalid number'));
 			if (!this._isCodeValid()) return reject(new Error('Invalid number'));
 			const Provider = this._getValidProvider(this.currentCode);
-			if (!provider) return reject(new Error('Country code is not supported'));
+			if (!Provider) return reject(new Error('Country code is not supported'));
 			
 			const provider = Provider.init(
 				this.currentCode,
