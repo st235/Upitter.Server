@@ -21,15 +21,19 @@ class LogsManager {
 	}
 
 	getLogs(limit = 20, offset) {
+		let logsObject;
+
 		return this
 			.logsModel
-			.getLogs(parseInt(limit), parseInt(offset))
+			.getLogs(parseInt(limit, 10), parseInt(offset, 10))
 			.then(logs => {
 				if (!logs) throw new Error(500);
-				return this.logsModel.count().then(count => {
-					const oSet = count - offset - logs.length;
-					return { offset: oSet, items: logs };
-				});
+				logsObject = logs;
+				return this.logsModel.count();
+			})
+			.then(count => {
+				const oSet = count - offset - logsObject.length;
+				return { offset: oSet, items: logsObject };
 			});
 	}
 }

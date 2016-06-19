@@ -1,5 +1,3 @@
 'use strict';
-const ApplicationServer = require('../app/server');
-const applicationServer = new ApplicationServer();
-
+const applicationServer = require('../app/server');
 applicationServer.start();

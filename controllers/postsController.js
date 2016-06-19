@@ -4,9 +4,11 @@ const BaseController = require('./baseController');
 
 class PostsController extends BaseController {
 	constructor(postsManager) {
-		super();
-		this.postsManager = postsManager;
+		super({ postsManager });
+	}
 
+	_onBind() {
+		super._onBind();
 		this.create = this.create.bind(this);
 		this.edit = this.edit.bind(this);
 		this.remove = this.remove.bind(this);

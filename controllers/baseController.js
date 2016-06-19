@@ -1,10 +1,10 @@
 'use strict';
 
-const { mixedLogger } = require('../utils/loggerUtils');
+const AppUnit = require('../app/unit');
 const domainConfig = require('../config/domain');
 
-class BaseController {
-	constructor() {
+class BaseController extends AppUnit {
+	_onBind() {
 		this.error = this.error.bind(this);
 		this.publish = this.publish.bind(this);
 		this.success = this.success.bind(this);

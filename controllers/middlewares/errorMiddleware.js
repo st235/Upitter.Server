@@ -5,9 +5,8 @@ const ErrorService = require('../../services/errorService');
 const { mixedLogger } = require('../../utils/loggerUtils');
 
 class ErrorMiddleware extends BaseController {
-	constructor() {
-		super();
-
+	_onBind() {
+		super._onBind();
 		this.handleError = this.handleError.bind(this);
 	}
 

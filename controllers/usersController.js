@@ -5,11 +5,14 @@ const userResponse = require('../models/response/userResponse');
 
 class UsersController extends BaseController {
 	constructor(usersManager) {
-		super();
-		this.usersManager = usersManager;
+		super({ usersManager });
+	}
 
+	_onBind() {
+		super._onBind();
 		this.edit = this.edit.bind(this);
 	}
+
 	edit(req, res) {
 		this
 			.usersManager

@@ -14,19 +14,23 @@ const TokenInfo = require('../config/methods');
 
 class AuthorizationController extends BaseController {
 	constructor(userManager) {
-		super();
-		socialRequestUtils.init();
-		this.authorizationClient = RedisService.getClientByName('authorizations');
-		this.validationService = ValidationGenerator.createValidator({});
+		super({ userManager });
+	}
 
-		this.userManager = userManager;
-
+	_onBind() {
+		super._onBind();
 		this.verify = this.verify.bind(this);
 		this.verifyToken = this.verifyToken.bind(this);
 		this.refreshToken = this.refreshToken.bind(this);
 		this.googleVerify = this.googleVerify.bind(this);
 		this.facebookVerify = this.facebookVerify.bind(this);
 		this.twitterVerify = this.twitterVerify.bind(this);
+	}
+
+	_onCreate() {
+		socialRequestUtils.init();
+		this.authorizationClient = RedisService.getClientByName('authorizations');
+		this.validationService = ValidationGenerator.createValidator({});
 	}
 
 	verifyToken(req, res, next) {
