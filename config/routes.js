@@ -11,7 +11,7 @@ module.exports = {
 		log: '/support/:systemType/:id',
 		getLogs: '/support/log/get',
 		feedback: '/support/feedback',
-		getFeedbacks: '/support/feedback/get'
+		getFeedback: '/support/feedback/get'
 	},
 	user: {
 		edit: '/user/edit'

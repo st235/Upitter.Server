@@ -9,7 +9,7 @@ const usersModel = require('../models/usersModel');
 const businessUserModel = require('../models/businessUsersModel');
 const counterModel = require('../models/counterModel');
 const logsModel = require('../models/logsModel');
-const feedbacsModel = require('../models/feedbaksModel');
+const feedbackModel = require('../models/feedbackModel');
 const categoriesModel = require('../models/categoriesModel');
 const postsModel = require('../models/postsModel');
 const votesModel = require('../models/votesModel');
@@ -20,7 +20,7 @@ const commentsModel = require('../models/commentsModel');
 
 const UsersManager = require('../managers/usersManager');
 const LogsManager = require('../managers/logsManager');
-const FeedbacksManager = require('../managers/feedbacksManager');
+const FeedbackManager = require('../managers/feedbackManager');
 const PostsManager = require('../managers/postsManager');
 const CommentsManager = require('../managers/commentsManager');
 
@@ -33,7 +33,7 @@ class AppDatabase {
 		this.usersModel = usersModel(mongoose);
 		this.businessUserModel = businessUserModel(mongoose);
 		this.logsModel = logsModel(mongoose);
-		this.feedbacksModel = feedbacsModel(mongoose);
+		this.feedbackModel = feedbackModel(mongoose);
 		this.categoriesModel = categoriesModel(mongoose);
 		this.postsModel = postsModel(mongoose);
 		this.votesModel = votesModel(mongoose);
@@ -44,7 +44,7 @@ class AppDatabase {
 
 		this.usersManager = new UsersManager(this.usersModel);
 		this.logsManager = new LogsManager(this.logsModel);
-		this.feedbacksManager = new FeedbacksManager(this.feedbacksModel);
+		this.feedbackManager = new FeedbackManager(this.feedbacksModel);
 		this.postsManager = new PostsManager(this.postsModel);
 		this.commentsManager = new CommentsManager(this.commentsModel);
 	}
@@ -59,7 +59,7 @@ class AppDatabase {
 		return {
 			users: this.usersManager,
 			logs: this.logsManager,
-			feedbacks: this.feedbacksManager,
+			feedback: this.feedbackManager,
 			posts: this.postsManager,
 			comments: this.commentsManager
 		};
@@ -71,7 +71,7 @@ class AppDatabase {
 			businessUser: this.businessUserModel,
 			counter: this.counterModel,
 			logs: this.logsModel,
-			feedbacks: this.feedbacksModel,
+			feedback: this.feedbackModel,
 			categoriesModel: this.categoriesModel,
 			posts: this.postsModel,
 			votes: this.votesModel,
