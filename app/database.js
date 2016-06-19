@@ -1,9 +1,7 @@
 'use strict';
 
 const mongoose = require('mongoose');
-const databaseConfig = require('../config/database');
-
-const { mixedLogger } = require('../utils/loggerUtils');
+mongoose.Promise = global.Promise;
 
 const usersModel = require('../models/usersModel');
 const businessUserModel = require('../models/businessUsersModel');
@@ -23,6 +21,9 @@ const LogsManager = require('../managers/logsManager');
 const FeedbackManager = require('../managers/feedbackManager');
 const PostsManager = require('../managers/postsManager');
 const CommentsManager = require('../managers/commentsManager');
+
+const { mixedLogger } = require('../utils/loggerUtils');
+const databaseConfig = require('../config/database');
 
 class AppDatabase {
 	constructor() {
