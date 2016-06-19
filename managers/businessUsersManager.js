@@ -2,7 +2,7 @@
 
 const _ = require('underscore');
 
-class OrgsManager {
+class BusinessUsersManager {
 	constructor(businessUsersModel) {
 		this.businessUsersModel = businessUsersModel;
 
@@ -26,4 +26,4 @@ class OrgsManager {
 	}
 }
 
-module.exports = OrgsManager;
+module.exports = BusinessUsersManager;

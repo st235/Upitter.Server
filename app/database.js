@@ -5,6 +5,7 @@ mongoose.Promise = global.Promise;
 
 const AppUnit = require('./unit');
 
+const BusinessUsersManager = require('../managers/businessUsersManager');
 const UsersManager = require('../managers/usersManager');
 const LogsManager = require('../managers/logsManager');
 const FeedbackManager = require('../managers/feedbackManager');

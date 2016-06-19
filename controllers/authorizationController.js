@@ -36,7 +36,7 @@ class AuthorizationController extends BaseController {
 	_onCreate() {
 		socialRequestUtils.init();
 		this.authorizationClient = RedisService.getClientByName('authorizations');
-		this.validationService = ValidationGenerator.createValidator({});
+		this.validationService = ValidationService;
 	}
 
 	verifyToken(req, res, next) {
@@ -149,7 +149,7 @@ class AuthorizationController extends BaseController {
 			.validate();
 
 		if (invalid) return this.error(res, invalid);
-		
+
 		const { number, countryCode } = req.params;
 		const phone = `${countryCode}${number}`;
 		const code = secretUtils.generateCode();
@@ -173,9 +173,9 @@ class AuthorizationController extends BaseController {
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
 			.add('code').should.exist().and.have.type('String')
 			.validate();
-		
+
 		if (invalid) return this.error(res, invalid);
-		
+
 		const { number, countryCode } = req.params;
 		const phone = `${countryCode}${number}`;
 		const { code } = req.body;
