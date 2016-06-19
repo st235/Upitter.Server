@@ -4,6 +4,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const routesConfig = require('../config/routes');
 
+const AppUnit = require('./unit');
+
 const AuthorizationMiddleware = require('../controllers/middlewares/authorizationMiddlerware');
 const LanguageMiddleware = require('../controllers/middlewares/languageMiddleware');
 const ErrorMiddleware = require('../controllers/middlewares/errorMiddleware');
@@ -15,27 +17,31 @@ const UsersController = require('../controllers/usersController');
 const PostsController = require('../controllers/postsController');
 const CommentController = require('../controllers/commentsController');
 
-class AppRoutes {
+class AppRoutes extends AppUnit {
 	constructor(app, managers) {
-		this.app = app;
+		super({ app, managers });
+	}
 
-		this.checkAuthorization = new AuthorizationMiddleware().authorize;
-		this.obtainLanguage = new LanguageMiddleware().obtainLanguage;
-		this.errorHandler = new ErrorMiddleware();
-
-		this.authorizationController = new AuthorizationController(managers.users, managers.businessUsers);
-		this.logsController = new LogsController(managers.logs);
-		this.feedbackController = new FeedbackController(managers.feedbacks);
-		this.usersController = new UsersController(managers.users);
-		this.postsController = new PostsController(managers.posts);
-		this.commentsController = new CommentController(managers.comments);
-
+	_onBind() {
 		this.register = this.register.bind(this);
 		this.registerHeader = this.registerHeader.bind(this);
 		this.registerAuthorization = this.registerAuthorization.bind(this);
 		this.registerLogs = this.registerLogs.bind(this);
 		this.registerFeedback = this.registerFeedback.bind(this);
 		this.registerFooter = this.registerFooter.bind(this);
+	}
+
+	_onCreate() {
+		this.checkAuthorization = new AuthorizationMiddleware().authorize;
+		this.obtainLanguage = new LanguageMiddleware().obtainLanguage;
+		this.errorHandler = new ErrorMiddleware();
+
+		this.authorizationController = new AuthorizationController(this.managers.users);
+		this.logsController = new LogsController(this.managers.logs);
+		this.feedbackController = new FeedbackController(this.managers.feedbacks);
+		this.usersController = new UsersController(this.managers.users);
+		this.postsController = new PostsController(this.managers.posts);
+		this.commentsController = new CommentController(this.managers.comments);
 	}
 
 	register() {

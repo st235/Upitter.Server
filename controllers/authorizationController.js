@@ -16,14 +16,11 @@ const TokenInfo = require('../config/methods');
 
 class AuthorizationController extends BaseController {
 	constructor(userManager, businessUserManager) {
-		super();
-		socialRequestUtils.init();
-		this.authorizationClient = RedisService.getClientByName('authorizations');
-		this.validationService = ValidationService;
+		super({ userManager, businessUserManager });
+	}
 
-		this.userManager = userManager;
-		this.businessUserManager = businessUserManager;
-
+	_onBind() {
+		super._onBind();
 		this.verify = this.verify.bind(this);
 		this.verifyToken = this.verifyToken.bind(this);
 		this.refreshToken = this.refreshToken.bind(this);
@@ -34,6 +31,12 @@ class AuthorizationController extends BaseController {
 		this.authorizeByPhone = this.authorizeByPhone.bind(this);
 		this.verifyCode = this.verifyCode.bind(this);
 		this.addInfo = this.addInfo.bind(this);
+	}
+
+	_onCreate() {
+		socialRequestUtils.init();
+		this.authorizationClient = RedisService.getClientByName('authorizations');
+		this.validationService = ValidationGenerator.createValidator({});
 	}
 
 	verifyToken(req, res, next) {

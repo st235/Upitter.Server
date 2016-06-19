@@ -2,6 +2,7 @@
 
 const express = require('express');
 
+const AppUnit = require('./unit');
 const AppRoutes = require('./routes');
 const AppDatabase = require('./database');
 
@@ -12,39 +13,20 @@ const { mixedLogger } = require('../utils/loggerUtils');
 const redisConfig = require('../config/redis');
 const httpConfig = require('../config/http');
 
-class AppServer {
-	constructor() {
-		const app = express();
-		app.listen(httpConfig.PORT, () => mixedLogger.info(`App is started on ${httpConfig.PORT} port`));
-
-		this.init();
-		const managers = new AppDatabase().managers();
-		this.routes = new AppRoutes(app, managers);
-
+class AppServer extends AppUnit {
+	_onBind() {
 		this.start = this.start.bind(this);
 	}
 
-	init() {
-		ErrorService.init();
-		SMSService.setEnv('dev');
-		this.initRedis();
-	}
+	_onCreate() {
+		const app = express();
+		app.listen(httpConfig.PORT, () => mixedLogger.info(`App is started on ${httpConfig.PORT} port`));
 
-	initRedis() {
 		RedisService.init(redisConfig);
+		ErrorService.init();
 
-		let i = 1;
-
-		while (true) {
-			const client = RedisService.getClientByDbNumber(i);
-			if (!client) break;
-
-			client.setConnectionHandler();
-			client.setErrorHandler();
-			client.setEndHandler();
-
-			i++;
-		}
+		const managers = new AppDatabase().managers();
+		this.routes = new AppRoutes(app, managers);
 	}
 
 	start() {
@@ -52,4 +34,4 @@ class AppServer {
 	}
 }
 
-module.exports = AppServer;
+module.exports = new AppServer();
