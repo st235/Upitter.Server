@@ -2,13 +2,13 @@
 
 const BaseController = require('./baseController');
 
-class FeedbacksController extends BaseController {
-	constructor(feedbacksManager) {
+class FeedbackController extends BaseController {
+	constructor(feedbackManager) {
 		super();
-		this.feedbacksManager = feedbacksManager;
+		this.feedbacksManager = feedbackManager;
 
 		this.feedback = this.feedback.bind(this);
-		this.getFeedbacks = this.getFeedbacks.bind(this);
+		this.getFeedback = this.getFeedback.bind(this);
 	}
 
 	feedback(req, res) {
@@ -19,15 +19,15 @@ class FeedbacksController extends BaseController {
 			.catch(error => this.error(res, error));
 	}
 
-	getFeedbacks(req, res) {
+	getFeedback(req, res) {
 		const query = req.query;
 		this
 			.feedbacksManager
-			.getFeedbacks(query.limit, query.offset)
-			.then(feedbacks => this.success(res, feedbacks))
+			.getFeedback(query.limit, query.offset)
+			.then(feedback => this.success(res, feedback))
 			.catch(error => this.error(res, error));
 	}
 
 }
 
-module.exports = FeedbacksController;
+module.exports = FeedbackController;

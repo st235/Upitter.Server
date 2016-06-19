@@ -10,7 +10,7 @@ const ErrorMiddleware = require('../controllers/middlewares/errorMiddleware');
 
 const AuthorizationController = require('../controllers/authorizationController');
 const LogsController = require('../controllers/logsController');
-const FeedbacksController = require('../controllers/feedbacksController');
+const FeedbackController = require('../controllers/feedbackController');
 const UsersController = require('../controllers/usersController');
 const PostsController = require('../controllers/postsController');
 const CommentController = require('../controllers/commentsController');
@@ -25,7 +25,7 @@ class AppRoutes {
 
 		this.authorizationController = new AuthorizationController(managers.users, managers.businessUsers);
 		this.logsController = new LogsController(managers.logs);
-		this.feedbacksController = new FeedbacksController(managers.feedbacks);
+		this.feedbackController = new FeedbackController(managers.feedbacks);
 		this.usersController = new UsersController(managers.users);
 		this.postsController = new PostsController(managers.posts);
 		this.commentsController = new CommentController(managers.comments);
@@ -34,7 +34,7 @@ class AppRoutes {
 		this.registerHeader = this.registerHeader.bind(this);
 		this.registerAuthorization = this.registerAuthorization.bind(this);
 		this.registerLogs = this.registerLogs.bind(this);
-		this.registerFeedbacks = this.registerFeedbacks.bind(this);
+		this.registerFeedback = this.registerFeedback.bind(this);
 		this.registerFooter = this.registerFooter.bind(this);
 	}
 
@@ -42,7 +42,7 @@ class AppRoutes {
 		this.registerHeader(this.app);
 		this.registerAuthorization(this.app, routesConfig.authorization, this.authorizationController);
 		this.registerLogs(this.app, routesConfig.support, this.logsController);
-		this.registerFeedbacks(this.app, routesConfig.support, this.feedbacksController);
+		this.registerFeedback(this.app, routesConfig.support, this.feedbackController);
 		this.registerUsers(this.app, routesConfig.user, this.usersController);
 		this.registerPosts(this.app, routesConfig.post, this.postsController);
 		this.registerComments(this.app, routesConfig.comment, this.commentsController);
@@ -78,9 +78,9 @@ class AppRoutes {
 		app.get(paths.getLogs, this.checkAuthorization, controller.getLogs);
 	}
 
-	registerFeedbacks(app, paths, controller) {
+	registerFeedback(app, paths, controller) {
 		app.post(paths.feedback, this.checkAuthorization, controller.feedback);
-		app.get(paths.getFeedbacks, this.checkAuthorization, controller.getFeedbacks);
+		app.get(paths.getFeedback, this.checkAuthorization, controller.getFeedback);
 	}
 
 	registerUsers(app, paths, controller) {
