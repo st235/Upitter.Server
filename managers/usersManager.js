@@ -16,6 +16,7 @@ class UsersManager {
 	//TODO Объединить 3 метода в 1
 
 	googleCheckExistence(json) {
+		//TODO Добавить try catch
 		const data = JSON.parse(json);
 		const userData = {
 			picture: data.picture,
@@ -32,6 +33,7 @@ class UsersManager {
 	}
 
 	facebookCheckExistence(json) {
+		//TODO Добавить try catch
 		const data = JSON.parse(json);
 		const userData = {
 			nickname: data.name,

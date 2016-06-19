@@ -1,30 +1,30 @@
 'use strict';
 
 const mongoose = require('mongoose');
-mongoose.Promise = global.Promise;
+const databaseConfig = require('../../../config/database');
+databaseConfig.uri = 'mongodb://127.0.0.1:27017/upitter_test';
 
-const usersModel = require('../models/usersModel');
-const businessUserModel = require('../models/businessUsersModel');
-const counterModel = require('../models/counterModel');
-const logsModel = require('../models/logsModel');
-const feedbackModel = require('../models/feedbackModel');
-const categoriesModel = require('../models/categoriesModel');
-const postsModel = require('../models/postsModel');
-const votesModel = require('../models/votesModel');
-const notificationsModel = require('../models/notificationsModel');
-const mediaModel = require('../models/mediaModel');
-const coordinatesModel = require('../models/coordinatesModel');
-const commentsModel = require('../models/commentsModel');
+const { mixedLogger } = require('../../../utils/loggerUtils');
 
-const UsersManager = require('../managers/usersManager');
-const BusinessUsersManager = require('../managers/businessUsersManager');
-const LogsManager = require('../managers/logsManager');
-const FeedbackManager = require('../managers/feedbackManager');
-const PostsManager = require('../managers/postsManager');
-const CommentsManager = require('../managers/commentsManager');
+const usersModel = require('../../../models/usersModel');
+const businessUserModel = require('../../../models/businessUsersModel');
+const counterModel = require('../../../models/counterModel');
+const logsModel = require('../../../models/logsModel');
+const feedbacsModel = require('../../../models/feedbaksModel');
+const categoriesModel = require('../../../models/categoriesModel');
+const postsModel = require('../../../models/postsModel');
+const votesModel = require('../../../models/votesModel');
+const notificationsModel = require('../../../models/notificationsModel');
+const mediaModel = require('../../../models/mediaModel');
+const coordinatesModel = require('../../../models/coordinatesModel');
+const commentsModel = require('../../../models/commentsModel');
 
-const { mixedLogger } = require('../utils/loggerUtils');
-const databaseConfig = require('../config/database');
+const UsersManager = require('../../../managers/usersManager');
+const BusinessUsersManager = require('../../../managers/businessUsersManager');
+const LogsManager = require('../../../managers/logsManager');
+const FeedbacksManager = require('../../../managers/feedbacksManager');
+const PostsManager = require('../../../managers/postsManager');
+const CommentsManager = require('../../../managers/commentsManager');
 
 class AppDatabase {
 	constructor() {
@@ -35,7 +35,7 @@ class AppDatabase {
 		this.usersModel = usersModel(mongoose);
 		this.businessUserModel = businessUserModel(mongoose);
 		this.logsModel = logsModel(mongoose);
-		this.feedbackModel = feedbackModel(mongoose);
+		this.feedbacksModel = feedbacsModel(mongoose);
 		this.categoriesModel = categoriesModel(mongoose);
 		this.postsModel = postsModel(mongoose);
 		this.votesModel = votesModel(mongoose);
@@ -47,7 +47,7 @@ class AppDatabase {
 		this.usersManager = new UsersManager(this.usersModel);
 		this.businessUsersManager = new BusinessUsersManager(this.businessUserModel);
 		this.logsManager = new LogsManager(this.logsModel);
-		this.feedbackManager = new FeedbackManager(this.feedbacksModel);
+		this.feedbacksManager = new FeedbacksManager(this.feedbacksModel);
 		this.postsManager = new PostsManager(this.postsModel);
 		this.commentsManager = new CommentsManager(this.commentsModel);
 	}
@@ -63,7 +63,7 @@ class AppDatabase {
 			users: this.usersManager,
 			businessUsers: this.businessUsersManager,
 			logs: this.logsManager,
-			feedback: this.feedbackManager,
+			feedbacks: this.feedbacksManager,
 			posts: this.postsManager,
 			comments: this.commentsManager
 		};
@@ -75,7 +75,7 @@ class AppDatabase {
 			businessUser: this.businessUserModel,
 			counter: this.counterModel,
 			logs: this.logsModel,
-			feedback: this.feedbackModel,
+			feedbacks: this.feedbacksModel,
 			categoriesModel: this.categoriesModel,
 			posts: this.postsModel,
 			votes: this.votesModel,

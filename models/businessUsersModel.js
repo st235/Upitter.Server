@@ -5,9 +5,8 @@ module.exports = mongoose => {
 	const Schema = mongoose.Schema;
 	const businessUsersSchema = new Schema({
 		customId: {
-			type: String,
-			unique: true,
-			required: true
+			type: Number,
+			unique: true
 		},
 		activity: {
 			type: String,
@@ -38,6 +37,18 @@ module.exports = mongoose => {
 		},
 		createdDate: {
 			type: Date
+		},
+		phone: {
+			body: {
+				type: String
+			},
+			code: {
+				type: String
+			},
+			fullNumber: {
+				type: String,
+				unique: true
+			}
 		}
 	});
 

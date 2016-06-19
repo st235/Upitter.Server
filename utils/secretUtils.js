@@ -21,5 +21,9 @@ module.exports = {
 			.update(origin.toString() + (Date.now() / 1000))
 			.digest('hex')
 			.toString('utf8');
+	},
+	
+	generateCode() {
+		return (Math.random() * 1e6).toFixed();
 	}
 };

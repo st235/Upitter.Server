@@ -3,16 +3,14 @@
 const request = require('unirest');
 const crypto = require('crypto');
 const _ = require('underscore');
-const smsConfig = require('../config/smsProvider/sms16');
+const smsConfig = require('../../config/smsProvider/sms16');
 
 class SMS16Strategy {
 	_formSuccessResponse(response) {
-		console.log(response);
 		return response;
 	}
 
 	_formErrorResponse(error) {
-		console.log(error);
 		throw error;
 	}
 
@@ -20,10 +18,24 @@ class SMS16Strategy {
 		this.code = code;
 		this.phone = phone;
 		this.text = text;
+
+		this._bind();
 	}
 
-	static init(phone, text) {
-		return new this(phone, text);
+	static init(code, phone, text) {
+		return new this(code, phone, text);
+	}
+
+	_bind() {
+		this._formSuccessResponse = this._formSuccessResponse.bind(this);
+		this._formErrorResponse = this._formErrorResponse.bind(this);
+		this._clear = this._clear.bind(this);
+		this._hashSMSObject = this._hashSMSObject.bind(this);
+		this._getTimeStamp = this._getTimeStamp.bind(this);
+		this._generateQueryString = this._generateQueryString.bind(this);
+		this._sortAndConcatObject = this._sortAndConcatObject.bind(this);
+		this._createApiRequest = this._createApiRequest.bind(this);
+		this.sendSMS = this.sendSMS.bind(this);
 	}
 
 	_clear() {
@@ -39,10 +51,10 @@ class SMS16Strategy {
 	_getTimeStamp() {
 		return new Promise((resolve, reject) => {
 			request
-				.get(smsConfig.api.BASE_URL + 'get/timestamp.php')
+				.get(`${smsConfig.api.BASE_URL}get/timestamp.php`)
 				.strictSSL(false)
-				.end(function (res) {
-					if (res.status === 200) {
+				.end(res => {
+					if (res && res.status === 200) {
 						return resolve(res.body);
 					} else if (res.text && res.text.error) {
 						return reject(res.text.error);
@@ -60,45 +72,49 @@ class SMS16Strategy {
 			phone: this.phone,
 			sender: smsConfig.api.SENDER,
 			text: this.text,
-			timestamp: timestamp
+			timestamp
 		};
 
-		var signature = this._hashSMSObject(this._sortAndConcatObject(objToSend) + smsConfig.api.API_KEY);
+		var signature = this._hashSMSObject(`${this._sortAndConcatObject(objToSend)}${smsConfig.api.API_KEY}`);
 
 		objToSend.return = 'json';
 
-		return smsConfig.api.BASE_URL + 'get/send.php?'
+		const result =  smsConfig.api.BASE_URL + 'get/send.php?'
 			+ "timestamp=" + objToSend["timestamp"] + "&"
 			+ "login=" + objToSend["login"] + "&"
 			+ "signature=" + signature + "&"
 			+ "phone=" + objToSend["phone"] + "&"
 			+ "text=" + objToSend["text"] + "&"
 			+ "sender=" + objToSend["sender"];
+		return result;
 	}
 
 	_sortAndConcatObject(smsObject) {
-		var sortedArray = Object.keys(obj).sort(),
+		var sortedArray = Object.keys(smsObject).sort(),
 			string = '';
 
 		for (var i = 0; i < sortedArray.length; i++) {
-			string += obj[sortedArray[i]];
+			string += smsObject[sortedArray[i]];
 		}
 
 		return string;
 	}
 
 	_createApiRequest(queryString) {
-		return new Promise((resolve, request) => {
-			request.get(queryString)
+		this._clear();
+		return new Promise((resolve, reject) => {
+			request
+				.get(queryString)
 				.strictSSL(false)
 				.set('Accept', 'application/json')
-				.end(function (res) {
-					if (error) {
-						return reject(error);
-					} else if (res.body && res.body.error) {
-						return reject(new Error(res.body.error))
+				.end(res => {
+					if (res && res.status === 200) {
+						return resolve(res.body);
+					} else if (res.text && res.text.error) {
+						return reject(res.text.error);
 					} else {
-						return resolve();
+						//TODO: Подключить ошибки
+						return reject(new Error('Ошибка получения timestamp'));
 					}
 				});
 		});
@@ -112,3 +128,5 @@ class SMS16Strategy {
 			.catch(this._formErrorResponse);
 	}
 }
+
+module.exports = SMS16Strategy;

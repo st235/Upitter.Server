@@ -2,6 +2,7 @@
 
 const redis = require('thunk-redis');
 const _ = require('underscore');
+const { mixedLogger } = require('./loggerUtils');
 
 class RedisUtils {
 	constructor(dbName, credentials, options) {
@@ -32,22 +33,22 @@ class RedisUtils {
 			const initialMessage = `Redis client: ${this.getDbName()}. DB number ${this.getDbNumber()} started on:\n`;
 
 			const message = this._credentials.reduce((prevValue, newValue) => `${prevValue}${newValue.host}:${newValue.port}\n`, initialMessage);
-			console.info(message);
-			handler();
+			mixedLogger.info(message);
+			if (handler) handler();
 		});
 	}
 
 	setErrorHandler(handler) {
 		this._client.on('error', err => {
-			console.error(`Redis client: ${this.getDbName()}. DB number ${this.getDbNumber()} got an error:\n`);
-			handler(err);
+			mixedLogger.error(`Redis client: ${this.getDbName()}. DB number ${this.getDbNumber()} got an error:\n`);
+			if (handler) handler(err);
 		});
 	}
 
 	setEndHandler(handler) {
 		this._client.on('end', () => {
-			console.warn(`Redis client: ${this.getDbName()}. DB number ${this.getDbNumber()} lost connection or exited:\n`);
-			handler();
+			mixedLogger.warn(`Redis client: ${this.getDbName()}. DB number ${this.getDbNumber()} lost connection or exited:\n`);
+			if (handler) handler();
 		});
 	}
 
