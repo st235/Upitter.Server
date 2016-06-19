@@ -4,9 +4,11 @@ const BaseController = require('./baseController');
 
 class CommentsController extends BaseController {
 	constructor(commentsManager) {
-		super();
-		this.commentsManager = commentsManager;
+		super({ commentsManager });
+	}
 
+	_onBind() {
+		super._onBind();
 		this.create = this.create.bind(this);
 		this.remove = this.remove.bind(this);
 		this.obtain = this.obtain.bind(this);

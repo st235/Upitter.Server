@@ -4,9 +4,11 @@ const BaseController = require('./baseController');
 
 class FeedbackController extends BaseController {
 	constructor(feedbackManager) {
-		super();
-		this.feedbacksManager = feedbackManager;
+		super({ feedbackManager });
+	}
 
+	_onBind() {
+		super._onBind();
 		this.feedback = this.feedback.bind(this);
 		this.getFeedback = this.getFeedback.bind(this);
 	}

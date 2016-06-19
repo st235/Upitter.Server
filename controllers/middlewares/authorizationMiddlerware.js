@@ -1,11 +1,15 @@
 'use strict';
 
+const AppUnit = require('../../app/unit');
 const RedisService = require('../../services/redisService');
 
-class AuthorizationMiddleware {
-	constructor() {
-		this.authorizationClient = RedisService.getClientByName('authorizations');
+class AuthorizationMiddleware extends AppUnit {
+	_onBind() {
 		this.authorize = this.authorize.bind(this);
+	}
+
+	_onCreate() {
+		this.authorizationClient = RedisService.getClientByName('authorizations');
 	}
 
 	authorize(req, res, next) {

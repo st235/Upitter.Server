@@ -4,9 +4,11 @@ const BaseController = require('./baseController');
 
 class LogsController extends BaseController {
 	constructor(logsManager) {
-		super();
-		this.logsManager = logsManager;
+		super({ logsManager });
+	}
 
+	_onBind() {
+		super._onBind();
 		this.log = this.log.bind(this);
 		this.getLogs = this.getLogs.bind(this);
 	}
