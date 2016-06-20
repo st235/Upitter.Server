@@ -62,7 +62,7 @@ class AppDatabase extends AppUnit {
 	_onStart() {
 		mixedLogger.info(`MongoDB started on uri ${databaseConfig.uri}`);
 		this
-			.counterModel
+			.countersModel
 			.create()
 			.then(model => mixedLogger.info(`Created ${model}`))
 			.catch(error => mixedLogger.error(error));

@@ -1,6 +1,7 @@
 'use strict';
 
 const BaseController = require('./baseController');
+const ValidationUtils = require('../utils/validationUtils');
 
 class LogsController extends BaseController {
 	constructor(logsManager) {
@@ -13,10 +14,25 @@ class LogsController extends BaseController {
 		this.getLogs = this.getLogs.bind(this);
 	}
 
+	_onCreate() {
+		this.validationUtils = new ValidationUtils;
+	}
+
 	log(req, res) {
-		//  TODO add accessToken and validatron
 		const params = req.params;
 		const body = req.body;
+
+		 if (this.validationUtils.stringVerify(params, 'id') || this.validationUtils.stringVerify(params, 'params.systemType') || this.validationUtils.stringVerify(body, 'log')) return this.error(res, 'сломалось к хуям')
+		//const invalidParams = this.validationService.init(params)
+		//	.add('id').should.exist().and.have.type('String')
+		//	.add('systemType').should.exist().and.have.type('String')
+		//	.validate();
+		//
+		//const invalidBody = this.validationService.init(body)
+		//	.add('log').should.exist().and.have.type('String')
+		//	.validate();
+
+		//if (invalidParams || invalidBody) return this.error(res, invalidParams || invalidBody);
 
 		this
 			.logsManager
