@@ -1,12 +1,16 @@
 'use strict';
 
 const _ = require('underscore');
+const AppUnit = require('../app/unit');
+
 const postResponse = require('../models/response/postResponse');
 
-class PostsManager {
+class PostsManager extends AppUnit {
 	constructor(postsModel) {
-		this.postsModel = postsModel;
+		super({ postsModel });
+	}
 
+	_onBind() {
 		this.create = this.create.bind(this);
 		this.edit = this.edit.bind(this);
 		this.remove = this.remove.bind(this);

@@ -1,11 +1,14 @@
 'use strict';
 
 const _ = require('underscore');
+const AppUnit = require('../app/unit');
 
-class UsersManager {
+class UsersManager extends AppUnit {
 	constructor(usersModel) {
-		this.usersModel = usersModel;
+		super({ usersModel });
+	}
 
+	_onBind() {
 		this.googleCheckExistence = this.googleCheckExistence.bind(this);
 		this.facebookCheckExistence = this.facebookCheckExistence.bind(this);
 		this.twitterCheckExistence = this.twitterCheckExistence.bind(this);

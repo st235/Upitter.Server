@@ -1,8 +1,13 @@
 'use strict';
 
-class FeedbackManager {
+const AppUnit = require('../app/unit');
+
+class FeedbackManager extends AppUnit {
 	constructor(feedbackModel) {
-		this.feedbacksModel = feedbackModel;
+		super({ feedbackModel });
+	}
+
+	_onBind() {
 		this.trySave = this.trySave.bind(this);
 		this.getFeedback = this.getFeedback.bind(this);
 	}

@@ -1,8 +1,13 @@
 'use strict';
 
-class LogsManager {
+const AppUnit = require('../app/unit');
+
+class LogsManager extends AppUnit {
 	constructor(logsModel) {
-		this.logsModel = logsModel;
+		super({ logsModel });
+	}
+
+	_onBind() {
 		this.trySave = this.trySave.bind(this);
 		this.getLogs = this.getLogs.bind(this);
 	}

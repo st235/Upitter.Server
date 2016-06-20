@@ -1,12 +1,16 @@
 'use strict';
 
 const _ = require('underscore');
+const AppUnit = require('../app/unit');
+
 const commentResponse = require('../models/response/commentResponse');
 
-class CommentsManager {
+class CommentsManager extends AppUnit {
 	constructor(commentsModel) {
-		this.commentsModel = commentsModel;
+		super({ commentsModel });
+	}
 
+	_onBind() {
 		this.create = this.create.bind(this);
 		this.remove = this.remove.bind(this);
 		this.obtain = this.obtain.bind(this);
