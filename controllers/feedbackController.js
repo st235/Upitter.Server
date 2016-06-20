@@ -1,6 +1,7 @@
 'use strict';
 
 const BaseController = require('./baseController');
+const ValidationUtils = require('../utils/validationUtils');
 
 class FeedbackController extends BaseController {
 	constructor(feedbackManager) {
@@ -13,18 +14,30 @@ class FeedbackController extends BaseController {
 		this.getFeedback = this.getFeedback.bind(this);
 	}
 
+	_onCreate() {
+		this.validationUtils = new ValidationUtils;
+	}
+
 	feedback(req, res) {
+		const body = req.body;
+
+		const invalidBody = this.validationUtils.existAndTypeVerify(body, 'String', 'message');
+		if (invalidBody) return this.error(res, invalidBody);
+
 		this
-			.feedbacksManager
-			.trySave(req.userId, req.body.message)
+			.feedbackManager
+			.trySave(req.userId, body.message)
 			.then(feedback => this.success(res, feedback))
 			.catch(error => this.error(res, error));
 	}
 
 	getFeedback(req, res) {
 		const query = req.query;
+		const invalidQuery = this.validationUtils.typeVerify(query, 'Number', 'limit', 'offset');
+		if (invalidQuery) return this.error(res, invalidQuery);
+
 		this
-			.feedbacksManager
+			.feedbackManager
 			.getFeedback(query.limit, query.offset)
 			.then(feedback => this.success(res, feedback))
 			.catch(error => this.error(res, error));

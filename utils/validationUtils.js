@@ -11,10 +11,11 @@ class ValidationUtils extends AppUnit {
 	}
 
 	_onBind() {
-		this.stringVerify = this.stringVerify.bind(this);
+		this.existAndTypeVerify = this.existAndTypeVerify.bind(this);
+		this.typeVerify = this.typeVerify.bind(this);
 	}
 
-	stringVerify(data, type, ...fields) {
+	existAndTypeVerify(data, type, ...fields) {
 		let validation = this
 			.validationService
 			.init(data);
@@ -25,6 +26,22 @@ class ValidationUtils extends AppUnit {
 				.should
 				.exist()
 				.and
+				.have
+				.type(type);
+		});
+
+		return validation.validate();
+	}
+
+	typeVerify(data, type, ...fields) {
+		let validation = this
+			.validationService
+			.init(data);
+
+		_.each(fields, field => {
+			validation
+				.add(field)
+				.should
 				.have
 				.type(type);
 		});

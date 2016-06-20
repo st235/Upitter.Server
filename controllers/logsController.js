@@ -22,17 +22,8 @@ class LogsController extends BaseController {
 		const params = req.params;
 		const body = req.body;
 
-		 if (this.validationUtils.stringVerify(params, 'id') || this.validationUtils.stringVerify(params, 'params.systemType') || this.validationUtils.stringVerify(body, 'log')) return this.error(res, 'сломалось к хуям')
-		//const invalidParams = this.validationService.init(params)
-		//	.add('id').should.exist().and.have.type('String')
-		//	.add('systemType').should.exist().and.have.type('String')
-		//	.validate();
-		//
-		//const invalidBody = this.validationService.init(body)
-		//	.add('log').should.exist().and.have.type('String')
-		//	.validate();
-
-		//if (invalidParams || invalidBody) return this.error(res, invalidParams || invalidBody);
+		const invalidBody = this.validationUtils.existAndTypeVerify(body, 'String', 'log');
+		if (invalidBody) return this.error(res, invalidBody);
 
 		this
 			.logsManager
@@ -42,8 +33,10 @@ class LogsController extends BaseController {
 	}
 
 	getLogs(req, res) {
-		//  TODO add accessToken and validatron
 		const query = req.query;
+
+		const invalidQuery = this.validationUtils.typeVerify(query, 'Number', 'limit', 'offset');
+		if (invalidQuery) return this.error(res, invalidQuery);
 
 		this
 			.logsManager

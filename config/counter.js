@@ -34,5 +34,9 @@ module.exports = {
 	comments: {
 		name: 'Comments',
 		defaultIndex: 0
+	},
+	categories: {
+		name: 'Categories',
+		defaultIndex: 0
 	}
 };

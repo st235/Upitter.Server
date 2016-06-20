@@ -16,6 +16,7 @@ const FeedbackController = require('../controllers/feedbackController');
 const UsersController = require('../controllers/usersController');
 const PostsController = require('../controllers/postsController');
 const CommentController = require('../controllers/commentsController');
+const CategoriesController = require('../controllers/categoriesController');
 
 class AppRoutes extends AppUnit {
 	constructor(app, managers) {
@@ -38,10 +39,11 @@ class AppRoutes extends AppUnit {
 
 		this.authorizationController = new AuthorizationController(this.managers.users, this.managers.businessUsers);
 		this.logsController = new LogsController(this.managers.logs);
-		this.feedbackController = new FeedbackController(this.managers.feedbacks);
+		this.feedbackController = new FeedbackController(this.managers.feedback);
 		this.usersController = new UsersController(this.managers.users);
 		this.postsController = new PostsController(this.managers.posts);
 		this.commentsController = new CommentController(this.managers.comments);
+		this.categoriesController = new CategoriesController(this.managers.categories);
 	}
 
 	register() {
@@ -52,6 +54,7 @@ class AppRoutes extends AppUnit {
 		this.registerUsers(this.app, routesConfig.user, this.usersController);
 		this.registerPosts(this.app, routesConfig.post, this.postsController);
 		this.registerComments(this.app, routesConfig.comment, this.commentsController);
+		this.registerCategories(this.app, routesConfig.category, this.categoriesController);
 		this.registerFooter(this.app);
 	}
 
@@ -104,6 +107,11 @@ class AppRoutes extends AppUnit {
 		app.post(paths.create, this.checkAuthorization, controller.create);
 		app.get(paths.remove, controller.remove);
 		app.get(paths.obtain, controller.obtain);
+	}
+
+	registerCategories(app, paths, controller) {
+		app.post(paths.create, this.checkAuthorization, controller.create);
+		app.get(paths.obtain, controller.getCategories);
 	}
 }
 
