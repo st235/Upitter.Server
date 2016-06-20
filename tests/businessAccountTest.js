@@ -39,10 +39,10 @@ describe('Testing business account authorization', () => {
 				});
 		});
 	});
-	
+
 	describe('Set phone number', () => {
 		it('should be okey', () => {
-			
+
 		});
 	});
 });

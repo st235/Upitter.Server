@@ -3,7 +3,7 @@
 const countryCodesConfig = require('../config/countryCodes');
 
 // SMSProviderStrategies
-const sms16  = require('./smsProviders/sms16Strategy');
+const sms16 = require('./smsProviders/sms16Strategy');
 
 class SMSService {
 	static init(providers) {
@@ -35,12 +35,12 @@ class SMSService {
 		this.currentText = text;
 		return this;
 	}
-	
+
 	_getValidProvider(code) {
 		const providerName = countryCodesConfig[code];
 		return this.providers[providerName];
 	}
-	
+
 	_isCodeValid() {
 		return /^[0-9]{1,8}$/.test(this.currentCode.toString());
 	}
@@ -66,7 +66,7 @@ class SMSService {
 			if (!this._isCodeValid()) return reject(new Error('Invalid number'));
 			const Provider = this._getValidProvider(this.currentCode);
 			if (!Provider) return reject(new Error('Country code is not supported'));
-			
+
 			const provider = Provider.init(
 				this.currentCode,
 				this.currentNumber,
@@ -74,10 +74,9 @@ class SMSService {
 			);
 
 			this._clear();
-			
+
 			return provider.sendSMS();
 		});
-
 	}
 }
 

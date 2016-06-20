@@ -36,7 +36,7 @@ class AppRoutes extends AppUnit {
 		this.obtainLanguage = new LanguageMiddleware().obtainLanguage;
 		this.errorHandler = new ErrorMiddleware();
 
-		this.authorizationController = new AuthorizationController(this.managers.users);
+		this.authorizationController = new AuthorizationController(this.managers.users, this.managers.businessUsers);
 		this.logsController = new LogsController(this.managers.logs);
 		this.feedbackController = new FeedbackController(this.managers.feedbacks);
 		this.usersController = new UsersController(this.managers.users);

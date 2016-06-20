@@ -13,8 +13,8 @@ const PostsManager = require('../managers/postsManager');
 const CommentsManager = require('../managers/commentsManager');
 
 const usersModel = require('../models/usersModel');
-const businessUserModel = require('../models/businessUsersModel');
-const counterModel = require('../models/counterModel');
+const businessUsersModel = require('../models/businessUsersModel');
+const countersModel = require('../models/counterModel');
 const logsModel = require('../models/logsModel');
 const feedbackModel = require('../models/feedbackModel');
 const categoriesModel = require('../models/categoriesModel');
@@ -38,9 +38,9 @@ class AppDatabase extends AppUnit {
 	_onCreate() {
 		mongoose.connect(databaseConfig.uri, databaseConfig.options, this._onStart);
 
-		this.counterModel = counterModel(mongoose);
+		this.countersModel = countersModel(mongoose);
 		this.usersModel = usersModel(mongoose);
-		this.businessUserModel = businessUserModel(mongoose);
+		this.businessUsersModel = businessUsersModel(mongoose);
 		this.logsModel = logsModel(mongoose);
 		this.feedbackModel = feedbackModel(mongoose);
 		this.categoriesModel = categoriesModel(mongoose);
@@ -52,9 +52,9 @@ class AppDatabase extends AppUnit {
 		this.commentsModel = commentsModel(mongoose);
 
 		this.usersManager = new UsersManager(this.usersModel);
-		this.businessUsersManager = new BusinessUsersManager(this.businessUserModel);
+		this.businessUsersManager = new BusinessUsersManager(this.businessUsersModel);
 		this.logsManager = new LogsManager(this.logsModel);
-		this.feedbackManager = new FeedbackManager(this.feedbacksModel);
+		this.feedbackManager = new FeedbackManager(this.feedbackModel);
 		this.postsManager = new PostsManager(this.postsModel);
 		this.commentsManager = new CommentsManager(this.commentsModel);
 	}
@@ -81,9 +81,9 @@ class AppDatabase extends AppUnit {
 
 	models() {
 		return {
-			user: this.usersModel,
-			businessUser: this.businessUserModel,
-			counter: this.counterModel,
+			users: this.usersModel,
+			businessUsers: this.businessUsersModel,
+			counters: this.countersModel,
 			logs: this.logsModel,
 			feedback: this.feedbackModel,
 			categoriesModel: this.categoriesModel,
