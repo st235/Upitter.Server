@@ -1,15 +1,35 @@
 'use strict';
 
+const _ = require('underscore');
+
+const AppUnit = require('../app/unit');
 const ValidationService = require('../services/validationService');
 
-class ValidationUtils {
+class ValidationUtils extends AppUnit {
 	constructor() {
-		this.validationService = ValidationService;
+		super({ validationService: ValidationService });
+	}
+
+	_onBind() {
 		this.stringVerify = this.stringVerify.bind(this);
 	}
 
-	stringVerify(data, field) {
-		return this.validationService.init(data).add(field).should.exist().and.have.type('String').validate();
+	stringVerify(data, type, ...fields) {
+		let validation = this
+			.validationService
+			.init(data);
+
+		_.each(fields, field => {
+			validation
+				.add(field)
+				.should
+				.exist()
+				.and
+				.have
+				.type(type);
+		});
+
+		return validation.validate();
 	}
 }
 

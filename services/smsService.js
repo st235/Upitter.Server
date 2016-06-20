@@ -56,7 +56,7 @@ class SMSService {
 	}
 
 	sendSMS() {
-		//TODO: Обработка ошибок
+		//  TODO: Обработка ошибок
 		return new Promise((resolve, reject) => {
 			if (this.env !== 'prod') {
 				console.log(this.currentText);
@@ -74,7 +74,6 @@ class SMSService {
 			);
 
 			this._clear();
-
 			return provider.sendSMS();
 		});
 	}
