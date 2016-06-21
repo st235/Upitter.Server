@@ -110,7 +110,6 @@ class AppRoutes extends AppUnit {
 	}
 
 	registerCategories(app, paths, controller) {
-		app.post(paths.create, this.checkAuthorization, controller.create);
 		app.get(paths.obtain, controller.getCategories);
 	}
 }

@@ -34,7 +34,6 @@ module.exports = {
 		remove: '/comment/remove'
 	},
 	category: {
-		create: '/category/create',
 		obtain: '/categories'
 	}
 };
