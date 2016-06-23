@@ -35,6 +35,10 @@ module.exports = {
 				} catch (e) {
 					throw new Error('Could not parse authModel. INTERNAL SERVER ERROR');
 				}
-			})
+			});
+	},
+	
+	removeOrgTempModel(authorizationClient, phone) {
+		return authorizationClient.remove(phone);
 	}
 };

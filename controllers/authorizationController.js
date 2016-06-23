@@ -192,12 +192,17 @@ class AuthorizationController extends BaseController {
 					return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
 						.then(model => this.error(res, {attempts: model.attempts}));
 				}
-				model.temporaryToken = secretUtils.getUniqueHash(phone);
-				model.code = null;
-				model.attempts = null;
-				return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
-					.then(model => this.success(res, { temporaryToken: model.temporaryToken }));
 
+				return this.businessUserManager.checkIfExists(phone).then(user => {
+					if (user) return authUtils.removeOrgTempModel(this.authorizationClient, phone)
+						.then(() => this.success(res, user));
+
+					model.temporaryToken = secretUtils.getUniqueHash(phone);
+					model.code = null;
+					model.attempts = null;
+					return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
+						.then(model => this.success(res, { temporaryToken: model.temporaryToken }));
+				});
 			})
 			.catch(error => this.error(res, error));
 	}
@@ -230,16 +235,22 @@ class AuthorizationController extends BaseController {
 				if (model.temporaryToken !== temporaryToken) return this.error(res, 'Supplied token is invalid');
 
 				return this.businessUserManager.checkIfExists(phone)
-					.then(() => this.businessUserManager.create({
-						//TODO: проверка категории на существование в нашем списке
-						name,
-						activity: category,
-						phone: {
-							body: number,
-							code: countryCode,
-							fullNumber: phone
+					.then(user => {
+						if (!user) {
+							return this.businessUserManager.create({
+								//TODO: проверка категории на существование в нашем списке
+								name,
+								activity: category,
+								phone: {
+									body: number,
+									code: countryCode,
+									fullNumber: phone
+								}
+							});
 						}
-					}));
+						
+						throw new Error('Can\'t create user. User already exists');
+					});
 			})
 			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
 			.then(token => this.success(res, { token }))

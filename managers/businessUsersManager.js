@@ -26,9 +26,6 @@ class BusinessUsersManager extends AppUnit {
 			.businessUsersModel
 			.findOne({ 'phone.fullNumber': phone })
 			.exec()
-			.then(user => {
-				if (user) throw new Error('Can\'t create user. User already exists');
-			});
 	}
 
 	edit(userId, data) {
