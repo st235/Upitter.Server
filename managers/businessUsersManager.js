@@ -3,6 +3,8 @@
 const _ = require('underscore');
 const AppUnit = require('../app/unit');
 
+const businessUserResponse = require('../models/response/businessUserResponse');
+
 class BusinessUsersManager extends AppUnit {
 	constructor(businessUsersModel) {
 		super({ businessUsersModel });
@@ -11,6 +13,7 @@ class BusinessUsersManager extends AppUnit {
 	_onBind() {
 		this.create = this.create.bind(this);
 		this.checkIfExists = this.checkIfExists.bind(this);
+		this.edit = this.edit.bind(this);
 	}
 
 	create(data) {
@@ -25,6 +28,21 @@ class BusinessUsersManager extends AppUnit {
 			.exec()
 			.then(user => {
 				if (user) throw new Error('Can\'t create user. User already exists');
+			});
+	}
+
+	edit(userId, data) {
+		return this
+			.businessUsersModel
+			.findOne({ customId: userId })
+			.then(businessUser => {
+				if (!businessUser) throw new Error(500);
+				_.extend(businessUser, data);
+				return businessUser.save();
+			})
+			.then(businessUser => {
+				if (!businessUser) throw new Error(500);
+				return businessUserResponse(businessUser);
 			});
 	}
 }

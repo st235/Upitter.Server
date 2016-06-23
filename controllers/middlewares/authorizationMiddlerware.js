@@ -15,7 +15,6 @@ class AuthorizationMiddleware extends AppUnit {
 	authorize(req, res, next) {
 		const accessToken = req.query.accessToken || req.body.accessToken;
 		if (!accessToken) return next('UNAUTHORIZED');
-
 		this
 			.authorizationClient
 			.get(accessToken)

@@ -68,7 +68,10 @@ class AppDatabase extends AppUnit {
 			.create()
 			.then(model => mixedLogger.info(`Created ${model}`))
 			.catch(error => mixedLogger.error(error));
-		this.categoriesManager.createDefault();
+
+		this
+			.categoriesManager
+			.createDefault();
 	}
 
 	managers() {

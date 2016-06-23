@@ -35,5 +35,8 @@ module.exports = {
 	},
 	category: {
 		obtain: '/categories'
+	},
+	businessUser: {
+		edit: '/company/edit'
 	}
 };
