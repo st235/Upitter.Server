@@ -15,10 +15,11 @@ class PostsManager extends AppUnit {
 		this.edit = this.edit.bind(this);
 		this.remove = this.remove.bind(this);
 		this.obtain = this.obtain.bind(this);
+		this.like = this.like.bind(this);
 	}
 
-	create(data) {
-		data.createdDate = Date.now();
+	create(companyId, data) {
+		data.author = companyId;
 		const post = new this.postsModel(data);
 		return post.save().then(post => {
 			if (!post) throw new Error(500);
@@ -58,6 +59,24 @@ class PostsManager extends AppUnit {
 				if (!posts) throw new Error(500);
 				return _.map(posts, (post) => postResponse(post));
 			});
+	}
+
+	like(userId, postId) {
+		return this
+			.postsModel
+			.findOne({ customId: postId })
+			.then(post => {
+				if (!post) throw new Error(500);
+				if (_.indexOf(post._voters, userId) > -1) {
+					post._voters = _.without(post._voters, userId);
+					post.rating--;
+				} else {
+					post._voters.push(userId);
+					post.rating++;
+				}
+				return post.save();
+			})
+			.then(post => postResponse(post));
 	}
 }
 

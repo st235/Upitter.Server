@@ -25,7 +25,7 @@ module.exports = {
 		create: '/post/create',
 		edit: '/post/edit',
 		remove: '/post/remove',
-		like: '/post/like',
+		like: '/post/like/:postId',
 		comment: '/post/comment'
 	},
 	comment: {

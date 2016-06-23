@@ -7,7 +7,9 @@ module.exports = post => {
 		title: post.title,
 		text: post.text,
 		createdDate: post.createdDate,
-		comments: post.comments
+		comments: post.comments,
+		rating: post.rating,
+		_voters: post._voters
 	};
 
 	if (post.logoUrl) postResponse.logoUrl = post.logoUrl;
