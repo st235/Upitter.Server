@@ -195,13 +195,19 @@ class AuthorizationController extends BaseController {
 
 				return this.businessUserManager.checkIfExists(phone).then(user => {
 					if (user) return authUtils.removeOrgTempModel(this.authorizationClient, phone)
-						.then(() => this.success(res, user));
+						.then(() => this.success(res, {
+							isAuthorized: true,
+							user
+						}));
 
 					model.temporaryToken = secretUtils.getUniqueHash(phone);
 					model.code = null;
 					model.attempts = null;
 					return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
-						.then(model => this.success(res, { temporaryToken: model.temporaryToken }));
+						.then(model => this.success(res, {
+							isAuthorized: false,
+							temporaryToken: model.temporaryToken
+						}));
 				});
 			})
 			.catch(error => this.error(res, error));
