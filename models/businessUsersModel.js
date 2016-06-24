@@ -26,7 +26,7 @@ module.exports = mongoose => {
 		logoUrl: {
 			type: String
 		},
-		usersList: {
+		subscribers: {
 			type: [String]
 		},
 		moderatorsList: {

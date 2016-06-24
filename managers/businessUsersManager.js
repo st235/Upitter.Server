@@ -14,10 +14,13 @@ class BusinessUsersManager extends AppUnit {
 		this.create = this.create.bind(this);
 		this.checkIfExists = this.checkIfExists.bind(this);
 		this.edit = this.edit.bind(this);
+		this.addUserToSubscribers = this.addUserToSubscribers.bind(this);
+		this.removeUserFromSubscribers = this.removeUserFromSubscribers.bind(this);
+		this.asd = this.asd.bind(this);
 	}
 
 	create(data) {
-		const businessUser = new this.businessUsersModel(data);
+		const businessUser = this.businessUsersModel(data);
 		return businessUser.save();
 	}
 
@@ -25,7 +28,7 @@ class BusinessUsersManager extends AppUnit {
 		return this
 			.businessUsersModel
 			.findOne({ 'phone.fullNumber': phone })
-			.exec()
+			.exec();
 	}
 
 	edit(userId, data) {
@@ -42,6 +45,39 @@ class BusinessUsersManager extends AppUnit {
 				return businessUserResponse(businessUser);
 			});
 	}
+
+	addUserToSubscribers(userId, companyId) {
+		return this
+			.businessUsersModel
+			.findOne({ customId: companyId })
+			.then(company => {
+				if (!company) throw new Error(500);
+				if (_.indexOf(company.subscribers, userId) !== -1) throw new Error('You are already subscribed to this organization');
+				company.subscribers.push(userId);
+				return company.save();
+			});
+	}
+
+	removeUserFromSubscribers(userId, companyId) {
+		return this
+			.businessUsersModel
+			.findOne({ customId: companyId })
+			.then(company => {
+				if (!company) throw new Error(500);
+				if (_.indexOf(company.subscribers, userId) === -1) throw new Error('You are not subscribed to this company');
+				company.subscribers = _.without(company.subscribers, String(userId));
+				return company.save();
+			});
+	}
+
+	asd(ids) {
+		return _.map(ids, (id) => {
+			return this
+				.businessUsersModel
+				.findOne({ customId: id });
+		});
+	}
+
 }
 
 module.exports = BusinessUsersManager;

@@ -14,6 +14,9 @@ class UsersManager extends AppUnit {
 		this.twitterCheckExistence = this.twitterCheckExistence.bind(this);
 		this.create = this.create.bind(this);
 		this.edit = this.edit.bind(this);
+		this.addCompanyToSubscriptions = this.addCompanyToSubscriptions.bind(this);
+		this.removeCompanyFromSubscriptions = this.removeCompanyFromSubscriptions.bind(this);
+		this.getSubscriptionIds = this.getSubscriptionIds.bind(this);
 	}
 
 	//TODO Объединить 3 метода в 1
@@ -78,7 +81,38 @@ class UsersManager extends AppUnit {
 				if (!user) throw new Error(500);
 				_.extend(user, data);
 				return user.save();
-		});
+			});
+	}
+
+	addCompanyToSubscriptions(userId, companyId) {
+		return this
+			.usersModel
+			.findOne({ customId: userId })
+			.then(user => {
+				if (!user) throw new Error(500);
+				if (_.indexOf(user.subscriptions, companyId) !== -1) throw new Error('You are already subscribed to this organization');
+				user.subscriptions.push(companyId);
+				return user.save();
+			});
+	}
+
+	removeCompanyFromSubscriptions(userId, companyId) {
+		return this
+			.usersModel
+			.findOne({ customId: userId })
+			.then(user => {
+				if (!user) throw new Error(500);
+				if (_.indexOf(user.subscriptions, companyId) === -1) throw new Error('You are not subscribed to this company');
+				user.subscriptions = _.without(user.subscriptions, companyId);
+				return user.save();
+			});
+	}
+
+	getSubscriptionIds(userId) {
+		return this
+			.usersModel
+			.findOne({ customId: userId })
+			.exec();
 	}
 }
 
