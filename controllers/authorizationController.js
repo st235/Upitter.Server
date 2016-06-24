@@ -49,7 +49,7 @@ class AuthorizationController extends BaseController {
 				if (!userId) return this.success(res, false);
 				this.success(res, true);
 			})
-			.catch(() => next('UNKNOWN_ERROR'));
+			.catch(() => next('INTERNAL_SERVER_ERROR'));
 	}
 
 	refreshToken(req, res, next) {

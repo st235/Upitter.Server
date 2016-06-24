@@ -17,7 +17,6 @@ class BaseController extends AppUnit {
 	}
 
 	error(res, error) {
-		error = error.message ? error.message : error;
 		res.json(this.responseModel(false, error, true));
 	}
 
