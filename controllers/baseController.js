@@ -18,7 +18,7 @@ class BaseController extends AppUnit {
 
 	error(res, error) {
 		error = error.message ? error.message : error;
-		res.json(this.responseModel(false, error, true));
+		res.json(this.responseModel(false, null, error, true));
 	}
 
 	publish(res, status, obj) {
@@ -31,9 +31,9 @@ class BaseController extends AppUnit {
 		res.json(this.responseModel(true, obj));
 	}
 
-	responseModel(success, message, isError = false) {
+	responseModel(success, response, message, isError = false) {
 		if (isError) return { success, error: { message } };
-		return { success, message };
+		return { success, response };
 	}
 }
 
