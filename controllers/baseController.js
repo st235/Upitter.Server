@@ -2,6 +2,7 @@
 
 const AppUnit = require('../app/unit');
 const domainConfig = require('../config/domain');
+const ValidationService = require('../services/validationService');
 
 class BaseController extends AppUnit {
 	_onBind() {
@@ -10,6 +11,10 @@ class BaseController extends AppUnit {
 		this.success = this.success.bind(this);
 		this.responseModel = this.responseModel.bind(this);
 		this.redirectToMain = this.redirectToMain.bind(this);
+	}
+	
+	_onCreate() {
+		this.validationService = ValidationService;
 	}
 
 	redirectToMain(res) {
@@ -33,6 +38,10 @@ class BaseController extends AppUnit {
 	responseModel(success, response, message, isError = false) {
 		if (isError) return { success, error: { message }};
 		return { success, response };
+	}
+
+	validate(req) {
+		return this.validationService.init(req.query, req.params, req.body);
 	}
 }
 

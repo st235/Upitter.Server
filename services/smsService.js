@@ -62,10 +62,10 @@ class SMSService {
 				console.log(this.currentText);
 				return resolve(this.currentText);
 			}
-			if (!this._isNumberValid()) return reject(new Error('Invalid number'));
-			if (!this._isCodeValid()) return reject(new Error('Invalid number'));
+			if (!this._isNumberValid()) return reject('SMS_SERVICE_ERROR');
+			if (!this._isCodeValid()) return reject('SMS_SERVICE_ERROR');
 			const Provider = this._getValidProvider(this.currentCode);
-			if (!Provider) return reject(new Error('Country code is not supported'));
+			if (!Provider) return reject('SMS_SERVICE_ERROR');
 
 			const provider = Provider.init(
 				this.currentCode,

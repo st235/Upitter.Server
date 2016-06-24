@@ -35,11 +35,24 @@ class CommentsController extends BaseController {
 	}
 
 	obtain(req, res) {
-		const query = req.query;
+		const invalid = this.validate(req)
+			.add('limit').should.exist().and.have.type('String')
+			.add('offset').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return this.error(res, invalid);
+
+		let { limit, offset } = req.query;
+		try {
+			limit = parseInt(limit);
+			offset = parseInt(offset);
+		} catch (e) {
+			throw 'PROPERTY_HAS_INCORRECT_TYPE';
+		}
 
 		this
 			.commentsManager
-			.obtain(query.limit, query.offset)
+			.obtain(limit, offset)
 			.then(comments => this.success(res, comments))
 			.catch(Error => this.error(res, Error));
 	}

@@ -18,11 +18,12 @@ class BusinessUsersController extends BaseController {
 	}
 
 	edit(req, res) {
+		//TODO: Доделать
 		this
 			.businessUsersManager
 			.edit(req.userId, req.body)
+			.catch(next)
 			.then(businessUser => this.success(res, businessUser))
-			.catch(error => this.error(res, error));
 	}
 }
 

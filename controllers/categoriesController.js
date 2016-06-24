@@ -21,6 +21,7 @@ class CategoriesController extends BaseController {
 		this
 			.categoriesManager
 			.getCategories()
+			.catch(next)
 			.then(categories => this.success(res, categories))
 			.catch(error => this.error(res, error));
 	}

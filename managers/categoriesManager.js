@@ -20,14 +20,20 @@ class CategoriesManager extends AppUnit {
 	_create(data, customId) {
 		data.customId = customId;
 		const category = this.categoriesModel(data);
-		return category.save();
+		return category.save()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 
 	createDefault() {
 		this
 			.categoriesModel
 			.remove({})
-			.then(_.map(categoriesConfig, (data, customId) => this._create(data, customId)));
+			.then(_.map(categoriesConfig, (data, customId) => this._create(data, customId)))
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 
 	getCategories() {
@@ -35,7 +41,10 @@ class CategoriesManager extends AppUnit {
 			.categoriesModel
 			.find()
 			.exec()
-			.then(categories => _.map(categories, (category) => categoryResponse(category)));
+			.then(categories => _.map(categories, (category) => categoryResponse(category)))
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 }
 

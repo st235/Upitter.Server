@@ -33,7 +33,7 @@ module.exports = {
 				try {
 					return JSON.parse(model);
 				} catch (e) {
-					throw new Error('Could not parse authModel. INTERNAL SERVER ERROR');
+					throw 'INTERNAL_SERVER_ERROR';
 				}
 			});
 	},

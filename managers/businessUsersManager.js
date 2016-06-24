@@ -1,8 +1,8 @@
 'use strict';
 
 const _ = require('underscore');
-const AppUnit = require('../app/unit');
 
+const AppUnit = require('../app/unit');
 const businessUserResponse = require('../models/response/businessUserResponse');
 
 class BusinessUsersManager extends AppUnit {
@@ -18,7 +18,9 @@ class BusinessUsersManager extends AppUnit {
 
 	create(data) {
 		const businessUser = new this.businessUsersModel(data);
-		return businessUser.save();
+		return businessUser.save().catch(() => {
+			throw 'INTERNAL_SERVER_ERROR';
+		});
 	}
 
 	checkIfExists(phone) {
@@ -26,21 +28,27 @@ class BusinessUsersManager extends AppUnit {
 			.businessUsersModel
 			.findOne({ 'phone.fullNumber': phone })
 			.exec()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 
 	edit(userId, data) {
 		return this
 			.businessUsersModel
 			.findOne({ customId: userId })
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			})
 			.then(businessUser => {
-				if (!businessUser) throw new Error(500);
+				if (!businessUser) throw 'INTERNAL_SERVER_ERROR';
 				_.extend(businessUser, data);
 				return businessUser.save();
 			})
-			.then(businessUser => {
-				if (!businessUser) throw new Error(500);
-				return businessUserResponse(businessUser);
-			});
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			})
+			.then(businessUser => businessUserResponse(businessUser));
 	}
 }
 

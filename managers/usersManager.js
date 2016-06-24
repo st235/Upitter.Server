@@ -9,76 +9,70 @@ class UsersManager extends AppUnit {
 	}
 
 	_onBind() {
-		this.googleCheckExistence = this.googleCheckExistence.bind(this);
-		this.facebookCheckExistence = this.facebookCheckExistence.bind(this);
-		this.twitterCheckExistence = this.twitterCheckExistence.bind(this);
+		this.checkSocialExistence = this.checkSocialExistence.bind(this);
 		this.create = this.create.bind(this);
 		this.edit = this.edit.bind(this);
 	}
-
-	//TODO Объединить 3 метода в 1
-
-	googleCheckExistence(json) {
-		//TODO Добавить try catch
-		const data = JSON.parse(json);
-		const userData = {
-			picture: data.picture,
-			nickname: data.name,
-			createdDate: Date.now(),
-			socialId: `google_${data.email}`
+	
+	_formSocialData(type, data) {
+		let result = {
+			createdDate: Date.now()
 		};
 
-		return this
-			.usersModel
-			.findOne({ socialId: userData.socialId })
-			.exec()
-			.then(user => !user ? this.create(userData) : user);
+		switch (type) {
+			case 'google':
+				result.picture = data.picture;
+				result.nickname = data.name;
+				result.socialId = `google_${data.email}`;
+				break;
+			case 'facebook':
+				result.nickname = data.name;
+				result.socialId = `facebook_${data.id}`;
+				break;
+			case 'twitter':
+				result.nickname = data.name;
+				result.socialId = `twitter_${data.id}`;
+				break;
+		}
+
+		return result;
 	}
 
-	facebookCheckExistence(json) {
-		//TODO Добавить try catch
-		const data = JSON.parse(json);
-		const userData = {
-			nickname: data.name,
-			createdDate: Date.now(),
-			socialId: `facebook_${data.id}`
-		};
-
+	_findBySocialId(userData) {
 		return this
 			.usersModel
 			.findOne({ socialId: userData.socialId })
 			.exec()
-			.then(user => !user ? this.create(userData) : user);
+			.then(user => !user ? this.create(userData) : user)
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 
-	twitterCheckExistence(data) {
-		const userData = {
-			nickname: data.name,
-			createdDate: Date.now(),
-			socialId: `twitter_${data.id}`
-		};
-
-		return this
-			.usersModel
-			.findOne({ socialId: userData.socialId })
-			.exec()
-			.then(user => !user ? this.create(userData) : user);
+	checkSocialExistence(type, data) {
+		return this._findBySocialId(this._formSocialData(type, data));
 	}
 
 	create(data) {
 		const user = new this.usersModel(data);
-		return user.save();
+		return user
+			.save()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 
-	edit(userId, data) {
+	edit(customId, data) {
 		return this
 			.usersModel
-			.findOne({ customId: userId })
+			.findOne({ customId })
 			.then(user => {
-				if (!user) throw new Error(500);
+				if (!user) throw 'INTERNAL_SERVER_ERROR';
 				_.extend(user, data);
 				return user.save();
-		});
+			}).catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 }
 

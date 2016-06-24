@@ -1,6 +1,5 @@
 const ValidationGenerator = require('validatron');
 const settingsConfig = require('../config/settings');
-const errorsConfig = require('../resources/errors/errors');
 
 module.exports = ValidationGenerator.createValidator({
 	errorsList: {
@@ -31,7 +30,8 @@ module.exports = ValidationGenerator.createValidator({
 			name: 'IS_NOT_EQUAL'
 		}
 	},
-	env: settingsConfig.env,
+	// env: settingsConfig.env,
+	env: 'prod',
 	returnAllErrors: false,
 	errorFieldsToGet: ['name']
 });
