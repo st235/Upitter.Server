@@ -51,7 +51,6 @@ class AuthorizationController extends BaseController {
 		this
 			.authorizationClient
 			.get(token)
-			.catch(next)
 			.then(userId => userId ? this.success(res, true) : this.success(res, false))
 			.catch(() => next('UNAUTHORIZED'));
 	}
@@ -69,16 +68,17 @@ class AuthorizationController extends BaseController {
 		this
 			.authorizationClient
 			.get(token)
-			.catch(next)
-			.then(userId => userId ? userId : next('UNAUTHORIZED'))
+			.then(userId => {
+				if (userId) return userId;
+				throw 'UNAUTHORIZED';
+			})
 			.then(userId => authUtils.createToken(this.authorizationClient, userId))
-			.catch(next)
 			.then(refresh => {
 				refreshToken = refresh;
 				return this.authorizationClient.remove(token);
 			})
-			.catch(next)
-			.then(() => this.success(res, { refreshToken }));
+			.then(() => this.success(res, { refreshToken }))
+			.catch(next);
 	}
 
 	googleVerify(req, res, next) {
@@ -93,21 +93,19 @@ class AuthorizationController extends BaseController {
 
 		socialRequestUtils
 			.getGoogle(TokenInfo.google, { id_token })
-			.catch(next)
 			.then(response => this.userManager.checkSocialExistence('google', response))
-			.catch(next)
 			.then(user => {
 				userModel = user;
 				return userModel;
 			})
 			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
-			.catch(next)
 			.then(token => {
 				userModel.token = token;
 				return userModel;
 			})
 			.then(user => userResponse(user))
-			.then(response => this.success(res, response));
+			.then(response => this.success(res, response))
+			.catch(next);
 	}
 
 	facebookVerify(req, res, next) {
@@ -122,21 +120,19 @@ class AuthorizationController extends BaseController {
 
 		socialRequestUtils
 			.getFacebook(TokenInfo.facebook, { access_token: data.accessToken })
-			.catch(next)
 			.then(response => this.userManager.checkSocialExistence('facebook', response))
-			.catch(next)
 			.then(user => {
 				userModel = user;
 				return userModel;
 			})
 			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
-			.catch(next)
 			.then(token => {
 				userModel.token = token;
 				return userModel;
 			})
 			.then(user => userResponse(user))
-			.then(response => this.success(res, response));
+			.then(response => this.success(res, response))
+			.catch(next);
 	}
 
 	twitterVerify(req, res, next) {
@@ -153,21 +149,19 @@ class AuthorizationController extends BaseController {
 
 		socialRequestUtils
 			.getTwitter(token, secret)
-			.catch(next)
 			.then(response => this.userManager.checkSocialExistence('twitter', response))
-			.catch(next)
 			.then(user => {
 				userModel = user;
 				return userModel;
 			})
 			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
-			.catch(next)
 			.then(token => {
 				userModel.token = token;
 				return userModel;
 			})
 			.then(user => userResponse(user))
 			.then(response => this.success(res, response))
+			.catch(next);
 	}
 
 	authorizeByPhone(req, res, next) {
@@ -189,10 +183,9 @@ class AuthorizationController extends BaseController {
 			.addCode(countryCode)
 			.addText(code)
 			.sendSMS()
-			.catch(next)
 			.then(() => authUtils.setOrgTempModel(this.authorizationClient, phone, tempModel))
-			.catch(next)
-			.then(this.success(res));
+			.then(this.success(res))
+			.catch(next);
 	}
 
 	verifyCode(req, res, next) {
@@ -209,7 +202,6 @@ class AuthorizationController extends BaseController {
 		const { code } = req.body;
 
 		authUtils.getOrgTempModel(this.authorizationClient, phone)
-			.catch(next)
 			.then(model => {
 				if (!model) throw 'PHONE_NOT_FOUND';
 				if (!model.code) throw 'INTERNAL_SERVER_ERROR';
@@ -218,13 +210,11 @@ class AuthorizationController extends BaseController {
 				if (model.code !== code) {
 					model.attempts++;
 					return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
-						.catch(next)
 						.then(model => this.success(res, {attempts: model.attempts}));
 				}
 
 				return this.businessUserManager.checkIfExists(phone).then(user => {
 					if (user) return authUtils.removeOrgTempModel(this.authorizationClient, phone)
-						.catch(next)
 						.then(() => this.success(res, {
 							isAuthorized: true,
 							user
@@ -234,14 +224,13 @@ class AuthorizationController extends BaseController {
 					model.code = null;
 					model.attempts = null;
 					return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
-						.catch(next)
 						.then(model => this.success(res, {
 							isAuthorized: false,
 							temporaryToken: model.temporaryToken
 						}));
 				});
 			})
-			.catch(error => this.error(res, error));
+			.catch(next);
 	}
 
 	addInfo(req, res, next) {
@@ -263,7 +252,6 @@ class AuthorizationController extends BaseController {
 		const { temporaryToken, name, coord, category } = req.body;
 
 		authUtils.getOrgTempModel(this.authorizationClient, phone)
-			.catch(next)
 			.then(model => {
 				if (!model) throw 'PHONE_NOT_FOUND';
 				//TODO: Добавить число попыток в конфиг
@@ -272,7 +260,6 @@ class AuthorizationController extends BaseController {
 				if (model.temporaryToken !== temporaryToken) throw 'INVALID_TEMPORARY_TOKEN';
 
 				return this.businessUserManager.checkIfExists(phone)
-					.catch(next)
 					.then(user => {
 						if (!user) {
 							return this.businessUserManager.create({
@@ -291,8 +278,8 @@ class AuthorizationController extends BaseController {
 					});
 			})
 			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
-			.catch(next)
 			.then(token => this.success(res, { token }))
+			.catch(next);
 	}
 }
 

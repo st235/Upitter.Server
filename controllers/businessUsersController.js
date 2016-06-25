@@ -17,13 +17,13 @@ class BusinessUsersController extends BaseController {
 		this.validationUtils = new ValidationUtils;
 	}
 
-	edit(req, res) {
+	edit(req, res, next) {
 		//TODO: Доделать
 		this
 			.businessUsersManager
 			.edit(req.userId, req.body)
-			.catch(next)
 			.then(businessUser => this.success(res, businessUser))
+			.catch(next);
 	}
 }
 

@@ -17,13 +17,12 @@ class CategoriesController extends BaseController {
 		this.validationUtils = new ValidationUtils;
 	}
 
-	getCategories(req, res) {
+	getCategories(req, res, next) {
 		this
 			.categoriesManager
 			.getCategories()
-			.catch(next)
 			.then(categories => this.success(res, categories))
-			.catch(error => this.error(res, error));
+			.catch(next);
 	}
 }
 
