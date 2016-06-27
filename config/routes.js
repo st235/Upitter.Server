@@ -37,7 +37,8 @@ module.exports = {
 		remove: '/comment/remove'
 	},
 	category: {
-		obtain: '/categories'
+		obtain: '/categories',
+		find: '/categories/find/:id'
 	},
 	businessUser: {
 		edit: '/company/edit'

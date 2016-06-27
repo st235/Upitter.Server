@@ -46,6 +46,17 @@ class CategoriesManager extends AppUnit {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
+
+	findCategory(id, language) {
+		return this
+			.categoriesModel
+			.findOne({ customId: id })
+			.exec()
+			.then(category => categoryResponse(category, language))
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
 }
 
 module.exports = CategoriesManager;

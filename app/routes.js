@@ -118,6 +118,7 @@ class AppRoutes extends AppUnit {
 
 	registerCategories(app, paths, controller) {
 		app.get(paths.obtain, controller.getCategories);
+		app.get(paths.find, controller.findCategory);
 	}
 
 	registerBusinessUsers(app, paths, controller) {
