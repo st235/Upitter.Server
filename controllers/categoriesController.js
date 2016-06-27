@@ -20,7 +20,7 @@ class CategoriesController extends BaseController {
 	getCategories(req, res, next) {
 		this
 			.categoriesManager
-			.getCategories()
+			.getCategories(req.ln)
 			.then(categories => this.success(res, categories))
 			.catch(next);
 	}

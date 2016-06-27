@@ -1,9 +1,11 @@
 'use strict';
 
-module.exports = category => {
+const LocaleService = require('default-locale');
+
+module.exports = (category, language) => {
 	const categoryResponse = {
 		customId: category.customId,
-		title: category.title
+		title: LocaleService.getString(`CATEGORY_${category.customId}`, language)
 	};
 
 	if (category.parentCategory) categoryResponse.parentCategory = category.parentCategory;

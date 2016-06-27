@@ -36,12 +36,12 @@ class CategoriesManager extends AppUnit {
 			});
 	}
 
-	getCategories() {
+	getCategories(language) {
 		return this
 			.categoriesModel
 			.find()
 			.exec()
-			.then(categories => _.map(categories, (category) => categoryResponse(category)))
+			.then(categories => _.map(categories, category => categoryResponse(category, language)))
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
