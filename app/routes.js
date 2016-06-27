@@ -41,7 +41,7 @@ class AppRoutes extends AppUnit {
 		this.authorizationController = new AuthorizationController(this.managers.users, this.managers.businessUsers);
 		this.logsController = new LogsController(this.managers.logs);
 		this.feedbackController = new FeedbackController(this.managers.feedback);
-		this.usersController = new UsersController(this.managers.users);
+		this.usersController = new UsersController(this.managers.users, this.managers.businessUsers);
 		this.postsController = new PostsController(this.managers.posts);
 		this.commentsController = new CommentController(this.managers.comments);
 		this.categoriesController = new CategoriesController(this.managers.categories);
@@ -97,6 +97,9 @@ class AppRoutes extends AppUnit {
 
 	registerUsers(app, paths, controller) {
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
+		app.post(paths.addToSubscriptions, this.checkAuthorization, controller.addToSubscriptions);
+		app.post(paths.removeFromSubscriptions, this.checkAuthorization, controller.removeFromSubscriptions);
+		app.post(paths.getSubscriptions, this.checkAuthorization, controller.getSubscriptions);
 	}
 
 	registerPosts(app, paths, controller) {

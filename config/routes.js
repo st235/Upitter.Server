@@ -18,7 +18,10 @@ module.exports = {
 		getFeedback: '/support/feedback/get'
 	},
 	user: {
-		edit: '/user/edit'
+		edit: '/user/edit',
+		addToSubscriptions: '/user/subscribe/:companyId',
+		removeFromSubscriptions: '/user/unsubscribe/:companyId',
+		getSubscriptions: '/user/subscriptions'
 	},
 	post: {
 		obtain: '/posts',

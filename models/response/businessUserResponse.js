@@ -6,7 +6,7 @@ module.exports = businessUser => {
 		activity: businessUser.activity,
 		name: businessUser.name,
 		isVerify: businessUser.isVerify,
-		usersList: businessUser.usersList,
+		subscribers: businessUser.subscribers,
 		moderatorsList: businessUser.moderatorsList,
 		addressesList: businessUser.addressesList
 	};
