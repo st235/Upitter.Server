@@ -2,7 +2,6 @@
 
 const request = require('unirest');
 const crypto = require('crypto');
-const _ = require('underscore');
 const smsConfig = require('../../config/smsProvider/sms16');
 
 class SMS16Strategy {
@@ -57,10 +56,10 @@ class SMS16Strategy {
 					if (res && res.status === 200) {
 						return resolve(res.body);
 					} else if (res.text && res.text.error) {
-						return reject(res.text.error);
+						return reject('SMS_SERVICE_ERROR');
 					} else {
 						//TODO: Подключить ошибки
-						return reject(new Error('Ошибка получения timestamp'));
+						return reject('SMS_SERVICE_ERROR');
 					}
 				});
 		});
@@ -111,10 +110,9 @@ class SMS16Strategy {
 					if (res && res.status === 200) {
 						return resolve(res.body);
 					} else if (res.text && res.text.error) {
-						return reject(res.text.error);
+						return  reject('SMS_SERVICE_ERROR');
 					} else {
-						//TODO: Подключить ошибки
-						return reject(new Error('Ошибка получения timestamp'));
+						return  reject('SMS_SERVICE_ERROR');
 					}
 				});
 		});

@@ -19,29 +19,34 @@ class CommentsManager extends AppUnit {
 	create(userId, data) {
 		data.createdDate = Date.now();
 		data.author = userId;
-		console.log(data);
 		const comment = new this.commentsModel(data);
-		return comment.save().then(comment => {
-			if (!comment) throw new Error(500);
-			return commentResponse(comment);
-		});
+		return comment.save()
+			.then(comment => commentResponse(comment))
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 
 	remove(commentId) {
 		return this
 			.commentsModel
 			.findOneAndUpdate({ customId: commentId }, { isRemoved: true }, { new: true })
-			.then(comment => comment.save())
-			.then(comment => comment.customId);
+			.then(comment => comment.customId)
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 
 	obtain(limit = 20, offset) {
 		return this
 			.commentsModel
-			.getComents(parseInt(limit), parseInt(offset))
+			.getComents(limit, offset)
 			.then(comments => {
-				if (!comments) throw new Error(500);
+				if (!comments) return [];
 				return _.map(comments, (comment) => commentResponse(comment));
+			})
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 }

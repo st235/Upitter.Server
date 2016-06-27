@@ -1,7 +1,10 @@
 'use strict';
 
 const Twitter = require('node-twitter-api');
+
 const authorization = require('../config/authorization');
+const requestService = require('../services/requestService');
+const tokenConfig = require('../config/methods');
 
 class SocialRequestUtils {
 	static init() {
@@ -12,7 +15,19 @@ class SocialRequestUtils {
 	}
 
 	static getTwitter(token, secret) {
-		return new Promise((resolve, reject) => this.twitter.verifyCredentials(token, secret, {}, (error, data) => error ? reject(error) : resolve(data)));
+		return new Promise((resolve, reject) => this.twitter.verifyCredentials(
+			token,
+			secret,
+			{},
+			(error, data) => error ? reject('REQUEST_SERVICE_ERROR') : resolve(data)));
+	}
+
+	static getGoogle(url, query) {
+		return requestService.get(url, query);
+	}
+
+	static getFacebook(url, query) {
+		return requestService.get(url, query);
 	}
 }
 

@@ -7,12 +7,14 @@ const { mixedLogger } = require('../../utils/loggerUtils');
 class ErrorMiddleware extends BaseController {
 	_onBind() {
 		super._onBind();
+
+		this.obtainError = this.obtainError.bind(this);
 		this.handleError = this.handleError.bind(this);
 	}
 
 	obtainError(errorCode, req, res, next) {
 		const error = ErrorService.getError(errorCode, req.ln);
-		if (error.isLog) mixedLogger.warn(error);
+		if (error.TO_LOG) mixedLogger.error(error);
 		res.status(error.externalCode);
 		next({
 			code: error.innerCode,

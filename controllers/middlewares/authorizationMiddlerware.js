@@ -23,7 +23,7 @@ class AuthorizationMiddleware extends AppUnit {
 				req.userId = userId;
 				return next();
 			})
-			.catch(next);
+			.catch(() => next('INTERNAL_SERVER_ERROR'));
 	}
 }
 

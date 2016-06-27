@@ -11,6 +11,7 @@ class ErrorService {
 	}
 
 	static getError(innerCode, locale) {
+		if (!innerCode || (!innerCode in errorList)) innerCode = 'UNKNOWN';
 		const errorBody = errorList[innerCode];
 		const description = this.staticLocale.getString(innerCode, locale);
 		return this._obtainModel(errorBody.isLog, errorBody, description);

@@ -1,10 +1,10 @@
 'use strict';
 
 const userResponse = require('../models/response/userResponse');
+const businessUserResponse = require('../models/response/businessUserResponse');
 
 const BaseController = require('./baseController');
 const ValidationService = require('../services/validationService');
-const RequestService = require('../services/requestService');
 const RedisService = require('../services/redisService');
 const SMSService = require('../services/smsService');
 
@@ -21,7 +21,6 @@ class AuthorizationController extends BaseController {
 
 	_onBind() {
 		super._onBind();
-		this.verify = this.verify.bind(this);
 		this.verifyToken = this.verifyToken.bind(this);
 		this.refreshToken = this.refreshToken.bind(this);
 		this.googleVerify = this.googleVerify.bind(this);
@@ -34,25 +33,35 @@ class AuthorizationController extends BaseController {
 	}
 
 	_onCreate() {
+		super._onCreate();
 		socialRequestUtils.init();
 		this.authorizationClient = RedisService.getClientByName('authorizations');
 		this.validationService = ValidationService;
 	}
 
 	verifyToken(req, res, next) {
+		const invalid = this.validate(req)
+			.add('token').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
 		const token = req.params.token;
 
 		this
 			.authorizationClient
 			.get(token)
-			.then(userId => {
-				if (!userId) return this.success(res, false);
-				this.success(res, true);
-			})
-			.catch(() => next('UNKNOWN_ERROR'));
+			.then(userId => userId ? this.success(res, true) : this.success(res, false))
+			.catch(() => next('UNAUTHORIZED'));
 	}
 
 	refreshToken(req, res, next) {
+		const invalid = this.validate(req)
+			.add('token').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+		
 		const token = req.params.token;
 		let refreshToken = null;
 
@@ -60,8 +69,8 @@ class AuthorizationController extends BaseController {
 			.authorizationClient
 			.get(token)
 			.then(userId => {
-				if (!userId) return next('UNAUTHORIZED');
-				return userId;
+				if (userId) return userId;
+				throw 'UNAUTHORIZED';
 			})
 			.then(userId => authUtils.createToken(this.authorizationClient, userId))
 			.then(refresh => {
@@ -69,18 +78,22 @@ class AuthorizationController extends BaseController {
 				return this.authorizationClient.remove(token);
 			})
 			.then(() => this.success(res, { refreshToken }))
-			.catch(() => next('UNKNOWN_ERROR'));
+			.catch(next);
 	}
 
-	googleVerify(req, res) {
-		const data = req.body;
-		if (this.verify(data, 'tokenId')) this.error(res, 'Malformed');
+	googleVerify(req, res, next) {
+		const invalid = this.validate(req)
+			.add('tokenId').should.exist().and.have.type('String')
+			.validate();
 
+		if (invalid) return next(invalid.name);
+
+		const id_token = req.body.tokenId;
 		let userModel = null;
 
-		RequestService
-			.get(TokenInfo.google, { id_token: data.tokenId })
-			.then(this.userManager.googleCheckExistence)
+		socialRequestUtils
+			.getGoogle(TokenInfo.google, { id_token })
+			.then(response => this.userManager.checkSocialExistence('google', response))
 			.then(user => {
 				userModel = user;
 				return userModel;
@@ -92,18 +105,22 @@ class AuthorizationController extends BaseController {
 			})
 			.then(user => userResponse(user))
 			.then(response => this.success(res, response))
-			.catch(error => this.error(res, error));
+			.catch(next);
 	}
 
-	facebookVerify(req, res) {
-		const data = req.body;
-		if (this.verify(data, 'accessToken')) this.error(res, 'Malformed');
+	facebookVerify(req, res, next) {
+		const invalid = this.validate(req)
+			.add('accessToken').should.exist().and.have.type('String')
+			.validate();
 
+		if (invalid) return next(invalid.name);
+
+		const { accessToken } = req.body;
 		let userModel = null;
 
-		RequestService
-			.get(TokenInfo.facebook, { access_token: data.accessToken })
-			.then(this.userManager.facebookCheckExistence)
+		socialRequestUtils
+			.getFacebook(TokenInfo.facebook, { access_token: data.accessToken })
+			.then(response => this.userManager.checkSocialExistence('facebook', response))
 			.then(user => {
 				userModel = user;
 				return userModel;
@@ -115,18 +132,24 @@ class AuthorizationController extends BaseController {
 			})
 			.then(user => userResponse(user))
 			.then(response => this.success(res, response))
-			.catch(error => this.error(res, error));
+			.catch(next);
 	}
 
-	twitterVerify(req, res) {
-		const data = req.body;
-		if (this.verify(data, 'secret') || this.verify(data, 'token')) this.error(res, 'Malformed');
+	twitterVerify(req, res, next) {
+		const invalid = this.validate(req)
+			.add('accessToken').should.exist().and.have.type('String')
+			.add('token').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
+		const { token, secret } = req.body;
 
 		let userModel = null;
 
 		socialRequestUtils
-			.getTwitter(data.token, data.secret)
-			.then(this.userManager.twitterCheckExistence)
+			.getTwitter(token, secret)
+			.then(response => this.userManager.checkSocialExistence('twitter', response))
 			.then(user => {
 				userModel = user;
 				return userModel;
@@ -138,17 +161,16 @@ class AuthorizationController extends BaseController {
 			})
 			.then(user => userResponse(user))
 			.then(response => this.success(res, response))
-			.catch(error => this.error(res, error));
+			.catch(next);
 	}
 
-	authorizeByPhone(req, res) {
-		const invalid = this.validationService
-			.init(req.body, req.query, req.params)
+	authorizeByPhone(req, res, next) {
+		const invalid = this.validate(req)
 			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
 			.validate();
 
-		if (invalid) return this.error(res, invalid);
+		if (invalid) return next(invalid.name);
 
 		const { number, countryCode } = req.params;
 		const phone = `${countryCode}${number}`;
@@ -163,34 +185,32 @@ class AuthorizationController extends BaseController {
 			.sendSMS()
 			.then(() => authUtils.setOrgTempModel(this.authorizationClient, phone, tempModel))
 			.then(this.success(res))
-			.catch(error => this.error(res, error));
+			.catch(next);
 	}
 
-	verifyCode(req, res) {
-		const invalid = this.validationService
-			.init(req.body, req.query, req.params)
+	verifyCode(req, res, next) {
+		const invalid = this.validate(req)
 			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
 			.add('code').should.exist().and.have.type('String')
 			.validate();
 
-		if (invalid) return this.error(res, invalid);
+		if (invalid) return next(invalid.name);
 
 		const { number, countryCode } = req.params;
 		const phone = `${countryCode}${number}`;
 		const { code } = req.body;
 
-		//TODO: Обработка ошибок!
 		authUtils.getOrgTempModel(this.authorizationClient, phone)
 			.then(model => {
-				if (!model) return this.error(res, 'No such phone in database');
-				if (!model.code) return this.error(res, 'Code was not yet sent');
+				if (!model) throw 'PHONE_NOT_FOUND';
+				if (!model.code) throw 'INTERNAL_SERVER_ERROR';
 				//TODO: Добавить число попыток в конфиг
-				if (model.attempts > 3) return this.error(res, 'Number of attempts exceeded');
+				if (model.attempts > 3) throw 'NUMBER_OF_ATTEMPTS_EXCEEDED';
 				if (model.code !== code) {
 					model.attempts++;
 					return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
-						.then(model => this.error(res, {attempts: model.attempts}));
+						.then(model => this.success(res, {attempts: model.attempts}));
 				}
 
 				return this.businessUserManager.checkIfExists(phone).then(user => {
@@ -210,14 +230,13 @@ class AuthorizationController extends BaseController {
 						}));
 				});
 			})
-			.catch(error => this.error(res, error));
+			.catch(next);
 	}
 
-	addInfo(req, res) {
+	addInfo(req, res, next) {
 		//TODO: Добавить в валидатрон метод length с четким указанием длинны
 		//TODO: Добавить в валидатрон метод should.be.containedBy('body'/'query'/'params')
-		const invalid = this.validationService
-			.init(req.body, req.query, req.params)
+		const invalid = this.validate(req)
 			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
 			.add('temporaryToken').should.exist().and.have.type('String')
@@ -234,11 +253,11 @@ class AuthorizationController extends BaseController {
 
 		authUtils.getOrgTempModel(this.authorizationClient, phone)
 			.then(model => {
-				if (!model) return this.error(res, 'No such user in database');
+				if (!model) throw 'PHONE_NOT_FOUND';
 				//TODO: Добавить число попыток в конфиг
 				//TODO: Обработка ошибок
-				if (!model.temporaryToken) return this.error(res, 'No temporary token was given to you');
-				if (model.temporaryToken !== temporaryToken) return this.error(res, 'Supplied token is invalid');
+				if (!model.temporaryToken) throw 'NO_TEMPORARY_TOKEN_IN_DB';
+				if (model.temporaryToken !== temporaryToken) throw 'INVALID_TEMPORARY_TOKEN';
 
 				return this.businessUserManager.checkIfExists(phone)
 					.then(user => {
@@ -255,16 +274,12 @@ class AuthorizationController extends BaseController {
 							});
 						}
 						
-						throw new Error('Can\'t create user. User already exists');
+						throw 'USER_ALREADY_EXISTS';
 					});
 			})
 			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
 			.then(token => this.success(res, { token }))
-			.catch(error => this.error(res, error));
-	}
-
-	verify(data, field) {
-		return this.validationService.init(data).add(field).should.exist().and.have.type('String').validate();
+			.catch(next);
 	}
 }
 

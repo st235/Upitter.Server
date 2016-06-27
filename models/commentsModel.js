@@ -36,7 +36,7 @@ module.exports = mongoose => {
 				this.customId = index;
 				next();
 			})
-			.catch(error => next(error));
+			.catch(() => next('INTERNAL_SERVER_ERROR'));
 	});
 
 	commentsSchema.statics.getComents = function (limit, offset) {
