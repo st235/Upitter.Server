@@ -220,10 +220,10 @@ class AuthorizationController extends BaseController {
 			.init(req.body, req.query, req.params)
 			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
+			.add('coordinates').should.exist().and.have.type('Array')
 			.add('temporaryToken').should.exist().and.have.type('String')
 			.add('name').should.exist().and.have.type('String').and.be.in.rangeOf(2, 25)
-			.add('latitude').should.exist().and.have.type('String')
-			.add('longitude').should.exist().and.have.type('String')
+			.add('site').should.have.type('String')
 			.add('category').should.exist().and.have.type('String').and.be.in.rangeOf(3, 20)
 			.validate();
 
@@ -231,7 +231,9 @@ class AuthorizationController extends BaseController {
 
 		const { number, countryCode } = req.params;
 		const phone = `${countryCode}${number}`;
-		const { temporaryToken, name, latitude, longitude, category } = req.body;
+		const { temporaryToken, name, site, category, coordinates } = req.body;
+
+		if (!coordinates[0].latitude || !coordinates[0].longitude) return this.error(res, 'Ну что ты за мудак-то такой?');
 
 		authUtils.getOrgTempModel(this.authorizationClient, phone)
 			.then(model => {
@@ -253,10 +255,8 @@ class AuthorizationController extends BaseController {
 									code: countryCode,
 									fullNumber: phone
 								},
-								coordinates: {
-									latitude,
-									longitude
-								}
+								site,
+								coordinates
 							});
 						}
 						throw new Error('Can\'t create user. User already exists');
