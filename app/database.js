@@ -50,7 +50,7 @@ class AppDatabase extends AppUnit {
 		this.commentsModel = commentsModel(mongoose);
 		this.categoriesModel = categoriesModel(mongoose);
 
-		this.usersManager = new UsersManager(this.usersModel, this.businessUsersModel);
+		this.usersManager = new UsersManager(this.usersModel);
 		this.businessUsersManager = new BusinessUsersManager(this.businessUsersModel);
 		this.logsManager = new LogsManager(this.logsModel);
 		this.feedbackManager = new FeedbackManager(this.feedbackModel);

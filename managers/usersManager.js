@@ -4,8 +4,8 @@ const _ = require('underscore');
 const AppUnit = require('../app/unit');
 
 class UsersManager extends AppUnit {
-	constructor(usersModel, businessUsersModel) {
-		super({ usersModel, businessUsersModel });
+	constructor(usersModel) {
+		super({ usersModel });
 	}
 
 	_onBind() {
