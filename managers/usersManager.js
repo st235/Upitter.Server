@@ -4,19 +4,20 @@ const _ = require('underscore');
 const AppUnit = require('../app/unit');
 
 class UsersManager extends AppUnit {
-	constructor(usersModel) {
-		super({ usersModel });
+	constructor(usersModel, businessUsersModel) {
+		super({ usersModel, businessUsersModel });
 	}
 
 	_onBind() {
 		this.checkSocialExistence = this.checkSocialExistence.bind(this);
 		this.create = this.create.bind(this);
 		this.edit = this.edit.bind(this);
+		this.getObjectId = this.getObjectId.bind(this);
 		this.addCompanyToSubscriptions = this.addCompanyToSubscriptions.bind(this);
 		this.removeCompanyFromSubscriptions = this.removeCompanyFromSubscriptions.bind(this);
-		this.getSubscriptionIds = this.getSubscriptionIds.bind(this);
+		this.getSubscriptions = this.getSubscriptions.bind(this);
 	}
-	
+
 	_formSocialData(type, data) {
 		let result = {
 			createdDate: Date.now()
@@ -69,6 +70,7 @@ class UsersManager extends AppUnit {
 		return this
 			.usersModel
 			.findOne({ customId })
+			.exec()
 			.then(user => {
 				if (!user) throw 'INTERNAL_SERVER_ERROR';
 				_.extend(user, data);
@@ -78,15 +80,27 @@ class UsersManager extends AppUnit {
 			});
 	}
 
+	getObjectId(userId) {
+		return this
+			.usersModel
+			.findOne({ customId: userId })
+			.exec()
+			.then(user => user._id);
+	}
+
 	addCompanyToSubscriptions(userId, companyId) {
 		return this
 			.usersModel
 			.findOne({ customId: userId })
+			.exec()
 			.then(user => {
 				if (!user) throw new Error(500);
-				if (_.indexOf(user.subscriptions, companyId) !== -1) throw new Error('You are already subscribed to this organization');
-				user.subscriptions.push(companyId);
+				if (_.indexOf(user.subscriptions, companyId.toString()) !== -1) throw 'SUBSCRIBE_ERROR_1';
+				user.subscriptions.push(companyId.toString());
 				return user.save();
+			})
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 
@@ -94,19 +108,27 @@ class UsersManager extends AppUnit {
 		return this
 			.usersModel
 			.findOne({ customId: userId })
+			.exec()
 			.then(user => {
 				if (!user) throw new Error(500);
-				if (_.indexOf(user.subscriptions, companyId) === -1) throw new Error('You are not subscribed to this company');
-				user.subscriptions = _.without(user.subscriptions, companyId);
+				if (_.indexOf(user.subscriptions, companyId.toString()) === -1) throw 'SUBSCRIBE_ERROR_2';
+				user.subscriptions = _.without(user.subscriptions, companyId.toString());
 				return user.save();
+			})
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 
-	getSubscriptionIds(userId) {
+	getSubscriptions(userId) {
 		return this
 			.usersModel
 			.findOne({ customId: userId })
-			.exec();
+			.populate('subscriptions')
+			.exec()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 }
 

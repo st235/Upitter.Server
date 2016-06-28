@@ -102,5 +102,15 @@ module.exports = {
 	SMS_SERVICE_ERROR: {
 		internalDescription: 'Ошибка в СМС-сервисе',
 		externalDescription: 'Внутренняя ошибка сервера'
+	},
+
+	SUBSCRIBE_ERROR_1: {
+		internalDescription: 'Пользователь уже подписан на эту компанию',
+		externalDescription: 'Вы уже подписаны на эту компанию'
+	},
+
+	SUBSCRIBE_ERROR_2: {
+		internalDescription: 'Пользователь еще не подписан на эту компанию',
+		externalDescription: 'Вы еще не подписаны на эту компанию'
 	}
 };

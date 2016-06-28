@@ -12,7 +12,7 @@ class BaseController extends AppUnit {
 		this.responseModel = this.responseModel.bind(this);
 		this.redirectToMain = this.redirectToMain.bind(this);
 	}
-	
+
 	_onCreate() {
 		this.validationService = ValidationService;
 	}

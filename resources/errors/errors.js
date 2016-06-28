@@ -136,5 +136,17 @@ module.exports = {
 		INNER_CODE: 3006,
 		EXTERNAL_CODE: 500,
 		TO_LOG: false
+	},
+
+	SUBSCRIBE_ERROR_1: {
+		INNER_CODE: 3007,
+		EXTERNAL_CODE: 500,
+		TO_LOG: false
+	},
+
+	SUBSCRIBE_ERROR_2: {
+		INNER_CODE: 3008,
+		EXTERNAL_CODE: 500,
+		TO_LOG: false
 	}
 };

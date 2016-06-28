@@ -123,6 +123,7 @@ class AppRoutes extends AppUnit {
 
 	registerBusinessUsers(app, paths, controller) {
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
+		app.post(paths.getSubscribers, this.checkAuthorization, controller.getSubscribers);
 	}
 }
 

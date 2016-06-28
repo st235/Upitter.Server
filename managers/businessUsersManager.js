@@ -14,9 +14,10 @@ class BusinessUsersManager extends AppUnit {
 		this.create = this.create.bind(this);
 		this.checkIfExists = this.checkIfExists.bind(this);
 		this.edit = this.edit.bind(this);
+		this.getObjectId = this.getObjectId.bind(this);
 		this.addUserToSubscribers = this.addUserToSubscribers.bind(this);
 		this.removeUserFromSubscribers = this.removeUserFromSubscribers.bind(this);
-		this.asd = this.asd.bind(this);
+		this.getSubscribers = this.getSubscribers.bind(this);
 	}
 
 	create(data) {
@@ -48,21 +49,32 @@ class BusinessUsersManager extends AppUnit {
 				_.extend(businessUser, data);
 				return businessUser.save();
 			})
+			.then(businessUser => businessUserResponse(businessUser));
+	}
+
+	getObjectId(companyId) {
+		return this
+			.businessUsersModel
+			.findOne({ customId: companyId })
+			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			})
-			.then(businessUser => businessUserResponse(businessUser));
+			.then(company => company._id);
 	}
 
 	addUserToSubscribers(userId, companyId) {
 		return this
 			.businessUsersModel
 			.findOne({ customId: companyId })
+			.exec()
 			.then(company => {
-				if (!company) throw new Error(500);
-				if (_.indexOf(company.subscribers, userId) !== -1) throw new Error('You are already subscribed to this organization');
-				company.subscribers.push(userId);
+				if (_.indexOf(company.subscribers, userId.toString()) !== -1) throw 'SUBSCRIBE_ERROR_1';
+				company.subscribers.push(userId.toString());
 				return company.save();
+			})
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 
@@ -70,22 +82,27 @@ class BusinessUsersManager extends AppUnit {
 		return this
 			.businessUsersModel
 			.findOne({ customId: companyId })
+			.exec()
 			.then(company => {
-				if (!company) throw new Error(500);
-				if (_.indexOf(company.subscribers, userId) === -1) throw new Error('You are not subscribed to this company');
-				company.subscribers = _.without(company.subscribers, String(userId));
+				if (_.indexOf(company.subscribers, userId.toString()) === -1) throw 'SUBSCRIBE_ERROR_2';
+				company.subscribers = _.without(company.subscribers, userId.toString());
 				return company.save();
+			})
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 
-	asd(ids) {
-		return _.map(ids, (id) => {
-			return this
-				.businessUsersModel
-				.findOne({ customId: id });
-		});
+	getSubscribers(companyId) {
+		return this
+			.businessUsersModel
+			.findOne({ customId: companyId })
+			.populate('subscribers')
+			.exec()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
-
 }
 
 module.exports = BusinessUsersManager;

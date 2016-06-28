@@ -102,6 +102,15 @@ module.exports = {
 	SMS_SERVICE_ERROR: {
 		internalDescription: 'Error in SMS-service',
 		externalDescription: 'Internal server error'
-	}
+	},
 
+	SUBSCRIBE_ERROR_1: {
+		internalDescription: 'User is already subscribed to this company',
+		externalDescription: 'You are already subscribed to this company'
+	},
+
+	SUBSCRIBE_ERROR_2: {
+		internalDescription: 'User has not subscribed to this company',
+		externalDescription: 'You have not subscribed to this company'
+	}
 };

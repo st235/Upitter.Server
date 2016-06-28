@@ -26,9 +26,10 @@ module.exports = mongoose => {
 		logoUrl: {
 			type: String
 		},
-		subscribers: {
-			type: [String]
-		},
+		subscribers: [{
+			type: String,
+			ref: 'Users'
+		}],
 		moderatorsList: {
 			type: [String]
 		},
@@ -49,6 +50,20 @@ module.exports = mongoose => {
 				type: String,
 				unique: true
 			}
+		},
+		site: {
+			type: String
+		},
+		coordinates: [{
+			latitude: {
+				type: String
+			},
+			longitude: {
+				type: String
+			}
+		}],
+		contactsPhones: {
+			type: [String]
 		}
 	});
 

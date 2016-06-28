@@ -22,7 +22,6 @@ const postsModel = require('../models/postsModel');
 const votesModel = require('../models/votesModel');
 const notificationsModel = require('../models/notificationsModel');
 const mediaModel = require('../models/mediaModel');
-const coordinatesModel = require('../models/coordinatesModel');
 const commentsModel = require('../models/commentsModel');
 const categoriesModel = require('../models/categoriesModel');
 
@@ -48,11 +47,10 @@ class AppDatabase extends AppUnit {
 		this.votesModel = votesModel(mongoose);
 		this.notificationsModel = notificationsModel(mongoose);
 		this.mediaModel = mediaModel(mongoose);
-		this.coordinatesModel = coordinatesModel(mongoose);
 		this.commentsModel = commentsModel(mongoose);
 		this.categoriesModel = categoriesModel(mongoose);
 
-		this.usersManager = new UsersManager(this.usersModel);
+		this.usersManager = new UsersManager(this.usersModel, this.businessUsersModel);
 		this.businessUsersManager = new BusinessUsersManager(this.businessUsersModel);
 		this.logsManager = new LogsManager(this.logsModel);
 		this.feedbackManager = new FeedbackManager(this.feedbackModel);
@@ -98,7 +96,6 @@ class AppDatabase extends AppUnit {
 			votes: this.votesModel,
 			notifications: this.notificationsModel,
 			media: this.mediaModel,
-			coordinates: this.coordinatesModel,
 			comments: this.commentsModel
 		};
 	}

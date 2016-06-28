@@ -38,9 +38,10 @@ module.exports = mongoose => {
 			type: Boolean,
 			default: false
 		},
-		subscriptions: {
-			type: [String]
-		},
+		subscriptions: [{
+			type: String,
+			ref: 'BusinessUsers'
+		}],
 		createdDate: {
 			type: Date
 		},

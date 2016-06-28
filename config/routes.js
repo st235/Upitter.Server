@@ -41,6 +41,7 @@ module.exports = {
 		find: '/categories/find/:id'
 	},
 	businessUser: {
-		edit: '/company/edit'
+		edit: '/company/edit',
+		getSubscribers: '/company/subscribers'
 	}
 };
