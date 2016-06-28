@@ -37,7 +37,7 @@ module.exports = {
 				}
 			});
 	},
-	
+
 	removeOrgTempModel(authorizationClient, phone) {
 		return authorizationClient.remove(phone);
 	}

@@ -9,7 +9,6 @@ module.exports = businessUser => {
 		name: businessUser.name,
 		isVerify: businessUser.isVerify,
 		moderatorsList: businessUser.moderatorsList,
-		addressesList: businessUser.addressesList,
 		coordinates: _.map(businessUser.coordinates, (coordinates) => {
 			return {
 				latitude: coordinates.latitude,

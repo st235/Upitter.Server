@@ -4,7 +4,6 @@ const Twitter = require('node-twitter-api');
 
 const authorization = require('../config/authorization');
 const requestService = require('../services/requestService');
-const tokenConfig = require('../config/methods');
 
 class SocialRequestUtils {
 	static init() {

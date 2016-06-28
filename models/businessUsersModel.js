@@ -33,9 +33,6 @@ module.exports = mongoose => {
 		moderatorsList: {
 			type: [String]
 		},
-		addressesList: {
-			type: [String]
-		},
 		createdDate: {
 			type: Date
 		},
