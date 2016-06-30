@@ -189,6 +189,7 @@ class AuthorizationController extends BaseController {
 	}
 
 	verifyCode(req, res, next) {
+		let userModel;
 		const invalid = this.validate(req)
 			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
@@ -213,22 +214,32 @@ class AuthorizationController extends BaseController {
 						.then(model => this.success(res, {attempts: model.attempts}));
 				}
 
-				return this.businessUserManager.checkIfExists(phone).then(user => {
-					if (user) return authUtils.removeOrgTempModel(this.authorizationClient, phone)
-						.then(() => this.success(res, {
-							isAuthorized: true,
-							user
-						}));
+				return this.businessUserManager
+					.checkIfExists(phone)
+					.then(user => {
+						if (user) return authUtils.removeOrgTempModel(this.authorizationClient, phone)
+							.then(() => {
+								userModel = user;
+								return authUtils.createToken(this.authorizationClient, user.customId);
+							})
+							.then(accessToken => {
+								userModel.accessToken = accessToken;
+								return businessUserResponse(userModel);
+							})
+							.then((businessUser) => this.success(res, {
+								isAuthorized: true,
+								businessUser
+							}));
 
-					model.temporaryToken = secretUtils.getUniqueHash(phone);
-					model.code = null;
-					model.attempts = null;
-					return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
-						.then(model => this.success(res, {
-							isAuthorized: false,
-							temporaryToken: model.temporaryToken
-						}));
-				});
+						model.temporaryToken = secretUtils.getUniqueHash(phone);
+						model.code = null;
+						model.attempts = null;
+						return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
+							.then(model => this.success(res, {
+								isAuthorized: false,
+								temporaryToken: model.temporaryToken
+							}));
+					});
 			})
 			.catch(next);
 	}
