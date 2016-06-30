@@ -16,26 +16,26 @@ module.exports = user => {
 	if (user.picture) userResponse.picture = user.picture;
 	if (user.description) userResponse.description = user.description;
 	if (user.token) userResponse.accessToken = user.token;
-	//if (user.subscriptions[0].customId) {
-	//	userResponse.subscriptions = _.map(user.subscriptions, (company) => {
-	//		const obj = {
-	//			customId: company.customId,
-	//			name: company.name,
-	//			activity: company.activity,
-	//			logoUrl: company.logoUrl,
-	//			isVerify: company.isVerify,
-	//			coordinates: _.map(company.coordinates, (coordinates) => {
-	//				return {
-	//					latitude: coordinates.latitude,
-	//					longitude: coordinates.longitude
-	//				};
-	//			})
-	//		};
-	//		if (company.description) obj.description = company.description;
-	//		if (company.site) obj.site = company.site;
-	//		return obj;
-	//	});
-	//}
+	if (user.subscriptions[0] && user.subscriptions[0].customId) {
+		userResponse.subscriptions = _.map(user.subscriptions, (company) => {
+			const obj = {
+				customId: company.customId,
+				name: company.name,
+				activity: company.activity,
+				logoUrl: company.logoUrl,
+				isVerify: company.isVerify,
+				coordinates: _.map(company.coordinates, (coordinates) => {
+					return {
+						latitude: coordinates.latitude,
+						longitude: coordinates.longitude
+					};
+				})
+			};
+			if (company.description) obj.description = company.description;
+			if (company.site) obj.site = company.site;
+			return obj;
+		});
+	}
 
 	return userResponse;
 };

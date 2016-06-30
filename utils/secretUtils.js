@@ -22,7 +22,7 @@ module.exports = {
 			.digest('hex')
 			.toString('utf8');
 	},
-	
+
 	generateCode() {
 		return (Math.random() * 1e6).toFixed();
 	}

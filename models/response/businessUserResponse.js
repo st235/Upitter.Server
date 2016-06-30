@@ -18,7 +18,7 @@ module.exports = businessUser => {
 	};
 	if (businessUser.description) businessUserResponse.description = businessUser.description;
 	if (businessUser.logoUrl) businessUserResponse.logoUrl = businessUser.logoUrl;
-	if (businessUser.subscribers[0].customId) {
+	if (businessUser.subscribers[0] && businessUser.subscribers[0].customId) {
 		businessUserResponse.subscribers = _.map(businessUser.subscribers, (user) => {
 			const obj = {
 				customId: user.customId,
