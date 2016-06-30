@@ -284,7 +284,11 @@ class AuthorizationController extends BaseController {
 				businessUser = user;
 				return authUtils.createToken(this.authorizationClient, user.customId);
 			})
-			.then(accessToken => this.success(res, { accessToken, businessUser }))
+			.then(accessToken => {
+				businessUser.accessToken = accessToken;
+				return businessUser;
+			})
+			.then(businessUser => this.success(res, businessUserResponse(businessUser)))
 			.catch(next);
 	}
 }

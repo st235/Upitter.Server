@@ -16,6 +16,7 @@ module.exports = businessUser => {
 			};
 		})
 	};
+	if (businessUser.accessToken) businessUserResponse.accessToken = businessUser.accessToken;
 	if (businessUser.description) businessUserResponse.description = businessUser.description;
 	if (businessUser.logoUrl) businessUserResponse.logoUrl = businessUser.logoUrl;
 	if (businessUser.subscribers[0] && businessUser.subscribers[0].customId) {
