@@ -59,7 +59,9 @@ class AppDatabase extends AppUnit {
 		this.categoriesManager = new CategoriesManager(this.categoriesModel);
 	}
 
-	_onStart() {
+	_onStart(error) {
+		if (error) mixedLogger.error(`MongoDB error: `, error);
+
 		mixedLogger.info(`MongoDB started on uri ${databaseConfig.uri}`);
 		this
 			.countersModel
