@@ -9,6 +9,7 @@ class BaseController extends AppUnit {
 		this.error = this.error.bind(this);
 		this.publish = this.publish.bind(this);
 		this.success = this.success.bind(this);
+		this.unsuccess = this.unsuccess.bind(this);
 		this.responseModel = this.responseModel.bind(this);
 		this.redirectToMain = this.redirectToMain.bind(this);
 	}
@@ -33,6 +34,11 @@ class BaseController extends AppUnit {
 	success(res, obj) {
 		res.status(200);
 		res.json(this.responseModel(true, obj));
+	}
+	
+	unsuccess(res, obj) {
+		res.status(200);
+		res.json(this.responseModel(false, obj));
 	}
 
 	responseModel(success, response, message, isError = false) {
