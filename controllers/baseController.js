@@ -41,8 +41,8 @@ class BaseController extends AppUnit {
 		res.json(this.responseModel(false, obj));
 	}
 
-	responseModel(success, response, message, isError = false) {
-		if (isError) return { success, error: { message }};
+	responseModel(success, response, error, isError = false) {
+		if (isError) return { success, error };
 		return { success, response };
 	}
 
