@@ -26,10 +26,17 @@ class AppRoutes extends AppUnit {
 
 	_onBind() {
 		this.register = this.register.bind(this);
+
 		this.registerHeader = this.registerHeader.bind(this);
 		this.registerAuthorization = this.registerAuthorization.bind(this);
 		this.registerLogs = this.registerLogs.bind(this);
 		this.registerFeedback = this.registerFeedback.bind(this);
+		this.registerFooter = this.registerFooter.bind(this);
+		this.registerUsers = this.registerUsers.bind(this);
+		this.registerPosts = this.registerPosts.bind(this);
+		this.registerComments = this.registerComments.bind(this);
+		this.registerCategories = this.registerCategories.bind(this);
+		this.registerBusinessUsers = this.registerBusinessUsers.bind(this);
 		this.registerFooter = this.registerFooter.bind(this);
 	}
 
