@@ -257,7 +257,7 @@ class AuthorizationController extends BaseController {
 			.add('category').should.exist().and.have.type('String').and.be.in.rangeOf(3, 20)
 			.validate();
 
-		if (invalid) return this.error(res, invalid);
+		if (invalid) return next(invalid.name);
 
 		const { number, countryCode } = req.params;
 		const phone = `${countryCode}${number}`;

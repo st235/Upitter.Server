@@ -5,7 +5,7 @@
 // 3001 - 4000 EXTERNAL SERVICES ERRORS
 
 module.exports = {
-	
+
 	//UNKNOWN ERROR
 	UNKNOWN_ERROR: {
 		INNER_CODE: 0,
@@ -27,7 +27,7 @@ module.exports = {
 	},
 
 	// CLIENT ERRORS
-	
+
 	PROPERTY_HAS_INCORRECT_TYPE: {
 		INNER_CODE: 1001,
 		EXTERNAL_CODE: 422,
