@@ -253,7 +253,7 @@ class AuthorizationController extends BaseController {
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
 			.add('temporaryToken').should.exist().and.have.type('String')
 			.add('name').should.exist().and.have.type('String').and.be.in.rangeOf(2, 25)
-			.add('site').should.have.type('String')
+			//.add('site').should.have.type('String')
 			.add('category').should.exist()
 			.add('coordinates').should.exist()
 			.validate();

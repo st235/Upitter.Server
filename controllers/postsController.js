@@ -44,8 +44,8 @@ class PostsController extends BaseController {
 	edit(req, res) {
 		const invalid = this.validate(req)
 			.add('accessToken').should.exist().and.have.type('String')
-			.add('title').should.have.type('String').and.be.in.rangeOf(3, 63)
-			.add('text').should.have.type('String').and.be.in.rangeOf(3, 500)
+			//.add('title').should.have.type('String').and.be.in.rangeOf(3, 63)
+			//.add('text').should.have.type('String').and.be.in.rangeOf(3, 500)
 			.validate();
 
 		if (invalid) return next(invalid.name);

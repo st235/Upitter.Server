@@ -26,12 +26,12 @@ class UsersController extends BaseController {
 
 	edit(req, res) {
 		const invalid = this.validate(req)
-			.add('nickname').should.have.type('String').and.be.in.rangeOf(2, 20)
-			.add('name').should.have.type('String').and.be.in.rangeOf(2, 20)
-			.add('surname').should.have.type('String').and.be.in.rangeOf(2, 30)
-			.add('email').should.have.type('String').and.be.in.rangeOf(2, 30)
-			.add('sex').should.have.type('String').and.be.in.rangeOf(0, 2)
-			.add('description').should.have.type('String').and.be.in.rangeOf(4, 400)
+			//.add('nickname').should.have.type('String').and.be.in.rangeOf(2, 20)
+			//.add('name').should.have.type('String').and.be.in.rangeOf(2, 20)
+			//.add('surname').should.have.type('String').and.be.in.rangeOf(2, 30)
+			//.add('email').should.have.type('String').and.be.in.rangeOf(2, 30)
+			//.add('sex').should.have.type('String').and.be.in.rangeOf(0, 2)
+			//.add('description').should.have.type('String').and.be.in.rangeOf(4, 400)
 			.validate();
 
 		if (invalid) return next(invalid.name);

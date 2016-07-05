@@ -23,9 +23,9 @@ class BusinessUsersController extends BaseController {
 	edit(req, res, next) {
 		const invalid = this.validate(req)
 			.add('accessToken').should.exist().and.have.type('String')
-			.add('name').should.have.type('String').and.be.in.rangeOf(3, 63)
-			.add('description').should.have.type('String').and.be.in.rangeOf(3, 400)
-			.add('site').should.have.type('String').and.be.in.rangeOf(3, 63)
+			//.add('name').should.have.type('String').and.be.in.rangeOf(3, 63)
+			//.add('description').should.have.type('String').and.be.in.rangeOf(3, 400)
+			//.add('site').should.have.type('String').and.be.in.rangeOf(3, 63)
 			.validate();
 
 		if (invalid) return next(invalid.name);
