@@ -10,7 +10,7 @@
     "start": "node bin/start"
   },
   "dependencies": {
-    "body-parser": "^1.15.1",
+    "body-parser": "^1.15.2",
     "cors": "^2.7.1",
     "default-locale": "^0.3.3",
     "express": "^4.14.0",

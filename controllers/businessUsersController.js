@@ -16,6 +16,7 @@ class BusinessUsersController extends BaseController {
 	}
 
 	_onCreate() {
+		super._onCreate();
 		this.validationUtils = new ValidationUtils;
 	}
 

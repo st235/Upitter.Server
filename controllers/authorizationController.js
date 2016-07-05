@@ -211,7 +211,7 @@ class AuthorizationController extends BaseController {
 				if (model.code !== code) {
 					model.attempts++;
 					return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
-						.then(model => this.unsuccess(res, {attempts: model.attempts}));
+						.then(model => this.unsuccess(res, { attempts: model.attempts }));
 				}
 
 				return this.businessUserManager
@@ -255,8 +255,8 @@ class AuthorizationController extends BaseController {
 			.add('name').should.exist().and.have.type('String').and.be.in.rangeOf(2, 25)
 			.add('site').should.have.type('String')
 			.add('category').should.exist()
+			.add('coordinates').should.exist()
 			.validate();
-
 		if (invalid) return next(invalid.name);
 
 		const { number, countryCode } = req.params;

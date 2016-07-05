@@ -1,6 +1,7 @@
 'use strict';
 
 const BaseController = require('./baseController');
+const ValidationUtils = require('../utils/validationUtils');
 
 class CommentsController extends BaseController {
 	constructor(commentsManager) {
@@ -12,6 +13,11 @@ class CommentsController extends BaseController {
 		this.create = this.create.bind(this);
 		this.remove = this.remove.bind(this);
 		this.obtain = this.obtain.bind(this);
+	}
+
+	_onCreate() {
+		super._onCreate();
+		this.validationUtils = new ValidationUtils;
 	}
 
 	create(req, res) {

@@ -18,6 +18,7 @@ class PostsController extends BaseController {
 	}
 
 	_onCreate() {
+		super._onCreate();
 		this.validationUtils = new ValidationUtils;
 	}
 
