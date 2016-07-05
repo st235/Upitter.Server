@@ -15,6 +15,13 @@ class CommentsController extends BaseController {
 	}
 
 	create(req, res) {
+		const invalid = this.validate(req)
+			.add('accessToken').should.exist().and.have.type('String')
+			.add('text').should.exist().and.have.type('String').and.be.in.rangeOf(3, 400)
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
 		const body = req.body;
 
 		this
@@ -25,6 +32,13 @@ class CommentsController extends BaseController {
 	}
 
 	remove(req, res, next) {
+		const invalid = this.validate(req)
+			.add('accessToken').should.exist().and.have.type('String')
+			.add('postId').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
 		const postId = req.query.customId;
 
 		this

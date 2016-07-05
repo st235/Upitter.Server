@@ -73,7 +73,8 @@ class UsersManager extends AppUnit {
 			.exec()
 			.then(user => {
 				if (!user) throw 'INTERNAL_SERVER_ERROR';
-				_.extend(user, data);
+				let validatedData = _.omit(data, 'customId', 'isVerify', 'createdDate', 'socialId');
+				_.extend(user, validatedData);
 				return user.save();
 			}).catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';

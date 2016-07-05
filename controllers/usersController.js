@@ -1,7 +1,9 @@
 'use strict';
 
 const BaseController = require('./baseController');
+const ValidationUtils = require('../utils/validationUtils');
 const userResponse = require('../models/response/userResponse');
+
 
 class UsersController extends BaseController {
 	constructor(usersManager, businessUsersManager) {
@@ -17,10 +19,27 @@ class UsersController extends BaseController {
 		this.getSubscriptions = this.getSubscriptions.bind(this);
 	}
 
+	_onCreate() {
+		this.validationUtils = new ValidationUtils;
+	}
+
 	edit(req, res) {
+		const invalid = this.validate(req)
+			.add('nickname').should.have.type('String').and.be.in.rangeOf(2, 20)
+			.add('name').should.have.type('String').and.be.in.rangeOf(2, 20)
+			.add('surname').should.have.type('String').and.be.in.rangeOf(2, 30)
+			.add('email').should.have.type('String').and.be.in.rangeOf(2, 30)
+			.add('sex').should.have.type('String').and.be.in.rangeOf(0, 2)
+			.add('description').should.have.type('String').and.be.in.rangeOf(4, 400)
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
+		const body = req.body;
+
 		this
 			.usersManager
-			.edit(req.userId, req.body)
+			.edit(req.userId, body)
 			.then(user => userResponse(user))
 			.then(response => this.success(res, response))
 			.catch(error => this.error(res, error));
@@ -37,6 +56,13 @@ class UsersController extends BaseController {
 	}
 
 	addToSubscriptions(req, res, next) {
+		const invalid = this.validate(req)
+			.add('accessToken').should.exist().and.have.type('String')
+			.add('companyId').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
 		const ids = {
 			userId: req.userId,
 			companyId: req.params.companyId
@@ -52,6 +78,13 @@ class UsersController extends BaseController {
 	}
 
 	removeFromSubscriptions(req, res, next) {
+		const invalid = this.validate(req)
+			.add('accessToken').should.exist().and.have.type('String')
+			.add('companyId').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
 		const ids = {
 			userId: req.userId,
 			companyId: req.params.companyId
@@ -67,6 +100,12 @@ class UsersController extends BaseController {
 	}
 
 	getSubscriptions(req, res, next) {
+		const invalid = this.validate(req)
+			.add('accessToken').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
 		const userId = req.userId;
 
 		this

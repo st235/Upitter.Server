@@ -60,7 +60,7 @@ class AppDatabase extends AppUnit {
 	}
 
 	_onStart(error) {
-		if (error) mixedLogger.error(`MongoDB error: `, error);
+		if (error) mixedLogger.error('MongoDB error: ', error);
 
 		mixedLogger.info(`MongoDB started on uri ${databaseConfig.uri}`);
 		this

@@ -254,7 +254,7 @@ class AuthorizationController extends BaseController {
 			.add('temporaryToken').should.exist().and.have.type('String')
 			.add('name').should.exist().and.have.type('String').and.be.in.rangeOf(2, 25)
 			.add('site').should.have.type('String')
-			.add('category').should.exist().and.have.type('String').and.be.in.rangeOf(3, 20)
+			.add('category').should.exist()
 			.validate();
 
 		if (invalid) return next(invalid.name);

@@ -46,7 +46,8 @@ class BusinessUsersManager extends AppUnit {
 			})
 			.then(businessUser => {
 				if (!businessUser) throw 'INTERNAL_SERVER_ERROR';
-				_.extend(businessUser, data);
+				let validatedData = _.omit(data, 'customId', 'isVerify', 'phone', 'coordinates', 'activity', 'createdDate');
+				_.extend(businessUser, validatedData);
 				return businessUser.save();
 			})
 			.then(businessUser => businessUserResponse(businessUser));

@@ -1,6 +1,7 @@
 'use strict';
 
 const BaseController = require('./baseController');
+const ValidationUtils = require('../utils/validationUtils');
 
 class PostsController extends BaseController {
 	constructor(postsManager) {
@@ -16,7 +17,19 @@ class PostsController extends BaseController {
 		this.like = this.like.bind(this);
 	}
 
+	_onCreate() {
+		this.validationUtils = new ValidationUtils;
+	}
+
 	create(req, res) {
+		const invalid = this.validate(req)
+			.add('accessToken').should.exist().and.have.type('String')
+			.add('title').should.exist().and.have.type('String').and.be.in.rangeOf(3, 63)
+			.add('text').should.exist().and.have.type('String').and.be.in.rangeOf(3, 500)
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
 		const body = req.body;
 		const company = req.userId;
 
@@ -28,6 +41,14 @@ class PostsController extends BaseController {
 	}
 
 	edit(req, res) {
+		const invalid = this.validate(req)
+			.add('accessToken').should.exist().and.have.type('String')
+			.add('title').should.have.type('String').and.be.in.rangeOf(3, 63)
+			.add('text').should.have.type('String').and.be.in.rangeOf(3, 500)
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
 		const body = req.body;
 
 		this
@@ -38,6 +59,13 @@ class PostsController extends BaseController {
 	}
 
 	remove(req, res) {
+		const invalid = this.validate(req)
+			.add('accessToken').should.exist().and.have.type('String')
+			.add('postId').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
 		const postId = req.query.customId;
 
 		this
@@ -48,6 +76,13 @@ class PostsController extends BaseController {
 	}
 
 	obtain(req, res) {
+		const invalid = this.validate(req)
+			.add('limit').should.exist().and.have.type('String')
+			.add('offset').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
 		const query = req.query;
 
 		this
@@ -58,6 +93,13 @@ class PostsController extends BaseController {
 	}
 
 	like(req, res) {
+		const invalid = this.validate(req)
+			.add('accessToken').should.exist().and.have.type('String')
+			.add('postId').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
 		const params = req.params;
 
 		this

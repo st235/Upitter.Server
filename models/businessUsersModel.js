@@ -8,10 +8,10 @@ module.exports = mongoose => {
 			type: Number,
 			unique: true
 		},
-		activity: {
+		activity: [{
 			type: String,
 			required: true
-		},
+		}],
 		name: {
 			type: String,
 			required: true
