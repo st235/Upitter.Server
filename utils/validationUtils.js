@@ -13,6 +13,8 @@ class ValidationUtils extends AppUnit {
 	_onBind() {
 		this.existAndTypeVerify = this.existAndTypeVerify.bind(this);
 		this.typeVerify = this.typeVerify.bind(this);
+		this.checkArray = this.checkArray.bind(this);
+		this.checkArrayElement = this.checkArrayElement.bind(this);
 	}
 
 	existAndTypeVerify(data, type, ...fields) {
@@ -47,6 +49,16 @@ class ValidationUtils extends AppUnit {
 		});
 
 		return validation.validate();
+	}
+
+	checkArray(arr, minLenght, maxLenght) {
+		return (!arr || arr.length < minLenght || arr.length > maxLenght)
+			|| this.checkArrayElement(arr, 1, 100)
+			|| false;
+	}
+
+	checkArrayElement(arr, minLenght, maxLenght) {
+		return _.filter(arr, (num) => typeof num !== String || num.length < minLenght || num.length > maxLenght);
 	}
 }
 

@@ -29,6 +29,7 @@ module.exports = {
 		edit: '/post/edit',
 		remove: '/post/remove',
 		like: '/post/like/:postId',
+		vote: '/post/vote/:postId/:variantIndex',
 		comment: '/post/comment'
 	},
 	comment: {

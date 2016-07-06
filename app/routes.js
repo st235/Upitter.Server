@@ -115,6 +115,7 @@ class AppRoutes extends AppUnit {
 		app.get(paths.remove, controller.remove);
 		app.get(paths.obtain, controller.obtain);
 		app.get(paths.like, this.checkAuthorization, controller.like);
+		app.get(paths.vote, this.checkAuthorization, controller.voteForVariant);
 	}
 
 	registerComments(app, paths, controller) {

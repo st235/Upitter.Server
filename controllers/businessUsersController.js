@@ -40,7 +40,7 @@ class BusinessUsersController extends BaseController {
 			.catch(next);
 	}
 
-	getSubscribers(req, res) {
+	getSubscribers(req, res, next) {
 		this
 			.businessUsersManager
 			.getSubscribers(req.userId)

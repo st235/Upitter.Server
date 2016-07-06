@@ -11,7 +11,11 @@ module.exports = mongoose => {
 		},
 		author: {
 			type: String,
-			required: true
+			required: true,
+			ref: 'BusinessUsers'
+		},
+		categories: {
+			type: [String]
 		},
 		title: {
 			type: String,
@@ -42,9 +46,19 @@ module.exports = mongoose => {
 			type: Number,
 			default: 0
 		},
-		_voters: {
-			type: [String]
-		}
+		variants: [{
+			value: {
+				type: String
+			},
+			count: {
+				type: Number,
+				default: 0
+			}
+		}],
+		_voters: [{
+			type: String,
+			ref: 'Users'
+		}]
 	});
 
 	postsSchema.pre('save', function (next) {

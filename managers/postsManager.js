@@ -16,15 +16,17 @@ class PostsManager extends AppUnit {
 		this.remove = this.remove.bind(this);
 		this.obtain = this.obtain.bind(this);
 		this.like = this.like.bind(this);
+		this.voteForVariant = this.voteForVariant.bind(this);
 	}
 
 	create(companyId, data) {
 		data.author = companyId;
 		const post = new this.postsModel(data);
-		return post.save().then(post => {
-			if (!post) throw new Error(500);
-			return postResponse(post);
-		});
+		return post.save()
+			.then(post => postResponse(post))
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 
 	edit(postId, data) {
@@ -32,14 +34,13 @@ class PostsManager extends AppUnit {
 			.postsModel
 			.findOne({ customId: postId })
 			.then(postModel => {
-				if (!postModel) throw new Error(500);
 				data.updatedDate = Date.now();
 				_.extend(postModel, data);
 				return postModel.save();
 			})
-			.then(post => {
-				if (!post) throw new Error(500);
-				return postResponse(post);
+			.then(post => postResponse(post))
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 
@@ -48,7 +49,10 @@ class PostsManager extends AppUnit {
 			.postsModel
 			.findOneAndUpdate({ customId: postId }, { isRemoved: true }, { new: true })
 			.then(post => post.save())
-			.then(post => post.customId);
+			.then(post => post.customId)
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 
 	obtain(limit = 20, offset) {
@@ -58,6 +62,9 @@ class PostsManager extends AppUnit {
 			.then(posts => {
 				if (!posts) throw new Error(500);
 				return _.map(posts, (post) => postResponse(post));
+			})
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 
@@ -76,7 +83,25 @@ class PostsManager extends AppUnit {
 				}
 				return post.save();
 			})
-			.then(post => postResponse(post));
+			.then(post => postResponse(post))
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	voteForVariant(userId, postId, variantIndex) {
+		return this
+			.postsModel
+			.findOne({ customId: postId })
+			.then(post => {
+				if (_.indexOf(post._voters, userId) !== -1) throw ''; //todo !!!
+				post._voters.push(userId);
+				post.variants[variantIndex].count++;
+				return post.save();
+			})
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 }
 

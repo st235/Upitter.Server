@@ -16,7 +16,7 @@ module.exports = user => {
 	if (user.picture) userResponse.picture = user.picture;
 	if (user.description) userResponse.description = user.description;
 	if (user.token) userResponse.accessToken = user.token;
-	if (user.subscriptions[0] && user.subscriptions[0].customId) {
+	if (user.subscriptions.length > 0 && user.subscriptions[0].customId) {
 		userResponse.subscriptions = _.map(user.subscriptions, (company) => {
 			const obj = {
 				customId: company.customId,
