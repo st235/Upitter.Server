@@ -9,7 +9,7 @@ module.exports = businessUser => {
 		name: businessUser.name,
 		isVerify: businessUser.isVerify,
 		moderatorsList: businessUser.moderatorsList,
-		coordinates: _.map(businessUser.coordinates, (coordinates) => {
+		coordinates: _.map(businessUser.coordinates, coordinates => {
 			return {
 				latitude: coordinates.latitude,
 				longitude: coordinates.longitude
@@ -20,7 +20,7 @@ module.exports = businessUser => {
 	if (businessUser.description) businessUserResponse.description = businessUser.description;
 	if (businessUser.logoUrl) businessUserResponse.logoUrl = businessUser.logoUrl;
 	if (businessUser.subscribers.length > 0 && businessUser.subscribers[0].customId) {
-		businessUserResponse.subscribers = _.map(businessUser.subscribers, (user) => {
+		businessUserResponse.subscribers = _.map(businessUser.subscribers, user => {
 			const obj = {
 				customId: user.customId,
 				nickname: user.nickname,
