@@ -3,7 +3,6 @@
 const _ = require('underscore');
 
 module.exports = post => {
-	console.log(post);
 	const postResponse = {
 		customId: post.customId,
 		author: post.author,
@@ -22,6 +21,7 @@ module.exports = post => {
 		});
 	}
 	if (post._voters.length > 0) postResponse._voters = post._voters;
+	if (post._votersForVariants > 0) postResponse._votersForVariants = post._votersForVariants;
 	if (post.logoUrl) postResponse.logoUrl = post.logoUrl;
 	if (post.updatedDate) postResponse.updatedDate = post.updatedDate;
 

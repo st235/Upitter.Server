@@ -64,6 +64,11 @@ module.exports = {
 		externalDescription: 'Пользователь уже существует'
 	},
 
+	USER_ALREADY_VOTED: {
+		internalDescription: 'Пользователь уже проголосовал',
+		externalDescription: 'Пользователь уже проголосовал'
+	},
+
 	NO_TEMPORARY_TOKEN_IN_DB: {
 		internalDescription: 'Временный токен отсутствует в базе данных',
 		externalDescription: 'Доступ запрещен'
@@ -112,5 +117,10 @@ module.exports = {
 	SUBSCRIBE_ERROR_2: {
 		internalDescription: 'Пользователь еще не подписан на эту компанию',
 		externalDescription: 'Вы еще не подписаны на эту компанию'
+	},
+
+	ACCESS_DENIED: {
+		internalDescription: 'Доступ запрещен',
+		externalDescription: 'Доступ запрещен'
 	}
 };

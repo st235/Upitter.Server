@@ -52,13 +52,12 @@ class ValidationUtils extends AppUnit {
 	}
 
 	checkArray(arr, minLenght, maxLenght) {
-		return (!arr || arr.length < minLenght || arr.length > maxLenght)
-			|| this.checkArrayElement(arr, 1, 100)
-			|| false;
+		return (arr.length && arr.length > minLenght && arr.length < maxLenght) && this.checkArrayElement(arr, 1, 100);
 	}
 
 	checkArrayElement(arr, minLenght, maxLenght) {
-		return _.filter(arr, (num) => typeof num !== String || num.length < minLenght || num.length > maxLenght);
+		const boolArr = _.map(arr, (num) => typeof num.value === 'string' && num.value.length > minLenght && num.value.length < maxLenght);
+		return _.indexOf(boolArr, false) === -1;
 	}
 }
 

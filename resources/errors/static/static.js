@@ -49,6 +49,11 @@ module.exports = {
 		externalDescription: 'User already exists'
 	},
 
+	USER_ALREADY_VOTED: {
+		internalDescription: 'User has already voted',
+		externalDescription: 'User has already voted'
+	},
+
 	UNAUTHORIZED: {
 		internalDescription: 'Query without authorization try to obtain router',
 		externalDescription: 'Access denied.'
@@ -112,5 +117,10 @@ module.exports = {
 	SUBSCRIBE_ERROR_2: {
 		internalDescription: 'User has not subscribed to this company',
 		externalDescription: 'You have not subscribed to this company'
+	},
+
+	ACCESS_DENIED: {
+		internalDescription: 'Access denied',
+		externalDescription: 'Access denied'
 	}
 };

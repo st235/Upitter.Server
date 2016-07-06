@@ -3,7 +3,6 @@
 const _ = require('underscore');
 const AppUnit = require('../app/unit');
 
-const postResponse = require('../models/response/postResponse');
 
 class PostsManager extends AppUnit {
 	constructor(postsModel) {
@@ -22,37 +21,42 @@ class PostsManager extends AppUnit {
 	create(companyId, data) {
 		data.author = companyId;
 		const post = new this.postsModel(data);
-		return post.save()
-			.then(post => postResponse(post))
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
-			});
+		return post
+			.save()
+			.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
 	}
 
-	edit(postId, data) {
+	edit(companyId, postId, data) {
 		return this
 			.postsModel
 			.findOne({ customId: postId })
-			.then(postModel => {
-				data.updatedDate = Date.now();
-				_.extend(postModel, data);
-				return postModel.save();
-			})
-			.then(post => postResponse(post))
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
+			.then(post => {
+				if (!post || post.isRemoved) throw 'INTERNAL_SERVER_ERROR';
+				if (companyId !== post.author) throw 'ACCESS_DENIED';
+
+				const validatedData = _.omit(data, 'customId', 'author', 'comments', 'createdDate', 'rating', 'variants', '_voters');
+				validatedData.updatedDate = Date.now();
+				_.extend(post, validatedData);
+
+				return post
+					.save()
+					.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
 			});
 	}
 
-	remove(postId) {
+	remove(companyId, postId) {
 		return this
 			.postsModel
 			.findOneAndUpdate({ customId: postId }, { isRemoved: true }, { new: true })
-			.then(post => post.save())
-			.then(post => post.customId)
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
-			});
+			.then(post => {
+				if (!post || post.isRemoved) throw 'INTERNAL_SERVER_ERROR';
+				if (companyId !== post.author) throw 'ACCESS_DENIED';
+
+				return post
+					.save()
+					.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
+			})
+			.then(post => post.customId);
 	}
 
 	obtain(limit = 20, offset) {
@@ -60,11 +64,8 @@ class PostsManager extends AppUnit {
 			.postsModel
 			.getPosts(parseInt(limit), parseInt(offset))
 			.then(posts => {
-				if (!posts) throw new Error(500);
-				return _.map(posts, (post) => postResponse(post));
-			})
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
+				if (!posts) throw 'INTERNAL_SERVER_ERROR';
+				return posts;
 			});
 	}
 
@@ -73,7 +74,7 @@ class PostsManager extends AppUnit {
 			.postsModel
 			.findOne({ customId: postId })
 			.then(post => {
-				if (!post) throw new Error(500);
+				if (!post) throw 'INTERNAL_SERVER_ERROR';
 				if (_.indexOf(post._voters, userId) > -1) {
 					post._voters = _.without(post._voters, userId);
 					post.rating--;
@@ -81,11 +82,9 @@ class PostsManager extends AppUnit {
 					post._voters.push(userId);
 					post.rating++;
 				}
-				return post.save();
-			})
-			.then(post => postResponse(post))
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
+				return post
+					.save()
+					.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
 			});
 	}
 
@@ -94,13 +93,13 @@ class PostsManager extends AppUnit {
 			.postsModel
 			.findOne({ customId: postId })
 			.then(post => {
-				if (_.indexOf(post._voters, userId) !== -1) throw ''; //todo !!!
-				post._voters.push(userId);
+				if (!post) throw 'INTERNAL_SERVER_ERROR';
+				if (_.indexOf(post._voters, userId) !== -1) throw 'USER_ALREADY_VOTED';
+				post._votersForVariants.push(userId);
 				post.variants[variantIndex].count++;
-				return post.save();
-			})
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
+				return post
+					.save()
+					.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
 			});
 	}
 }

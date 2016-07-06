@@ -1,7 +1,9 @@
 'use strict';
+const _ = require('underscore');
 
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
+const postResponse = require('../models/response/postResponse');
 
 class PostsController extends BaseController {
 	constructor(postsManager) {
@@ -33,15 +35,16 @@ class PostsController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const variants = req.body.variants;
-		if (!variants && variants.length === 0 && this.validationUtils.checkArray(variants, 1, 12)) return next('UNKNOWN');
-		//TODO допилить валидацию
+		if (variants && variants.length !== 0 && !this.validationUtils.checkArray(variants, 1, 12)) return next('PROPERTY_NOT_SUPPLIED');
+
 		const body = req.body;
 		const company = req.userId;
 
 		this
 			.postsManager
 			.create(company, body)
-			.then(post => this.success(res, post))
+			.then(post => postResponse(post))
+			.then(response => this.success(res, response))
 			.catch(next);
 	}
 
@@ -55,11 +58,13 @@ class PostsController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const body = req.body;
+		const companyId = req.userId;
 
 		this
 			.postsManager
-			.edit(body.customId, body)
-			.then(post => this.success(res, post))
+			.edit(companyId, body.postId, body)
+			.then(post => postResponse(post))
+			.then(response => this.success(res, response))
 			.catch(next);
 	}
 
@@ -71,11 +76,12 @@ class PostsController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const postId = req.query.customId;
+		const postId = req.query.postId;
+		const companyId = req.userId;
 
 		this
 			.postsManager
-			.remove(postId)
+			.remove(companyId, postId)
 			.then(removedId => this.success(res, removedId))
 			.catch(next);
 	}
@@ -93,7 +99,8 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.obtain(query.limit, query.offset)
-			.then(posts => this.success(res, posts))
+			.then(posts => _.map(posts, (post) => postResponse(post)))
+			.then(response => this.success(res, response))
 			.catch(next);
 	}
 
@@ -110,7 +117,8 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.like(req.userId, params.postId)
-			.then(post => this.success(res, post))
+			.then(post => postResponse(post))
+			.then(response => this.success(res, response))
 			.catch(next);
 	}
 
@@ -126,13 +134,14 @@ class PostsController extends BaseController {
 		const userId = req.userId;
 		const postId = req.params.postId;
 		const variantIndex = req.params.variantIndex;
+
 		this
 			.postsManager
 			.voteForVariant(userId, postId, variantIndex)
-			.then(post => this.success(res, post))
+			.then(post => postResponse(post))
+			.then(response => this.success(res, response))
 			.catch(next);
 	}
-	//TODO перенести все респонсы в контроллеро
 }
 
 module.exports = PostsController;

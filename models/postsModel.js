@@ -58,6 +58,10 @@ module.exports = mongoose => {
 		_voters: [{
 			type: String,
 			ref: 'Users'
+		}],
+		_votersForVariants: [{
+			type: String,
+			ref: 'Users'
 		}]
 	});
 
@@ -75,7 +79,11 @@ module.exports = mongoose => {
 	});
 
 	postsSchema.statics.getPosts = function (limit, offset) {
-		return this.find({ isRemoved: false }).sort({ createdDate: -1 }).skip(offset).limit(limit).exec();
+		return this
+			.find({ isRemoved: false })
+			.sort({ createdDate: -1 })
+			.skip(offset).limit(limit)
+			.exec();
 	};
 
 	postsSchema.statics.ratingPlus = function (userId) {
@@ -86,8 +94,7 @@ module.exports = mongoose => {
 			this._voters.push(userId);
 			this.rating++;
 		}
-		console.log(this);
-		return this.save;
+		return this.save();
 	};
 
 	return mongoose.model('Posts', postsSchema);

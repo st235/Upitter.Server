@@ -70,6 +70,12 @@ module.exports = {
 		TO_LOG: true
 	},
 
+	USER_ALREADY_VOTED: {
+		INNER_CODE: 1008,
+		EXTERNAL_CODE: 403,
+		TO_LOG: false
+	},
+
 	// ACCESS ERRORS
 	INCORRECT_CREDENTIALS: {
 		INNER_CODE: 2001,
@@ -97,6 +103,12 @@ module.exports = {
 
 	INVALID_TEMPORARY_TOKEN: {
 		INNER_CODE: 2005,
+		EXTERNAL_CODE: 401,
+		TO_LOG: true
+	},
+
+	ACCESS_DENIED: {
+		INNER_CODE: 2006,
 		EXTERNAL_CODE: 401,
 		TO_LOG: true
 	},
