@@ -56,8 +56,7 @@ class ValidationUtils extends AppUnit {
 	}
 
 	checkArrayElement(arr, minLenght, maxLenght) {
-		const boolArr = _.map(arr, (num) => typeof num.value === 'string' && num.value.length > minLenght && num.value.length < maxLenght);
-		return _.indexOf(boolArr, false) === -1;
+		return _.every(arr, (num) => typeof num.value === 'string' && num.value.length > minLenght && num.value.length < maxLenght);
 	}
 }
 
