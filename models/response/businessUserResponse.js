@@ -11,6 +11,7 @@ module.exports = businessUser => {
 		moderatorsList: businessUser.moderatorsList,
 		coordinates: _.map(businessUser.coordinates, coordinates => {
 			return {
+				address: coordinates.address,
 				latitude: coordinates.latitude,
 				longitude: coordinates.longitude
 			};
