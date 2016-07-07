@@ -52,6 +52,9 @@ module.exports = mongoose => {
 			type: String
 		},
 		coordinates: [{
+			address: {
+				type: String
+			},
 			latitude: {
 				type: String
 			},

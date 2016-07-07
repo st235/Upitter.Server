@@ -246,8 +246,8 @@ class AuthorizationController extends BaseController {
 
 	addInfo(req, res, next) {
 		let businessUser;
-		//TODO: Добавить в валидатрон метод length с четким указанием длинны
-		//TODO: Добавить в валидатрон метод should.be.containedBy('body'/'query'/'params')
+		//  TODO: Добавить в валидатрон метод length с четким указанием длинны
+		//  TODO: Добавить в валидатрон метод should.be.containedBy('body'/'query'/'params')
 		const invalid = this.validate(req)
 			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)

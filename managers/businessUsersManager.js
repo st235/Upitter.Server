@@ -20,6 +20,7 @@ class BusinessUsersManager extends AppUnit {
 		this.getSubscribers = this.getSubscribers.bind(this);
 	}
 
+	//  TODO: переделать
 	create(data) {
 		const businessUser = new this.businessUsersModel(data);
 		return businessUser.save().catch(() => {
