@@ -1,6 +1,6 @@
 {
   "name": "jupiter.server",
-  "version": "1.0.0",
+  "version": "0.3.1",
   "description": "0.0.1",
   "private": true,
   "main": "bin/start",
@@ -23,7 +23,7 @@
     "thunk-redis": "^1.6.5",
     "underscore": "^1.8.3",
     "unirest": "^0.5.0",
-    "validatron": "^0.8.6"
+    "validatron": "^0.8.9"
   },
   "devDependencies": {
     "babel-eslint": "^6.0.4",

@@ -17,9 +17,11 @@ module.exports = businessUser => {
 			};
 		})
 	};
-	if (businessUser.accessToken) businessUserResponse.accessToken = businessUser.accessToken;
 	if (businessUser.description) businessUserResponse.description = businessUser.description;
 	if (businessUser.logoUrl) businessUserResponse.logoUrl = businessUser.logoUrl;
+	if (businessUser.site) businessUserResponse.site = businessUser.site;
+
+	if (businessUser.accessToken) businessUserResponse.accessToken = businessUser.accessToken;
 	if (businessUser.subscribers.length > 0 && businessUser.subscribers[0].customId) {
 		businessUserResponse.subscribers = _.map(businessUser.subscribers, user => {
 			const obj = {
