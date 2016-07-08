@@ -80,5 +80,13 @@ module.exports = mongoose => {
 			.catch(error => next(error));
 	});
 
+	businessUsersSchema.statics.findById = function (customId) {
+		return this.findOne({ customId }).exec();
+	};
+
+	businessUsersSchema.statics.findMany = function (customIds) {
+		return this.find({ customId: { $in: customIds } }).exec();
+	};
+
 	return mongoose.model('BusinessUsers', businessUsersSchema);
 };

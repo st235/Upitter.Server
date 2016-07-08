@@ -257,11 +257,12 @@ class AuthorizationController extends BaseController {
 			.add('category').should.exist()
 			.add('coordinates').should.exist()
 			.validate();
+
 		if (invalid) return next(invalid.name);
 
 		const { number, countryCode } = req.params;
 		const phone = `${countryCode}${number}`;
-		const { temporaryToken, name, site, coordinates, category } = req.body;
+		const { temporaryToken, name, site, coordinates, category, logoUrl } = req.body;
 
 		authUtils.getOrgTempModel(this.authorizationClient, phone)
 			.then(model => {
@@ -279,6 +280,7 @@ class AuthorizationController extends BaseController {
 								name,
 								activity: category,
 								site,
+								logoUrl,
 								coordinates,
 								phone: {
 									body: number,

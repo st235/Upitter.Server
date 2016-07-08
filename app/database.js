@@ -54,7 +54,7 @@ class AppDatabase extends AppUnit {
 		this.businessUsersManager = new BusinessUsersManager(this.businessUsersModel);
 		this.logsManager = new LogsManager(this.logsModel);
 		this.feedbackManager = new FeedbackManager(this.feedbackModel);
-		this.postsManager = new PostsManager(this.postsModel);
+		this.postsManager = new PostsManager(this.postsModel, this.businessUsersModel);
 		this.commentsManager = new CommentsManager(this.commentsModel);
 		this.categoriesManager = new CategoriesManager(this.categoriesModel);
 	}

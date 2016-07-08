@@ -49,6 +49,7 @@ class PostsController extends BaseController {
 	}
 
 	edit(req, res, next) {
+		//  TODO: add coordinates
 		const invalid = this.validate(req)
 			.add('accessToken').should.exist().and.have.type('String')
 			//.add('title').should.have.type('String').and.be.in.rangeOf(3, 63)
@@ -87,9 +88,10 @@ class PostsController extends BaseController {
 	}
 
 	obtain(req, res, next) {
+		//  TODO: add coordinates
 		const invalid = this.validate(req)
 			.add('limit').should.exist().and.have.type('String')
-			.add('offset').should.exist().and.have.type('String')
+			//.add('offset').should.exist().and.have.type('String')
 			.validate();
 
 		if (invalid) return next(invalid.name);

@@ -5,8 +5,8 @@ const AppUnit = require('../app/unit');
 
 
 class PostsManager extends AppUnit {
-	constructor(postsModel) {
-		super({ postsModel });
+	constructor(postsModel, businessUsersModel) {
+		super({ postsModel, businessUsersModel });
 	}
 
 	_onBind() {
@@ -60,13 +60,20 @@ class PostsManager extends AppUnit {
 	}
 
 	obtain(limit = 20, offset) {
+		let resultPost;
+
 		return this
 			.postsModel
 			.getPosts(parseInt(limit), parseInt(offset))
 			.then(posts => {
 				if (!posts) throw 'INTERNAL_SERVER_ERROR';
+				resultPost = posts;
 				return posts;
-			});
+			})
+			.then(posts => _.map(posts, post => this.businessUsersModel.findById(post.author)))
+			.then(promises => Promise.all(promises))
+			.then(companies => _.each(companies, (company, i) => resultPost[i].author = company))
+			.then(() => resultPost);
 	}
 
 	like(userId, postId) {
