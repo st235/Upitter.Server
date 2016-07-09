@@ -88,14 +88,13 @@ class PostsController extends BaseController {
 	}
 
 	obtain(req, res, next) {
-		//  TODO: add coordinates
 		const invalid = this.validate(req)
 			.add('limit').should.exist().and.have.type('String')
 			.validate();
 
 		if (invalid) return next(invalid.name);
 
-		const { latitude, longitude, radius, limit, offset = 0 } = req.query;
+		const { latitude, longitude, radius = 0, limit, offset = 0 } = req.query;
 
 		this
 			.postsManager
