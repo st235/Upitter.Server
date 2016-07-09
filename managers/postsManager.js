@@ -18,8 +18,14 @@ class PostsManager extends AppUnit {
 		this.voteForVariant = this.voteForVariant.bind(this);
 	}
 
-	create(companyId, data) {
-		data.author = companyId;
+	create(companyId, title, text, latitude, longitude) {
+		const data = {
+			author: companyId,
+			location: [latitude, longitude],
+			title,
+			text
+		};
+
 		const post = new this.postsModel(data);
 		return post
 			.save()
@@ -59,12 +65,12 @@ class PostsManager extends AppUnit {
 			.then(post => post.customId);
 	}
 
-	obtain(limit = 20, offset) {
+	obtain(latitude, longitude, radius, limit = 20, offset) {
 		let resultPost;
 
 		return this
 			.postsModel
-			.getPosts(parseInt(limit), parseInt(offset))
+			.getPosts(latitude, longitude, radius, parseInt(limit), parseInt(offset))
 			.then(posts => {
 				if (!posts) throw 'INTERNAL_SERVER_ERROR';
 				resultPost = posts;

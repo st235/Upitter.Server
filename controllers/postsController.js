@@ -37,12 +37,12 @@ class PostsController extends BaseController {
 		const variants = req.body.variants;
 		if (variants && variants.length !== 0 && !this.validationUtils.checkArray(variants, 1, 12)) return next('PROPERTY_NOT_SUPPLIED');
 
-		const body = req.body;
-		const company = req.userId;
+		const { title, text, latitude, longitude } = req.body;
+		const companyId = req.userId;
 
 		this
 			.postsManager
-			.create(company, body)
+			.create(companyId, title, text, latitude, longitude)
 			.then(post => postResponse(post))
 			.then(response => this.success(res, response))
 			.catch(next);
@@ -96,11 +96,11 @@ class PostsController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const query = req.query;
+		const { latitude, longitude, radius, limit, offset } = req.query;
 
 		this
 			.postsManager
-			.obtain(query.limit, query.offset)
+			.obtain(latitude, longitude, radius, limit, offset)
 			.then(posts => _.map(posts, (post) => postResponse(post)))
 			.then(response => this.success(res, response))
 			.catch(next);

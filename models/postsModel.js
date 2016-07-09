@@ -25,15 +25,12 @@ module.exports = mongoose => {
 			type: String,
 			required: true
 		},
-		logoUrl: {
-			type: String
-		},
 		isRemoved: {
 			type: Boolean,
 			default: false
 		},
 		comments: {
-			type: [String]
+			type: [String]  //  TODO: add reference to comment Model
 		},
 		createdDate: {
 			type: Date,
@@ -55,6 +52,15 @@ module.exports = mongoose => {
 				default: 0
 			}
 		}],
+		media: [{
+			kind: String,
+			url: String
+		}],
+		location: {
+			type: [Number],
+			required: true,
+			index: '2dsphere'
+		},
 		_voters: [{
 			type: String,
 			ref: 'Users'
@@ -78,11 +84,28 @@ module.exports = mongoose => {
 			.catch(error => next(error));
 	});
 
-	postsSchema.statics.getPosts = function (limit, offset) {
+	postsSchema.statics.getPosts = function (latitude, longitude, radius, limit, offset) {
+		const query = {
+			location: {
+				$near: {
+					$geometry: {
+						type: 'Point',
+						coordinates: [
+							parseFloat(latitude),
+							parseFloat(longitude)
+						]
+					},
+					$maxDistance: radius
+				}
+			},
+			isRemoved: false
+		};
+
 		return this
-			.find({ isRemoved: false })
+			.find(query)
 			.sort({ createdDate: -1 })
-			.skip(offset).limit(limit)
+			.skip(offset)
+			.limit(limit)
 			.exec();
 	};
 

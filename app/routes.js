@@ -113,20 +113,20 @@ class AppRoutes extends AppUnit {
 		app.post(paths.create, this.checkAuthorization, controller.create);
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
 		app.get(paths.remove, this.checkAuthorization, controller.remove);
-		app.get(paths.obtain, controller.obtain);
+		app.get(paths.obtain, this.checkAuthorization, controller.obtain);
 		app.get(paths.like, this.checkAuthorization, controller.like);
 		app.get(paths.vote, this.checkAuthorization, controller.voteForVariant);
 	}
 
 	registerComments(app, paths, controller) {
 		app.post(paths.create, this.checkAuthorization, controller.create);
-		app.get(paths.remove, controller.remove);
-		app.get(paths.obtain, controller.obtain);
+		app.get(paths.remove, this.checkAuthorization, controller.remove);
+		app.get(paths.obtain, this.checkAuthorization, controller.obtain);
 	}
 
 	registerCategories(app, paths, controller) {
 		app.get(paths.obtain, controller.getCategories);
-		app.get(paths.find, controller.findCategory);
+		app.get(paths.find, this.checkAuthorization, controller.findCategory);
 	}
 
 	registerBusinessUsers(app, paths, controller) {
