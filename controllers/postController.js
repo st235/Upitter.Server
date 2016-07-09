@@ -3,7 +3,7 @@ const _ = require('underscore');
 
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
-const postResponse = require('../models/response/postResponse');
+const postResponse = require('../models/response/postResponseModel');
 
 class PostsController extends BaseController {
 	constructor(postsManager) {
@@ -91,18 +91,17 @@ class PostsController extends BaseController {
 		//  TODO: add coordinates
 		const invalid = this.validate(req)
 			.add('limit').should.exist().and.have.type('String')
-			//.add('offset').should.exist().and.have.type('String')
 			.validate();
 
 		if (invalid) return next(invalid.name);
 
-		const { latitude, longitude, radius, limit, offset } = req.query;
+		const { latitude, longitude, radius, limit, offset = 0 } = req.query;
 
 		this
 			.postsManager
 			.obtain(latitude, longitude, radius, limit, offset)
-			.then(posts => _.map(posts, (post) => postResponse(post)))
-			.then(response => this.success(res, response))
+			.then(posts => _.map(posts, post => postResponse(post)))
+			.then(response => this.success(res, { offset: parseInt(offset, 10) + response.length, posts: response }))
 			.catch(next);
 	}
 

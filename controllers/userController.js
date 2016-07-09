@@ -2,12 +2,12 @@
 
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
-const userResponse = require('../models/response/userResponse');
+const userResponse = require('../models/response/userResponseModel');
 
 
 class UsersController extends BaseController {
-	constructor(usersManager, businessUsersManager) {
-		super({ usersManager, businessUsersManager });
+	constructor(usersManager, companiesManager) {
+		super({ usersManager, companiesManager });
 	}
 
 	_onBind() {
@@ -51,7 +51,7 @@ class UsersController extends BaseController {
 			.usersManager
 			.getObjectId(ids.userId)
 			.then(userObjectId => ids.userObjectId = userObjectId)
-			.then(() => this.businessUsersManager.getObjectId(ids.companyId))
+			.then(() => this.companiesManager.getObjectId(ids.companyId))
 			.then(companyObjectId => ids.companyObjectId = companyObjectId)
 			.then(() => ids);
 	}
@@ -71,7 +71,7 @@ class UsersController extends BaseController {
 
 		this
 			._getObjectsIds(ids)
-			.then(() => this.businessUsersManager.addUserToSubscribers(ids.userObjectId, ids.companyId))
+			.then(() => this.companiesManager.addUserToSubscribers(ids.userObjectId, ids.companyId))
 			.then(() => this.usersManager.addCompanyToSubscriptions(ids.userId, ids.companyObjectId))
 			.then(user => userResponse(user))
 			.then(response => this.success(res, response))
@@ -93,7 +93,7 @@ class UsersController extends BaseController {
 
 		this
 			._getObjectsIds(ids)
-			.then(() => this.businessUsersManager.removeUserFromSubscribers(ids.userObjectId, ids.companyId))
+			.then(() => this.companiesManager.removeUserFromSubscribers(ids.userObjectId, ids.companyId))
 			.then(() => this.usersManager.removeCompanyFromSubscriptions(ids.userId, ids.companyObjectId))
 			.then(user => userResponse(user))
 			.then(response => this.success(res, response))

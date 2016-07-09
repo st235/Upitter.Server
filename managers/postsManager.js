@@ -5,8 +5,8 @@ const AppUnit = require('../app/unit');
 
 
 class PostsManager extends AppUnit {
-	constructor(postsModel, businessUsersModel) {
-		super({ postsModel, businessUsersModel });
+	constructor(postModel, companyModel) {
+		super({ postModel, companyModel });
 	}
 
 	_onBind() {
@@ -26,7 +26,7 @@ class PostsManager extends AppUnit {
 			text
 		};
 
-		const post = new this.postsModel(data);
+		const post = new this.postModel(data);
 		return post
 			.save()
 			.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
@@ -34,13 +34,13 @@ class PostsManager extends AppUnit {
 
 	edit(companyId, postId, data) {
 		return this
-			.postsModel
+			.postModel
 			.findOne({ customId: postId })
 			.then(post => {
 				if (!post || post.isRemoved) throw 'INTERNAL_SERVER_ERROR';
 				if (companyId !== post.author) throw 'ACCESS_DENIED';
 
-				const validatedData = _.omit(data, 'customId', 'author', 'comments', 'createdDate', 'rating', 'variants', '_voters');
+				const validatedData = _.omit(data, 'customId', 'author', 'comments', 'createdDate', 'rating', 'variants', 'voters');
 				validatedData.updatedDate = Date.now();
 				_.extend(post, validatedData);
 
@@ -52,7 +52,7 @@ class PostsManager extends AppUnit {
 
 	remove(companyId, postId) {
 		return this
-			.postsModel
+			.postModel
 			.findOneAndUpdate({ customId: postId }, { isRemoved: true }, { new: true })
 			.then(post => {
 				if (!post || post.isRemoved) throw 'INTERNAL_SERVER_ERROR';
@@ -69,14 +69,14 @@ class PostsManager extends AppUnit {
 		let resultPost;
 
 		return this
-			.postsModel
+			.postModel
 			.getPosts(latitude, longitude, radius, parseInt(limit), parseInt(offset))
 			.then(posts => {
 				if (!posts) throw 'INTERNAL_SERVER_ERROR';
 				resultPost = posts;
 				return posts;
 			})
-			.then(posts => _.map(posts, post => this.businessUsersModel.findById(post.author)))
+			.then(posts => _.map(posts, post => this.companyModel.findById(post.author)))
 			.then(promises => Promise.all(promises))
 			.then(companies => _.each(companies, (company, i) => resultPost[i].author = company))
 			.then(() => resultPost);
@@ -84,15 +84,15 @@ class PostsManager extends AppUnit {
 
 	like(userId, postId) {
 		return this
-			.postsModel
+			.postModel
 			.findOne({ customId: postId })
 			.then(post => {
 				if (!post) throw 'INTERNAL_SERVER_ERROR';
-				if (_.indexOf(post._voters, userId) > -1) {
-					post._voters = _.without(post._voters, userId);
+				if (_.indexOf(post.voters, userId) > -1) {
+					post.voters = _.without(post.voters, userId);
 					post.rating--;
 				} else {
-					post._voters.push(userId);
+					post.voters.push(userId);
 					post.rating++;
 				}
 				return post
@@ -103,12 +103,12 @@ class PostsManager extends AppUnit {
 
 	voteForVariant(userId, postId, variantIndex) {
 		return this
-			.postsModel
+			.postModel
 			.findOne({ customId: postId })
 			.then(post => {
 				if (!post) throw 'INTERNAL_SERVER_ERROR';
-				if (_.indexOf(post._voters, userId) !== -1) throw 'USER_ALREADY_VOTED';
-				post._votersForVariants.push(userId);
+				if (_.indexOf(post.voters, userId) !== -1) throw 'USER_ALREADY_VOTED';
+				post.votersForVariants.push(userId);
 				post.variants[variantIndex].count++;
 				return post
 					.save()

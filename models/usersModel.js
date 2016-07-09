@@ -1,9 +1,11 @@
 'use strict';
+
 const counterConfig = require('../config/counter');
 
 module.exports = mongoose => {
 	const Schema = mongoose.Schema;
-	const usersSchema = new Schema({
+
+	const userSchema = new Schema({
 		customId: {
 			type: Number,
 			unique: true
@@ -40,7 +42,7 @@ module.exports = mongoose => {
 		},
 		subscriptions: [{
 			type: String,
-			ref: 'BusinessUsers'
+			ref: 'Companies'
 		}],
 		createdDate: {
 			type: Date
@@ -51,7 +53,7 @@ module.exports = mongoose => {
 		}
 	});
 
-	usersSchema.pre('save', function (next) {
+	userSchema.pre('save', function (next) {
 		if (this.customId) return next();
 
 		this
@@ -64,5 +66,5 @@ module.exports = mongoose => {
 			.catch(error => next(error));
 	});
 
-	return mongoose.model('Users', usersSchema);
+	return mongoose.model('Users', userSchema);
 };

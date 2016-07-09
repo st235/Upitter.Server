@@ -1,20 +1,26 @@
 'use strict';
+
 const counterConfig = require('../config/counter');
 
 module.exports = mongoose => {
 	const Schema = mongoose.Schema;
-	const businessUsersSchema = new Schema({
+
+	const companySchema = new Schema({
 		customId: {
 			type: Number,
 			unique: true
 		},
-		activity: [{
+		activity: [{ // TODO достигнуть единого нейминга categories
 			type: String,
 			required: true
 		}],
 		name: {
 			type: String,
 			required: true
+		},
+		nickname: {
+			type: String,
+			unique: true
 		},
 		description: {
 			type: String
@@ -67,12 +73,12 @@ module.exports = mongoose => {
 		}
 	});
 
-	businessUsersSchema.pre('save', function (next) {
+	companySchema.pre('save', function (next) {
 		if (this.customId) return next();
 
 		this
 			.model('_Counters')
-			.findAndModify(counterConfig.businessUsers.name, counterConfig.businessUsers.defaultIndex)
+			.findAndModify(counterConfig.companies.name, counterConfig.companies.defaultIndex)
 			.then(index => {
 				this.customId = index;
 				next();
@@ -80,13 +86,11 @@ module.exports = mongoose => {
 			.catch(error => next(error));
 	});
 
-	businessUsersSchema.statics.findById = function (customId) {
-		return this.findOne({ customId }).exec();
+	companySchema.statics.findById = function (customId) {
+		return this
+			.findOne({ customId })
+			.exec();
 	};
 
-	businessUsersSchema.statics.findMany = function (customIds) {
-		return this.find({ customId: { $in: customIds } }).exec();
-	};
-
-	return mongoose.model('BusinessUsers', businessUsersSchema);
+	return mongoose.model('Companies', companySchema);
 };

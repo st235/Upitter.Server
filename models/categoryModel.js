@@ -2,7 +2,8 @@
 
 module.exports = mongoose => {
 	const Schema = mongoose.Schema;
-	const categoriesSchema = new Schema ({
+
+	const categorySchema = new Schema({
 		customId: {
 			type: String,
 			unique: true
@@ -19,5 +20,5 @@ module.exports = mongoose => {
 		}
 	});
 
-	return mongoose.model('Categories', categoriesSchema);
+	return mongoose.model('Categories', categorySchema);
 };

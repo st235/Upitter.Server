@@ -1,9 +1,11 @@
 'use strict';
+
 const counterConfig = require('../config/counter');
 
 module.exports = mongoose => {
 	const Schema = mongoose.Schema;
-	const votesSchema = new Schema({
+
+	const voteSchema = new Schema({
 		customId: {
 			type: String,
 			unique: true,
@@ -23,7 +25,7 @@ module.exports = mongoose => {
 		}
 	});
 
-	votesSchema.pre('save', function (next) {
+	voteSchema.pre('save', function (next) {
 		if (this.customId) return next();
 
 		this
@@ -36,5 +38,5 @@ module.exports = mongoose => {
 			.catch(error => next(error));
 	});
 
-	return mongoose.model('Votes', votesSchema);
+	return mongoose.model('Votes', voteSchema);
 };

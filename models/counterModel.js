@@ -1,3 +1,5 @@
+'use strict';
+
 const mathUtils = require('../utils/mathUtils');
 
 module.exports = mongoose => {

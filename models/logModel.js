@@ -27,11 +27,18 @@ module.exports = mongoose => {
 	});
 
 	logSchema.statics.findUnique = function (logId, systemType) {
-		return this.findOne({ logId, systemType }).exec();
+		return this
+			.findOne({ logId, systemType })
+			.exec();
 	};
 
 	logSchema.statics.getLogs = function (limit, offset) {
-		return this.find().sort({ createdDate: -1 }).skip(offset).limit(limit).exec();
+		return this
+			.find()
+			.sort({ createdDate: -1 })
+			.skip(offset)
+			.limit(limit)
+			.exec();
 	};
 
 	return mongoose.model('Logs', logSchema);

@@ -1,22 +1,20 @@
 'use strict';
 
-const userResponse = require('../models/response/userResponse');
-const businessUserResponse = require('../models/response/businessUserResponse');
+const userResponse = require('../models/response/userResponseModel');
+const businessUserResponse = require('../models/response/companyResponseModel');
 
 const BaseController = require('./baseController');
-const ValidationService = require('../services/validationService');
+const SmsService = require('../services/smsService');
 const RedisService = require('../services/redisService');
-const SMSService = require('../services/smsService');
-
+const ValidationService = require('../services/validationService');
 const authUtils = require('../utils/authUtils');
 const secretUtils = require('../utils/secretUtils');
 const socialRequestUtils = require('../utils/socialRequestUtils');
 const TokenInfo = require('../config/methods');
 
-
 class AuthorizationController extends BaseController {
-	constructor(userManager, businessUserManager) {
-		super({ userManager, businessUserManager });
+	constructor(usersManager, companiesManager) {
+		super({ usersManager, companiesManager });
 	}
 
 	_onBind() {
@@ -93,7 +91,7 @@ class AuthorizationController extends BaseController {
 
 		socialRequestUtils
 			.getGoogle(TokenInfo.google, { id_token })
-			.then(response => this.userManager.checkSocialExistence('google', response))
+			.then(response => this.usersManager.checkSocialExistence('google', response))
 			.then(user => {
 				userModel = user;
 				return userModel;
@@ -120,7 +118,7 @@ class AuthorizationController extends BaseController {
 
 		socialRequestUtils
 			.getFacebook(TokenInfo.facebook, { access_token: accessToken })
-			.then(response => this.userManager.checkSocialExistence('facebook', response))
+			.then(response => this.usersManager.checkSocialExistence('facebook', response))
 			.then(user => {
 				userModel = user;
 				return userModel;
@@ -149,7 +147,7 @@ class AuthorizationController extends BaseController {
 
 		socialRequestUtils
 			.getTwitter(token, secret)
-			.then(response => this.userManager.checkSocialExistence('twitter', response))
+			.then(response => this.usersManager.checkSocialExistence('twitter', response))
 			.then(user => {
 				userModel = user;
 				return userModel;
@@ -178,7 +176,7 @@ class AuthorizationController extends BaseController {
 		const attempts = 0;
 		const tempModel = { code, number, countryCode, attempts };
 
-		SMSService
+		SmsService
 			.addNumber(number)
 			.addCode(countryCode)
 			.addText(code)
@@ -214,7 +212,7 @@ class AuthorizationController extends BaseController {
 						.then(model => this.unsuccess(res, { attempts: model.attempts }));
 				}
 
-				return this.businessUserManager
+				return this.companiesManager
 					.checkIfExists(phone)
 					.then(user => {
 						if (user) return authUtils.removeOrgTempModel(this.authorizationClient, phone)
@@ -246,6 +244,7 @@ class AuthorizationController extends BaseController {
 
 	addInfo(req, res, next) {
 		let businessUser;
+		console.log(req.body);
 		//  TODO: Добавить в валидатрон метод length с четким указанием длинны
 		//  TODO: Добавить в валидатрон метод should.be.containedBy('body'/'query'/'params')
 		const invalid = this.validate(req)
@@ -272,10 +271,10 @@ class AuthorizationController extends BaseController {
 				if (!model.temporaryToken) throw 'NO_TEMPORARY_TOKEN_IN_DB';
 				if (model.temporaryToken !== temporaryToken) throw 'INVALID_TEMPORARY_TOKEN';
 
-				return this.businessUserManager.checkIfExists(phone)
+				return this.companiesManager.checkIfExists(phone)
 					.then(user => {
 						if (!user) {
-							return this.businessUserManager.create({
+							return this.companiesManager.create({
 								//TODO: проверка категории на существование в нашем списке
 								name,
 								activity: category,

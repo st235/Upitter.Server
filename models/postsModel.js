@@ -1,10 +1,12 @@
 'use strict';
-const counterConfig = require('../config/counter');
+
 const _ = require('underscore');
+const counterConfig = require('../config/counter');
 
 module.exports = mongoose => {
 	const Schema = mongoose.Schema;
-	const postsSchema = new Schema({
+
+	const postSchema = new Schema({
 		customId: {
 			type: String,
 			unique: true
@@ -12,7 +14,7 @@ module.exports = mongoose => {
 		author: {
 			type: String,
 			required: true,
-			ref: 'BusinessUsers'
+			ref: 'Companies'
 		},
 		categories: {
 			type: [String]
@@ -61,17 +63,17 @@ module.exports = mongoose => {
 			required: true,
 			index: '2dsphere'
 		},
-		_voters: [{
+		voters: [{
 			type: String,
 			ref: 'Users'
 		}],
-		_votersForVariants: [{
+		votersForVariants: [{
 			type: String,
 			ref: 'Users'
 		}]
 	});
 
-	postsSchema.pre('save', function (next) {
+	postSchema.pre('save', function (next) {
 		if (this.customId) return next();
 
 		this
@@ -84,7 +86,7 @@ module.exports = mongoose => {
 			.catch(error => next(error));
 	});
 
-	postsSchema.statics.getPosts = function (latitude, longitude, radius, limit, offset) {
+	postSchema.statics.getPosts = function (latitude, longitude, radius, limit, offset) {
 		const query = {
 			location: {
 				$near: {
@@ -109,16 +111,16 @@ module.exports = mongoose => {
 			.exec();
 	};
 
-	postsSchema.statics.ratingPlus = function (userId) {
-		if (_.indexOf(this._voters, userId) > -1) {
-			this._voters = _.without(this._voters, userId);
+	postSchema.statics.ratingPlus = function (userId) {
+		if (_.indexOf(this.voters, userId) > -1) {
+			this.voters = _.without(this.voters, userId);
 			this.rating--;
 		} else {
-			this._voters.push(userId);
+			this.voters.push(userId);
 			this.rating++;
 		}
 		return this.save();
 	};
 
-	return mongoose.model('Posts', postsSchema);
+	return mongoose.model('Posts', postSchema);
 };

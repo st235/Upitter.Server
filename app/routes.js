@@ -11,13 +11,13 @@ const LanguageMiddleware = require('../controllers/middlewares/languageMiddlewar
 const ErrorMiddleware = require('../controllers/middlewares/errorMiddleware');
 
 const AuthorizationController = require('../controllers/authorizationController');
-const LogsController = require('../controllers/logsController');
+const CategoryController = require('../controllers/categoryController');
+const CommentController = require('../controllers/commentController');
+const CompanyController = require('../controllers/companyController');
 const FeedbackController = require('../controllers/feedbackController');
-const UsersController = require('../controllers/usersController');
-const PostsController = require('../controllers/postsController');
-const CommentController = require('../controllers/commentsController');
-const CategoriesController = require('../controllers/categoriesController');
-const BusinessUsersController = require('../controllers/businessUsersController');
+const LogController = require('../controllers/logController');
+const PostController = require('../controllers/postController');
+const UserController = require('../controllers/userController');
 
 class AppRoutes extends AppUnit {
 	constructor(app, managers) {
@@ -29,14 +29,14 @@ class AppRoutes extends AppUnit {
 
 		this.registerHeader = this.registerHeader.bind(this);
 		this.registerAuthorization = this.registerAuthorization.bind(this);
-		this.registerLogs = this.registerLogs.bind(this);
+		this.registerLog = this.registerLog.bind(this);
 		this.registerFeedback = this.registerFeedback.bind(this);
 		this.registerFooter = this.registerFooter.bind(this);
-		this.registerUsers = this.registerUsers.bind(this);
-		this.registerPosts = this.registerPosts.bind(this);
-		this.registerComments = this.registerComments.bind(this);
-		this.registerCategories = this.registerCategories.bind(this);
-		this.registerBusinessUsers = this.registerBusinessUsers.bind(this);
+		this.registerUser = this.registerUser.bind(this);
+		this.registerPost = this.registerPost.bind(this);
+		this.registerComment = this.registerComment.bind(this);
+		this.registerCategory = this.registerCategory.bind(this);
+		this.registerCompany = this.registerCompany.bind(this);
 		this.registerFooter = this.registerFooter.bind(this);
 	}
 
@@ -45,26 +45,26 @@ class AppRoutes extends AppUnit {
 		this.obtainLanguage = new LanguageMiddleware().obtainLanguage;
 		this.errorHandler = new ErrorMiddleware();
 
-		this.authorizationController = new AuthorizationController(this.managers.users, this.managers.businessUsers);
-		this.logsController = new LogsController(this.managers.logs);
+		this.authorizationController = new AuthorizationController(this.managers.users, this.managers.companies);
+		this.categoryController = new CategoryController(this.managers.categories);
+		this.commentController = new CommentController(this.managers.comments);
+		this.companyController = new CompanyController(this.managers.companies);
 		this.feedbackController = new FeedbackController(this.managers.feedback);
-		this.usersController = new UsersController(this.managers.users, this.managers.businessUsers);
-		this.postsController = new PostsController(this.managers.posts);
-		this.commentsController = new CommentController(this.managers.comments);
-		this.categoriesController = new CategoriesController(this.managers.categories);
-		this.businessUsersController = new BusinessUsersController(this.managers.businessUsers);
+		this.logController = new LogController(this.managers.logs);
+		this.postController = new PostController(this.managers.posts);
+		this.userController = new UserController(this.managers.users, this.managers.companies);
 	}
 
 	register() {
 		this.registerHeader(this.app);
 		this.registerAuthorization(this.app, routesConfig.authorization, this.authorizationController);
-		this.registerLogs(this.app, routesConfig.support, this.logsController);
+		this.registerCategory(this.app, routesConfig.category, this.categoryController);
+		this.registerComment(this.app, routesConfig.comment, this.commentController);
+		this.registerCompany(this.app, routesConfig.company, this.companyController);
 		this.registerFeedback(this.app, routesConfig.support, this.feedbackController);
-		this.registerUsers(this.app, routesConfig.user, this.usersController);
-		this.registerPosts(this.app, routesConfig.post, this.postsController);
-		this.registerComments(this.app, routesConfig.comment, this.commentsController);
-		this.registerCategories(this.app, routesConfig.category, this.categoriesController);
-		this.registerBusinessUsers(this.app, routesConfig.businessUser, this.businessUsersController);
+		this.registerLog(this.app, routesConfig.support, this.logController);
+		this.registerPost(this.app, routesConfig.post, this.postController);
+		this.registerUser(this.app, routesConfig.user, this.userController);
 		this.registerFooter(this.app);
 	}
 
@@ -73,11 +73,6 @@ class AppRoutes extends AppUnit {
 		app.use(bodyParser.json());
 		app.use(bodyParser.urlencoded({ extended: true }));
 		app.use(this.obtainLanguage);
-	}
-
-	registerFooter(app) {
-		app.use(this.errorHandler.obtainError);
-		app.use(this.errorHandler.handleError);
 	}
 
 	registerAuthorization(app, paths, controller) {
@@ -92,9 +87,20 @@ class AppRoutes extends AppUnit {
 		app.post(paths.addInfo, controller.addInfo);
 	}
 
-	registerLogs(app, paths, controller) {
-		app.post(paths.log, this.checkAuthorization, controller.log);
-		app.get(paths.getLogs, this.checkAuthorization, controller.getLogs);
+	registerCategory(app, paths, controller) {
+		app.get(paths.obtain, controller.getCategories);
+		app.get(paths.find, this.checkAuthorization, controller.findCategory);
+	}
+
+	registerComment(app, paths, controller) {
+		app.post(paths.create, this.checkAuthorization, controller.create);
+		app.get(paths.remove, this.checkAuthorization, controller.remove);
+		app.get(paths.obtain, this.checkAuthorization, controller.obtain);
+	}
+
+	registerCompany(app, paths, controller) {
+		app.post(paths.edit, this.checkAuthorization, controller.edit);
+		app.post(paths.getSubscribers, this.checkAuthorization, controller.getSubscribers);
 	}
 
 	registerFeedback(app, paths, controller) {
@@ -102,14 +108,12 @@ class AppRoutes extends AppUnit {
 		app.get(paths.getFeedback, this.checkAuthorization, controller.getFeedback);
 	}
 
-	registerUsers(app, paths, controller) {
-		app.post(paths.edit, this.checkAuthorization, controller.edit);
-		app.post(paths.addToSubscriptions, this.checkAuthorization, controller.addToSubscriptions);
-		app.post(paths.removeFromSubscriptions, this.checkAuthorization, controller.removeFromSubscriptions);
-		app.post(paths.getSubscriptions, this.checkAuthorization, controller.getSubscriptions);
+	registerLog(app, paths, controller) {
+		app.post(paths.log, this.checkAuthorization, controller.log);
+		app.get(paths.getLogs, this.checkAuthorization, controller.getLogs);
 	}
 
-	registerPosts(app, paths, controller) {
+	registerPost(app, paths, controller) {
 		app.post(paths.create, this.checkAuthorization, controller.create);
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
 		app.get(paths.remove, this.checkAuthorization, controller.remove);
@@ -118,20 +122,16 @@ class AppRoutes extends AppUnit {
 		app.get(paths.vote, this.checkAuthorization, controller.voteForVariant);
 	}
 
-	registerComments(app, paths, controller) {
-		app.post(paths.create, this.checkAuthorization, controller.create);
-		app.get(paths.remove, this.checkAuthorization, controller.remove);
-		app.get(paths.obtain, this.checkAuthorization, controller.obtain);
-	}
-
-	registerCategories(app, paths, controller) {
-		app.get(paths.obtain, controller.getCategories);
-		app.get(paths.find, this.checkAuthorization, controller.findCategory);
-	}
-
-	registerBusinessUsers(app, paths, controller) {
+	registerUser(app, paths, controller) {
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
-		app.post(paths.getSubscribers, this.checkAuthorization, controller.getSubscribers);
+		app.post(paths.addToSubscriptions, this.checkAuthorization, controller.addToSubscriptions);
+		app.post(paths.removeFromSubscriptions, this.checkAuthorization, controller.removeFromSubscriptions);
+		app.post(paths.getSubscriptions, this.checkAuthorization, controller.getSubscriptions);
+	}
+
+	registerFooter(app) {
+		app.use(this.errorHandler.obtainError);
+		app.use(this.errorHandler.handleError);
 	}
 }
 

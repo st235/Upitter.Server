@@ -2,7 +2,8 @@
 
 module.exports = mongoose => {
 	const Schema = mongoose.Schema;
-	const SMSSchema = new Schema({
+
+	const SmsSchema = new Schema({
 		text: {
 			type: String,
 			required: true
@@ -21,10 +22,12 @@ module.exports = mongoose => {
 		}
 	});
 
-	SMSSchema.statics.findUnsended = function () {
-		return this.find({sentDate: null}).exec();
+	SmsSchema.statics.findUnsent = function () {
+		return this
+			.find({ sentDate: null })
+			.exec();
 	};
 
-	return mongoose.model('SMS', SMSSchema);
+	return mongoose.model('Sms', SmsSchema);
 };
 

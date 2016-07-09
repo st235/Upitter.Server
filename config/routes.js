@@ -10,6 +10,28 @@ module.exports = {
 		verifyCode: '/authorization/phone/verify/:number/:countryCode',
 		addInfo: '/authorization/phone/add_info/:number/:countryCode'
 	},
+	category: {
+		obtain: '/categories',
+		find: '/categories/find/:id'
+	},
+	comment: {
+		obtain: '/comments',
+		create: '/comment/create',
+		remove: '/comment/remove'
+	},
+	company: {
+		edit: '/company/edit',
+		getSubscribers: '/company/subscribers'
+	},
+	post: {
+		obtain: '/posts',
+		create: '/post/create',
+		edit: '/post/edit',
+		remove: '/post/remove',
+		like: '/post/like/:postId',
+		vote: '/post/vote/:postId/:variantIndex',
+		comment: '/post/comment'
+	},
 	support: {
 		support: '/support',
 		log: '/support/:systemType/:id',
@@ -22,27 +44,5 @@ module.exports = {
 		addToSubscriptions: '/user/subscribe/:companyId',
 		removeFromSubscriptions: '/user/unsubscribe/:companyId',
 		getSubscriptions: '/user/subscriptions'
-	},
-	post: {
-		obtain: '/posts',
-		create: '/post/create',
-		edit: '/post/edit',
-		remove: '/post/remove',
-		like: '/post/like/:postId',
-		vote: '/post/vote/:postId/:variantIndex',
-		comment: '/post/comment'
-	},
-	comment: {
-		obtain: '/comments',
-		create: '/comment/create',
-		remove: '/comment/remove'
-	},
-	category: {
-		obtain: '/categories',
-		find: '/categories/find/:id'
-	},
-	businessUser: {
-		edit: '/company/edit',
-		getSubscribers: '/company/subscribers'
 	}
 };

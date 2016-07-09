@@ -1,9 +1,11 @@
 'use strict';
+
 const counterConfig = require('../config/counter');
 
 module.exports = mongoose => {
 	const Schema = mongoose.Schema;
-	const notificationsSchema = new Schema({
+
+	const notificationSchema = new Schema({
 		customId: {
 			type: String,
 			unique: true,
@@ -23,7 +25,7 @@ module.exports = mongoose => {
 		}
 	});
 
-	notificationsSchema.pre('save', function (next) {
+	notificationSchema.pre('save', function (next) {
 		if (this.customId) return next();
 
 		this
@@ -36,5 +38,5 @@ module.exports = mongoose => {
 			.catch(error => next(error));
 	});
 
-	return mongoose.model('Notifications', notificationsSchema);
+	return mongoose.model('Notifications', notificationSchema);
 };

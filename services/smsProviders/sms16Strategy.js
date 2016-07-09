@@ -2,7 +2,7 @@
 
 const request = require('unirest');
 const crypto = require('crypto');
-const smsConfig = require('../../config/smsProvider/sms16');
+const smsConfig = require('../../config/sms16');
 
 class SMS16Strategy {
 	_formSuccessResponse(response) {

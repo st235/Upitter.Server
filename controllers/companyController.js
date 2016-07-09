@@ -2,11 +2,11 @@
 
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
-const businessUserResponse = require('../models/response/businessUserResponse');
+const CompanyResponseModel = require('../models/response/companyResponseModel');
 
-class BusinessUsersController extends BaseController {
-	constructor(businessUsersManager) {
-		super({ businessUsersManager });
+class CompanyController extends BaseController {
+	constructor(companiesManager) {
+		super({ companiesManager });
 	}
 
 	_onBind() {
@@ -30,24 +30,24 @@ class BusinessUsersController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const body = req.body;
-		const company = req.userId;
+		const body = req.body; //   TODO: пофиксить передачу объекта
+		const companyId = req.userId;
 
 		this
-			.businessUsersManager
-			.edit(company, body)
+			.companiesManager
+			.edit(companyId, body)
 			.then(businessUser => this.success(res, businessUser))
 			.catch(next);
 	}
 
 	getSubscribers(req, res, next) {
 		this
-			.businessUsersManager
+			.companiesManager
 			.getSubscribers(req.userId)
-			.then(company => businessUserResponse(company))
+			.then(company => CompanyResponseModel(company))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
 }
 
-module.exports = BusinessUsersController;
+module.exports = CompanyController;

@@ -20,8 +20,8 @@ module.exports = post => {
 			};
 		});
 	}
-	if (post._voters.length > 0) postResponse._voters = post._voters;
-	if (post._votersForVariants > 0) postResponse._votersForVariants = post._votersForVariants;
+	if (post.voters.length > 0) postResponse.voters = post.voters;
+	if (post.votersForVariants > 0) postResponse.votersForVariants = post.votersForVariants;
 	if (post.logoUrl) postResponse.logoUrl = post.logoUrl;
 	if (post.updatedDate) postResponse.updatedDate = post.updatedDate;
 

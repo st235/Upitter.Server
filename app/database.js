@@ -5,25 +5,25 @@ mongoose.Promise = global.Promise;
 
 const AppUnit = require('./unit');
 
-const BusinessUsersManager = require('../managers/businessUsersManager');
-const UsersManager = require('../managers/usersManager');
-const LogsManager = require('../managers/logsManager');
-const FeedbackManager = require('../managers/feedbackManager');
-const PostsManager = require('../managers/postsManager');
-const CommentsManager = require('../managers/commentsManager');
 const CategoriesManager = require('../managers/categoriesManager');
+const CommentsManager = require('../managers/commentsManager');
+const CompaniesManager = require('../managers/companiesManager');
+const FeedbackManager = require('../managers/feedbackManager');
+const LogsManager = require('../managers/logsManager');
+const PostsManager = require('../managers/postsManager');
+const UsersManager = require('../managers/usersManager');
 
-const usersModel = require('../models/usersModel');
-const businessUsersModel = require('../models/businessUsersModel');
-const countersModel = require('../models/counterModel');
-const logsModel = require('../models/logsModel');
+const categoryModel = require('../models/categoryModel');
+const commentModel = require('../models/commentModel');
+const companyModel = require('../models/companyModel');
+const counterModel = require('../models/counterModel');
 const feedbackModel = require('../models/feedbackModel');
-const postsModel = require('../models/postsModel');
-const votesModel = require('../models/votesModel');
-const notificationsModel = require('../models/notificationsModel');
+const logModel = require('../models/logModel');
 const mediaModel = require('../models/mediaModel');
-const commentsModel = require('../models/commentsModel');
-const categoriesModel = require('../models/categoriesModel');
+const notificationModel = require('../models/notificationsModel');
+const postModel = require('../models/postsModel');
+const voteModel = require('../models/votesModel');
+const userModel = require('../models/usersModel');
 
 const { mixedLogger } = require('../utils/loggerUtils');
 const databaseConfig = require('../config/database');
@@ -38,36 +38,36 @@ class AppDatabase extends AppUnit {
 	_onCreate() {
 		mongoose.connect(databaseConfig.uri, databaseConfig.options, this._onStart);
 
-		this.countersModel = countersModel(mongoose);
-		this.usersModel = usersModel(mongoose);
-		this.businessUsersModel = businessUsersModel(mongoose);
-		this.logsModel = logsModel(mongoose);
+		this.categoryModel = categoryModel(mongoose);
+		this.commentModel = commentModel(mongoose);
+		this.companyModel = companyModel(mongoose);
+		this.counterModel = counterModel(mongoose);
 		this.feedbackModel = feedbackModel(mongoose);
-		this.postsModel = postsModel(mongoose);
-		this.votesModel = votesModel(mongoose);
-		this.notificationsModel = notificationsModel(mongoose);
+		this.logModel = logModel(mongoose);
 		this.mediaModel = mediaModel(mongoose);
-		this.commentsModel = commentsModel(mongoose);
-		this.categoriesModel = categoriesModel(mongoose);
+		this.notificationModel = notificationModel(mongoose);
+		this.postModel = postModel(mongoose);
+		this.userModel = userModel(mongoose);
+		this.voteModel = voteModel(mongoose);
 
-		this.usersManager = new UsersManager(this.usersModel);
-		this.businessUsersManager = new BusinessUsersManager(this.businessUsersModel);
-		this.logsManager = new LogsManager(this.logsModel);
+		this.categoriesManager = new CategoriesManager(this.categoryModel);
+		this.commentsManager = new CommentsManager(this.commentModel);
+		this.companiesManager = new CompaniesManager(this.companyModel);
 		this.feedbackManager = new FeedbackManager(this.feedbackModel);
-		this.postsManager = new PostsManager(this.postsModel, this.businessUsersModel);
-		this.commentsManager = new CommentsManager(this.commentsModel);
-		this.categoriesManager = new CategoriesManager(this.categoriesModel);
+		this.logsManager = new LogsManager(this.logModel);
+		this.postsManager = new PostsManager(this.postModel, this.companyModel);
+		this.usersManager = new UsersManager(this.userModel);
 	}
 
 	_onStart(error) {
 		if (error) mixedLogger.error('MongoDB error: ', error);
-
 		mixedLogger.info(`MongoDB started on uri ${databaseConfig.uri}`);
+
 		this
-			.countersModel
+			.counterModel
 			.create()
-			.then(model => mixedLogger.info(`Created ${model}`))
-			.catch(error => mixedLogger.error(error));
+			.then(counter => mixedLogger.info(`Created ${counter}`))
+			.catch(counterError => mixedLogger.error(counterError));
 
 		this
 			.categoriesManager
@@ -76,29 +76,29 @@ class AppDatabase extends AppUnit {
 
 	managers() {
 		return {
-			users: this.usersManager,
-			businessUsers: this.businessUsersManager,
-			logs: this.logsManager,
-			feedback: this.feedbackManager,
-			posts: this.postsManager,
+			categories: this.categoriesManager,
 			comments: this.commentsManager,
-			categories: this.categoriesManager
+			companies: this.companiesManager,
+			feedback: this.feedbackManager,
+			logs: this.logsManager,
+			posts: this.postsManager,
+			users: this.usersManager
 		};
 	}
 
 	models() {
 		return {
-			users: this.usersModel,
-			businessUsers: this.businessUsersModel,
-			counters: this.countersModel,
-			logs: this.logsModel,
+			category: this.categoryModel,
+			comment: this.commentModel,
+			company: this.companyModel,
+			counter: this.counterModel,
 			feedback: this.feedbackModel,
-			categories: this.categoriesModel,
-			posts: this.postsModel,
-			votes: this.votesModel,
-			notifications: this.notificationsModel,
+			log: this.logModel,
 			media: this.mediaModel,
-			comments: this.commentsModel
+			notification: this.notificationModel,
+			post: this.postModel,
+			user: this.userModel,
+			vote: this.voteModel
 		};
 	}
 }

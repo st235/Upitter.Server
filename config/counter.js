@@ -3,12 +3,12 @@ module.exports = {
 		name: 'Users',
 		defaultIndex: 0
 	},
-	feedbacks: {
-		name: 'Feedbacks',
+	feedback: {
+		name: 'Feedback',
 		defaultIndex: 0
 	},
-	businessUsers: {
-		name: 'BusinessUsers',
+	companies: {
+		name: 'Companies',
 		defaultIndex: 0
 	},
 	posts: {

@@ -4,8 +4,8 @@ const _ = require('underscore');
 const AppUnit = require('../app/unit');
 
 class UsersManager extends AppUnit {
-	constructor(usersModel) {
-		super({ usersModel });
+	constructor(userModel) {
+		super({ userModel });
 	}
 
 	_onBind() {
@@ -44,7 +44,7 @@ class UsersManager extends AppUnit {
 
 	_findBySocialId(userData) {
 		return this
-			.usersModel
+			.userModel
 			.findOne({ socialId: userData.socialId })
 			.exec()
 			.then(user => !user ? this.create(userData) : user)
@@ -58,7 +58,7 @@ class UsersManager extends AppUnit {
 	}
 
 	create(data) {
-		const user = new this.usersModel(data);
+		const user = new this.userModel(data);
 		return user
 			.save()
 			.catch(() => {
@@ -68,7 +68,7 @@ class UsersManager extends AppUnit {
 
 	edit(customId, data) {
 		return this
-			.usersModel
+			.userModel
 			.findOne({ customId })
 			.exec()
 			.then(user => {
@@ -83,7 +83,7 @@ class UsersManager extends AppUnit {
 
 	getObjectId(userId) {
 		return this
-			.usersModel
+			.userModel
 			.findOne({ customId: userId })
 			.exec()
 			.then(user => user._id);
@@ -91,7 +91,7 @@ class UsersManager extends AppUnit {
 
 	addCompanyToSubscriptions(userId, companyId) {
 		return this
-			.usersModel
+			.userModel
 			.findOne({ customId: userId })
 			.exec()
 			.then(user => {
@@ -107,7 +107,7 @@ class UsersManager extends AppUnit {
 
 	removeCompanyFromSubscriptions(userId, companyId) {
 		return this
-			.usersModel
+			.userModel
 			.findOne({ customId: userId })
 			.exec()
 			.then(user => {
@@ -123,7 +123,7 @@ class UsersManager extends AppUnit {
 
 	getSubscriptions(userId) {
 		return this
-			.usersModel
+			.userModel
 			.findOne({ customId: userId })
 			.populate('subscriptions')
 			.exec()

@@ -4,11 +4,11 @@ const AppUnit = require('../app/unit');
 const categoriesConfig = require('../config/categories');
 const _ = require('underscore');
 
-const categoryResponse = require('../models/response/categoryResponse');
+const categoryResponse = require('../models/response/categoryResponseModel');
 
 class CategoriesManager extends AppUnit {
-	constructor(categoriesModel) {
-		super({ categoriesModel });
+	constructor(categoryModel) {
+		super({ categoryModel });
 	}
 
 	_onBind() {
@@ -19,7 +19,7 @@ class CategoriesManager extends AppUnit {
 
 	_create(data, customId) {
 		data.customId = customId;
-		const category = this.categoriesModel(data);
+		const category = this.categoryModel(data);
 		return category.save()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
@@ -28,7 +28,7 @@ class CategoriesManager extends AppUnit {
 
 	createDefault() {
 		this
-			.categoriesModel
+			.categoryModel
 			.remove({})
 			.then(_.map(categoriesConfig, (data, customId) => this._create(data, customId)))
 			.catch(() => {
@@ -38,7 +38,7 @@ class CategoriesManager extends AppUnit {
 
 	getCategories(language) {
 		return this
-			.categoriesModel
+			.categoryModel
 			.find()
 			.exec()
 			.then(categories => _.map(categories, category => categoryResponse(category, language)))
@@ -49,7 +49,7 @@ class CategoriesManager extends AppUnit {
 
 	findCategory(id, language) {
 		return this
-			.categoriesModel
+			.categoryModel
 			.findOne({ customId: id })
 			.exec()
 			.then(category => categoryResponse(category, language))

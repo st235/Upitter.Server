@@ -1,4 +1,5 @@
 'use strict';
+
 const counterConfig = require('../config/counter');
 
 module.exports = mongoose => {

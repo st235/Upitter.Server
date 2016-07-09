@@ -7,20 +7,20 @@ databaseConfig.uri = 'mongodb://127.0.0.1:27017/upitter_test';
 const { mixedLogger } = require('../../../utils/loggerUtils');
 
 const usersModel = require('../../../models/usersModel');
-const businessUserModel = require('../../../models/businessUsersModel');
+const businessUserModel = require('../../../models/companyModel');
 const counterModel = require('../../../models/counterModel');
-const logsModel = require('../../../models/logsModel');
+const logsModel = require('../../../models/logModel');
 const feedbacsModel = require('../../../models/feedbaksModel');
-const categoriesModel = require('../../../models/categoriesModel');
+const categoriesModel = require('../../../models/categoryModel');
 const postsModel = require('../../../models/postsModel');
 const votesModel = require('../../../models/votesModel');
 const notificationsModel = require('../../../models/notificationsModel');
 const mediaModel = require('../../../models/mediaModel');
 const coordinatesModel = require('../../../models/coordinatesModel');
-const commentsModel = require('../../../models/commentsModel');
+const commentsModel = require('../../../models/commentModel');
 
 const UsersManager = require('../../../managers/usersManager');
-const BusinessUsersManager = require('../../../managers/businessUsersManager');
+const BusinessUsersManager = require('../../../managers/companiesManager');
 const LogsManager = require('../../../managers/logsManager');
 const FeedbacksManager = require('../../../managers/feedbacksManager');
 const PostsManager = require('../../../managers/postsManager');
@@ -32,17 +32,17 @@ class AppDatabase {
 		mongoose.connect(databaseConfig.uri, databaseConfig.options, this.onStart);
 
 		this.counterModel = counterModel(mongoose);
-		this.usersModel = usersModel(mongoose);
+		this.userModel = usersModel(mongoose);
 		this.businessUserModel = businessUserModel(mongoose);
-		this.logsModel = logsModel(mongoose);
+		this.logModel = logsModel(mongoose);
 		this.feedbacksModel = feedbacsModel(mongoose);
-		this.categoriesModel = categoriesModel(mongoose);
-		this.postsModel = postsModel(mongoose);
-		this.votesModel = votesModel(mongoose);
-		this.notificationsModel = notificationsModel(mongoose);
+		this.categoryModel = categoriesModel(mongoose);
+		this.postModel = postsModel(mongoose);
+		this.voteModel = votesModel(mongoose);
+		this.notificationModel = notificationsModel(mongoose);
 		this.mediaModel = mediaModel(mongoose);
 		this.coordinatesModel = coordinatesModel(mongoose);
-		this.commentsModel = commentsModel(mongoose);
+		this.commentModel = commentsModel(mongoose);
 
 		this.usersManager = new UsersManager(this.usersModel);
 		this.businessUsersManager = new BusinessUsersManager(this.businessUserModel);

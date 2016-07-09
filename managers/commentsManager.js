@@ -3,11 +3,11 @@
 const _ = require('underscore');
 const AppUnit = require('../app/unit');
 
-const commentResponse = require('../models/response/commentResponse');
+const commentResponse = require('../models/response/commentResponseModel');
 
 class CommentsManager extends AppUnit {
-	constructor(commentsModel) {
-		super({ commentsModel });
+	constructor(commentModel) {
+		super({ commentModel });
 	}
 
 	_onBind() {
@@ -19,7 +19,7 @@ class CommentsManager extends AppUnit {
 	create(userId, data) {
 		data.createdDate = Date.now();
 		data.author = userId;
-		const comment = new this.commentsModel(data);
+		const comment = new this.commentModel(data);
 		return comment.save()
 			.then(comment => commentResponse(comment))
 			.catch(() => {
@@ -29,7 +29,7 @@ class CommentsManager extends AppUnit {
 
 	remove(commentId) {
 		return this
-			.commentsModel
+			.commentModel
 			.findOneAndUpdate({ customId: commentId }, { isRemoved: true }, { new: true })
 			.then(comment => comment.customId)
 			.catch(() => {
@@ -39,8 +39,8 @@ class CommentsManager extends AppUnit {
 
 	obtain(limit = 20, offset) {
 		return this
-			.commentsModel
-			.getComents(limit, offset)
+			.commentModel
+			.getComments(limit, offset)
 			.then(comments => {
 				if (!comments) return [];
 				return _.map(comments, (comment) => commentResponse(comment));

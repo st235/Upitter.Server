@@ -9,11 +9,11 @@ const LanguageMiddleware = require('../../../controllers/middlewares/languageMid
 const ErrorMiddleware = require('../../../controllers/middlewares/errorMiddleware');
 
 const AuthorizationController = require('../../../controllers/authorizationController');
-const LogsController = require('../../../controllers/logsController');
+const LogsController = require('../../../controllers/logController');
 const FeedbacksController = require('../../../controllers/feedbacksController');
-const UsersController = require('../../../controllers/usersController');
-const PostsController = require('../../../controllers/postsController');
-const CommentController = require('../../../controllers/commentsController');
+const UsersController = require('../../../controllers/userController');
+const PostsController = require('../../../controllers/postController');
+const CommentController = require('../../../controllers/commentController');
 
 class AppRoutes {
 	constructor(app, managers) {
@@ -24,11 +24,11 @@ class AppRoutes {
 		this.errorHandler = new ErrorMiddleware();
 
 		this.authorizationController = new AuthorizationController(managers.users, managers.businessUsers);
-		this.logsController = new LogsController(managers.logs);
+		this.logController = new LogsController(managers.logs);
 		this.feedbacksController = new FeedbacksController(managers.feedbacks);
-		this.usersController = new UsersController(managers.users);
-		this.postsController = new PostsController(managers.posts);
-		this.commentsController = new CommentController(managers.comments);
+		this.userController = new UsersController(managers.users);
+		this.postController = new PostsController(managers.posts);
+		this.commentController = new CommentController(managers.comments);
 
 		this.register = this.register.bind(this);
 		this.registerHeader = this.registerHeader.bind(this);
@@ -41,11 +41,11 @@ class AppRoutes {
 	register() {
 		this.registerHeader(this.app);
 		this.registerAuthorization(this.app, routesConfig.authorization, this.authorizationController);
-		this.registerLogs(this.app, routesConfig.support, this.logsController);
+		this.registerLogs(this.app, routesConfig.support, this.logController);
 		this.registerFeedbacks(this.app, routesConfig.support, this.feedbacksController);
-		this.registerUsers(this.app, routesConfig.user, this.usersController);
-		this.registerPosts(this.app, routesConfig.post, this.postsController);
-		this.registerComments(this.app, routesConfig.comment, this.commentsController);
+		this.registerUsers(this.app, routesConfig.user, this.userController);
+		this.registerPosts(this.app, routesConfig.post, this.postController);
+		this.registerComments(this.app, routesConfig.comment, this.commentController);
 		this.registerFooter(this.app);
 	}
 

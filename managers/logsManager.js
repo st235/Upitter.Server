@@ -3,8 +3,8 @@
 const AppUnit = require('../app/unit');
 
 class LogsManager extends AppUnit {
-	constructor(logsModel) {
-		super({ logsModel });
+	constructor(logModel) {
+		super({ logModel });
 	}
 
 	_onBind() {
@@ -16,11 +16,11 @@ class LogsManager extends AppUnit {
 		const data = { logId, systemType, log, createdDate: Date.now() };
 
 		return this
-			.logsModel
+			.logModel
 			.findUnique(logId, systemType)
 			.then(log => {
 				if (log) throw new Error(500);
-				const model = new this.logsModel(data);
+				const model = new this.logModel(data);
 				return model.save();
 			});
 	}
@@ -29,12 +29,12 @@ class LogsManager extends AppUnit {
 		let logsObject;
 
 		return this
-			.logsModel
+			.logModel
 			.getLogs(parseInt(limit, 10), parseInt(offset, 10))
 			.then(logs => {
 				if (!logs) throw new Error(500);
 				logsObject = logs;
-				return this.logsModel.count();
+				return this.logModel.count();
 			})
 			.then(count => {
 				const oSet = count - offset - logsObject.length;

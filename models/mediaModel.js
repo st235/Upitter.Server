@@ -1,8 +1,10 @@
 'use strict';
+
 const counterConfig = require('../config/counter');
 
 module.exports = mongoose => {
 	const Schema = mongoose.Schema;
+
 	const mediaSchema = new Schema({
 		customId: {
 			type: String,

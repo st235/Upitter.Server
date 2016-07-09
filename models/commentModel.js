@@ -4,7 +4,8 @@ const counterConfig = require('../config/counter');
 
 module.exports = mongoose => {
 	const Schema = mongoose.Schema;
-	const commentsSchema = new Schema({
+
+	const commentSchema = new Schema({
 		customId: {
 			type: String,
 			unique: true
@@ -26,7 +27,7 @@ module.exports = mongoose => {
 		}
 	});
 
-	commentsSchema.pre('save', function (next) {
+	commentSchema.pre('save', function (next) {
 		if (this.customId) return next();
 
 		this
@@ -39,9 +40,14 @@ module.exports = mongoose => {
 			.catch(() => next('INTERNAL_SERVER_ERROR'));
 	});
 
-	commentsSchema.statics.getComents = function (limit, offset) {
-		return this.find({ isRemoved: false }).sort({ createdDate: -1 }).skip(offset).limit(limit).exec();
+	commentSchema.statics.getComments = function (limit, offset) {
+		return this
+			.find({ isRemoved: false })
+			.sort({ createdDate: -1 })
+			.skip(offset)
+			.limit(limit)
+			.exec();
 	};
 
-	return mongoose.model('Comments', commentsSchema);
+	return mongoose.model('Comments', commentSchema);
 };

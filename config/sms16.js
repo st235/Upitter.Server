@@ -5,8 +5,8 @@ module.exports = {
 		SENDER: 'Astral',
 		BASE_URL: 'https://new.sms16.ru/'
 	},
-	codes: [],
+	codes: [], //   TODO: вписать коды
 	errors: {
-
+		//  TODO: сделать оошибки, если нужны
 	}
 };

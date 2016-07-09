@@ -3,11 +3,11 @@
 const _ = require('underscore');
 
 const AppUnit = require('../app/unit');
-const businessUserResponse = require('../models/response/businessUserResponse');
+const businessUserResponse = require('../models/response/companyResponseModel');
 
-class BusinessUsersManager extends AppUnit {
-	constructor(businessUsersModel) {
-		super({ businessUsersModel });
+class CompaniesManager extends AppUnit {
+	constructor(companyModel) {
+		super({ companyModel });
 	}
 
 	_onBind() {
@@ -22,7 +22,7 @@ class BusinessUsersManager extends AppUnit {
 
 	//  TODO: переделать
 	create(data) {
-		const businessUser = new this.businessUsersModel(data);
+		const businessUser = new this.companyModel(data);
 		return businessUser.save().catch(() => {
 			throw 'INTERNAL_SERVER_ERROR';
 		});
@@ -30,7 +30,7 @@ class BusinessUsersManager extends AppUnit {
 
 	checkIfExists(phone) {
 		return this
-			.businessUsersModel
+			.companyModel
 			.findOne({ 'phone.fullNumber': phone })
 			.exec()
 			.catch(() => {
@@ -40,7 +40,7 @@ class BusinessUsersManager extends AppUnit {
 
 	edit(userId, data) {
 		return this
-			.businessUsersModel
+			.companyModel
 			.findOne({ customId: userId })
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
@@ -56,7 +56,7 @@ class BusinessUsersManager extends AppUnit {
 
 	getObjectId(companyId) {
 		return this
-			.businessUsersModel
+			.companyModel
 			.findOne({ customId: companyId })
 			.exec()
 			.catch(() => {
@@ -67,7 +67,7 @@ class BusinessUsersManager extends AppUnit {
 
 	addUserToSubscribers(userId, companyId) {
 		return this
-			.businessUsersModel
+			.companyModel
 			.findOne({ customId: companyId })
 			.exec()
 			.then(company => {
@@ -82,7 +82,7 @@ class BusinessUsersManager extends AppUnit {
 
 	removeUserFromSubscribers(userId, companyId) {
 		return this
-			.businessUsersModel
+			.companyModel
 			.findOne({ customId: companyId })
 			.exec()
 			.then(company => {
@@ -97,7 +97,7 @@ class BusinessUsersManager extends AppUnit {
 
 	getSubscribers(companyId) {
 		return this
-			.businessUsersModel
+			.companyModel
 			.findOne({ customId: companyId })
 			.populate('subscribers')
 			.exec()
@@ -107,4 +107,4 @@ class BusinessUsersManager extends AppUnit {
 	}
 }
 
-module.exports = BusinessUsersManager;
+module.exports = CompaniesManager;
