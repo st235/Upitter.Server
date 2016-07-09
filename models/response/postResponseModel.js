@@ -3,6 +3,8 @@
 const _ = require('underscore');
 
 module.exports = post => {
+	//  TODO: добавить прикрепление категории к посту. Изменить нейминг поля rating (непонятный).
+
 	const postResponse = {
 		customId: post.customId,
 		author: post.author,
