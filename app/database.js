@@ -20,10 +20,10 @@ const counterModel = require('../models/counterModel');
 const feedbackModel = require('../models/feedbackModel');
 const logModel = require('../models/logModel');
 const mediaModel = require('../models/mediaModel');
-const notificationModel = require('../models/notificationsModel');
-const postModel = require('../models/postsModel');
-const voteModel = require('../models/votesModel');
-const userModel = require('../models/usersModel');
+const notificationModel = require('../models/notificationModel');
+const postModel = require('../models/postModel');
+const voteModel = require('../models/voteModel');
+const userModel = require('../models/userModel');
 
 const { mixedLogger } = require('../utils/loggerUtils');
 const databaseConfig = require('../config/database');

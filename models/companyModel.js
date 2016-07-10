@@ -10,6 +10,11 @@ module.exports = mongoose => {
 			type: Number,
 			unique: true
 		},
+		aliasId: {
+			type: String,
+			unique: true,
+			sparse: true
+		},
 		activity: [{ // TODO достигнуть единого нейминга categories
 			type: String,
 			required: true
@@ -17,10 +22,6 @@ module.exports = mongoose => {
 		name: {
 			type: String,
 			required: true
-		},
-		nickname: {
-			type: String,
-			unique: true
 		},
 		description: {
 			type: String
@@ -89,6 +90,12 @@ module.exports = mongoose => {
 	companySchema.statics.findById = function (customId) {
 		return this
 			.findOne({ customId })
+			.exec();
+	};
+
+	companySchema.statics.findByAlias = function (aliasId) {
+		return this
+			.findOne({ aliasId })
 			.exec();
 	};
 

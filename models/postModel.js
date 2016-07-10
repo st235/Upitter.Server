@@ -14,10 +14,7 @@ module.exports = mongoose => {
 		author: {
 			type: String,
 			required: true,
-			ref: 'Companies'
-		},
-		categories: {
-			type: [String]
+			ref: 'Companies'    //  TODO: решить проблему со сылками
 		},
 		title: {
 			type: String,
@@ -25,6 +22,10 @@ module.exports = mongoose => {
 		},
 		text: {
 			type: String,
+			required: true
+		},
+		category: {
+			type: Number,
 			required: true
 		},
 		isRemoved: {

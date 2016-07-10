@@ -30,6 +30,9 @@ class PostsController extends BaseController {
 			.add('accessToken').should.exist().and.have.type('String')
 			.add('title').should.exist().and.have.type('String').and.be.in.rangeOf(3, 63)
 			.add('text').should.exist().and.have.type('String').and.be.in.rangeOf(3, 500)
+			.add('category').should.exist().and.have.type('Number')
+			.add('latitude').should.exist().and.have.type('Number')
+			.add('longitude').should.exist().and.have.type('Number')
 			.validate();
 
 		if (invalid) return next(invalid.name);
@@ -37,12 +40,12 @@ class PostsController extends BaseController {
 		const variants = req.body.variants;
 		if (variants && variants.length !== 0 && !this.validationUtils.checkArray(variants, 1, 12)) return next('PROPERTY_NOT_SUPPLIED');
 
-		const { title, text, latitude, longitude } = req.body;
+		const { title, text, category, latitude, longitude } = req.body;
 		const companyId = req.userId;
 
 		this
 			.postsManager
-			.create(companyId, title, text, latitude, longitude)
+			.create(companyId, title, text, category, latitude, longitude)
 			.then(post => postResponse(post))
 			.then(response => this.success(res, response))
 			.catch(next);

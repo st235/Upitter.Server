@@ -18,12 +18,13 @@ class PostsManager extends AppUnit {
 		this.voteForVariant = this.voteForVariant.bind(this);
 	}
 
-	create(companyId, title, text, latitude, longitude) {
+	create(companyId, title, text, category, latitude, longitude) {
 		const data = {
 			author: companyId,
 			location: [latitude, longitude],
 			title,
-			text
+			text,
+			category
 		};
 
 		const post = new this.postModel(data);

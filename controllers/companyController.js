@@ -11,8 +11,10 @@ class CompanyController extends BaseController {
 
 	_onBind() {
 		super._onBind();
+
 		this.edit = this.edit.bind(this);
 		this.getSubscribers = this.getSubscribers.bind(this);
+		this.findByAlias = this.findByAlias.bind(this);
 	}
 
 	_onCreate() {
@@ -30,13 +32,24 @@ class CompanyController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const body = req.body; //   TODO: пофиксить передачу объекта
+		const { aliasId, description, logoUrl, site } = req.body;
 		const companyId = req.userId;
 
 		this
 			.companiesManager
-			.edit(companyId, body)
+			.edit(companyId, aliasId, description, logoUrl, site)
 			.then(businessUser => this.success(res, businessUser))
+			.catch(next);
+	}
+
+	findByAlias(req, res, next) {
+		const { aliasId } = req.params;
+
+		this
+			.companiesManager
+			.findByAlias(aliasId)
+			.then(company => CompanyResponseModel(company))
+			.then(response => this.success(res, response))
 			.catch(next);
 	}
 

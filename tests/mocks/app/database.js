@@ -6,15 +6,15 @@ databaseConfig.uri = 'mongodb://127.0.0.1:27017/upitter_test';
 
 const { mixedLogger } = require('../../../utils/loggerUtils');
 
-const usersModel = require('../../../models/usersModel');
+const usersModel = require('../../../models/userModel');
 const businessUserModel = require('../../../models/companyModel');
 const counterModel = require('../../../models/counterModel');
 const logsModel = require('../../../models/logModel');
 const feedbacsModel = require('../../../models/feedbaksModel');
 const categoriesModel = require('../../../models/categoryModel');
-const postsModel = require('../../../models/postsModel');
-const votesModel = require('../../../models/votesModel');
-const notificationsModel = require('../../../models/notificationsModel');
+const postsModel = require('../../../models/postModel');
+const votesModel = require('../../../models/voteModel');
+const notificationsModel = require('../../../models/notificationModel');
 const mediaModel = require('../../../models/mediaModel');
 const coordinatesModel = require('../../../models/coordinatesModel');
 const commentsModel = require('../../../models/commentModel');

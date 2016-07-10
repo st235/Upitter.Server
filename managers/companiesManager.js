@@ -11,6 +11,7 @@ class CompaniesManager extends AppUnit {
 	}
 
 	_onBind() {
+		this.findByAlias = this.findByAlias.bind(this);
 		this.create = this.create.bind(this);
 		this.checkIfExists = this.checkIfExists.bind(this);
 		this.edit = this.edit.bind(this);
@@ -20,12 +21,28 @@ class CompaniesManager extends AppUnit {
 		this.getSubscribers = this.getSubscribers.bind(this);
 	}
 
+	findByAlias(aliasId) {
+		return this
+			.companyModel
+			.findByAlias(aliasId)
+			.then(company => {
+				if (!company) return this.companyModel.findById(aliasId);
+				return company;
+			})
+			.then(company => {
+				if (!company) throw 'INTERNAL_SERVER_ERROR';
+				return company;
+			});
+	}
+
 	//  TODO: переделать
 	create(data) {
 		const businessUser = new this.companyModel(data);
-		return businessUser.save().catch(() => {
+		return businessUser
+			.save()
+			.catch(() => {
 			throw 'INTERNAL_SERVER_ERROR';
-		});
+			});
 	}
 
 	checkIfExists(phone) {
@@ -38,20 +55,15 @@ class CompaniesManager extends AppUnit {
 			});
 	}
 
-	edit(userId, data) {
+	edit(companyId, aliasId, description, logoUrl, site) {
+		const data = _.omit({ aliasId, description, logoUrl, site }, field => !field);
+
 		return this
 			.companyModel
-			.findOne({ customId: userId })
+			.findOneAndUpdate({ customId: companyId }, data, { new: true })
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
-			})
-			.then(businessUser => {
-				if (!businessUser) throw 'INTERNAL_SERVER_ERROR';
-				let validatedData = _.omit(data, 'customId', 'isVerify', 'phone', 'coordinates', 'activity', 'createdDate');
-				_.extend(businessUser, validatedData);
-				return businessUser.save();
-			})
-			.then(businessUser => businessUserResponse(businessUser));
+			});
 	}
 
 	getObjectId(companyId) {

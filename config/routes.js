@@ -21,7 +21,8 @@ module.exports = {
 	},
 	company: {
 		edit: '/company/edit',
-		getSubscribers: '/company/subscribers'
+		getSubscribers: '/company/subscribers',
+		findByAlias: '/:aliasId'
 	},
 	post: {
 		obtain: '/posts',

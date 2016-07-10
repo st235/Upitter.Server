@@ -3,16 +3,17 @@
 const _ = require('underscore');
 
 module.exports = post => {
-	//  TODO: добавить прикрепление категории к посту. Изменить нейминг поля rating (непонятный).
 
 	const postResponse = {
 		customId: post.customId,
 		author: post.author,
 		title: post.title,
 		text: post.text,
+		category: post.category,
 		createdDate: post.createdDate,
-		rating: post.rating
+		likes: post.rating 	//  TODO: Изменить нейминг поля rating (непонятный).
 	};
+
 	if (post.comments.length > 0) postResponse.comments = post.comments;
 	if (post.variants.length > 0) {
 		postResponse.variants = _.map(post.variants, (variant) => {
@@ -22,6 +23,7 @@ module.exports = post => {
 			};
 		});
 	}
+
 	if (post.voters.length > 0) postResponse.voters = post.voters;
 	if (post.votersForVariants > 0) postResponse.votersForVariants = post.votersForVariants;
 	if (post.logoUrl) postResponse.logoUrl = post.logoUrl;
