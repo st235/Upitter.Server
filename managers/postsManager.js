@@ -89,16 +89,19 @@ class PostsManager extends AppUnit {
 			.findOne({ customId: postId })
 			.then(post => {
 				if (!post) throw 'INTERNAL_SERVER_ERROR';
-				if (_.indexOf(post.voters, userId) > -1) {
+				const find = !!_.find(post.voters, vote => vote === userId);
+
+				if (find) {
 					post.voters = _.without(post.voters, userId);
 					post.rating--;
 				} else {
 					post.voters.push(userId);
 					post.rating++;
 				}
-				return post
-					.save()
-					.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
+				return post.save();
+			})
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 

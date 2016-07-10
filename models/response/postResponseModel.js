@@ -1,8 +1,10 @@
 'use strict';
 
 const _ = require('underscore');
+const CompanyResponseModel = require('./companyResponseModel');
 
-module.exports = post => {
+module.exports = (userId, post) => {
+	const inVoters = !!_.find(post.voters, voterId => voterId === userId);
 
 	const postResponse = {
 		customId: post.customId,
@@ -11,7 +13,8 @@ module.exports = post => {
 		text: post.text,
 		category: post.category,
 		createdDate: post.createdDate,
-		likes: post.rating 	//  TODO: Изменить нейминг поля rating (непонятный).
+		likes: post.rating, 	//  TODO: Изменить нейминг поля rating (непонятный).
+		isLikedByMe: inVoters
 	};
 
 	if (post.comments.length > 0) postResponse.comments = post.comments;

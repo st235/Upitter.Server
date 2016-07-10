@@ -22,10 +22,10 @@ module.exports = {
 	company: {
 		edit: '/company/edit',
 		getSubscribers: '/company/subscribers',
-		findByAlias: '/:aliasId'
+		findByAlias: '/company/:aliasId'
 	},
 	post: {
-		obtain: '/posts',
+		obtain: '/post/obtain',
 		create: '/post/create',
 		edit: '/post/edit',
 		remove: '/post/remove',

@@ -3,7 +3,7 @@ const _ = require('underscore');
 
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
-const postResponse = require('../models/response/postResponseModel');
+const PostResponse = require('../models/response/postResponseModel');
 
 class PostsController extends BaseController {
 	constructor(postsManager) {
@@ -30,7 +30,7 @@ class PostsController extends BaseController {
 			.add('accessToken').should.exist().and.have.type('String')
 			.add('title').should.exist().and.have.type('String').and.be.in.rangeOf(3, 63)
 			.add('text').should.exist().and.have.type('String').and.be.in.rangeOf(3, 500)
-			.add('category').should.exist().and.have.type('Number')
+			.add('category').should.exist().and.have.type('String')
 			.add('latitude').should.exist().and.have.type('Number')
 			.add('longitude').should.exist().and.have.type('Number')
 			.validate();
@@ -46,7 +46,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.create(companyId, title, text, category, latitude, longitude)
-			.then(post => postResponse(post))
+			.then(post => PostResponse(req.userId, post))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
@@ -67,7 +67,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.edit(companyId, body.postId, body)
-			.then(post => postResponse(post))
+			.then(post => PostResponse(req.userId, post))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
@@ -102,7 +102,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.obtain(latitude, longitude, radius, limit, offset)
-			.then(posts => _.map(posts, post => postResponse(post)))
+			.then(posts => _.map(posts, post => PostResponse(req.userId, post)))
 			.then(response => this.success(res, { offset: parseInt(offset, 10) + response.length, posts: response }))
 			.catch(next);
 	}
@@ -115,12 +115,13 @@ class PostsController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const params = req.params;
+		const { userId } = req;
+		const { postId } = req.params;
 
 		this
 			.postsManager
-			.like(req.userId, params.postId)
-			.then(post => postResponse(post))
+			.like(userId, postId)
+			.then(post => PostResponse(req.userId, post))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
@@ -134,14 +135,14 @@ class PostsController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const userId = req.userId;
-		const postId = req.params.postId;
+		const { userId } = req;
+		const { postId } = req.params;
 		const variantIndex = req.params.variantIndex;
 
 		this
 			.postsManager
 			.voteForVariant(userId, postId, variantIndex)
-			.then(post => postResponse(post))
+			.then(post => PostResponse(req.userId, post))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}

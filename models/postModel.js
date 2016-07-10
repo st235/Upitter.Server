@@ -25,7 +25,7 @@ module.exports = mongoose => {
 			required: true
 		},
 		category: {
-			type: Number,
+			type: String,
 			required: true
 		},
 		isRemoved: {
