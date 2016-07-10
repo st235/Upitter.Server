@@ -1,10 +1,9 @@
 'use strict';
 
-const AppUnit = require('../app/unit');
-const categoriesConfig = require('../config/categories');
 const _ = require('underscore');
 
-const categoryResponse = require('../models/response/categoryResponseModel');
+const AppUnit = require('../app/unit');
+const categoriesConfig = require('../config/categories');
 
 class CategoriesManager extends AppUnit {
 	constructor(categoryModel) {
@@ -36,23 +35,22 @@ class CategoriesManager extends AppUnit {
 			});
 	}
 
-	getCategories(language) {
+	getCategories() {
 		return this
 			.categoryModel
 			.find()
 			.exec()
-			.then(categories => _.map(categories, category => categoryResponse(category, language)))
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 
-	findCategory(id, language) {
+	findCategory(id) {
+
 		return this
 			.categoryModel
 			.findOne({ customId: id })
 			.exec()
-			.then(category => categoryResponse(category, language))
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});

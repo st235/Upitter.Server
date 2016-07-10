@@ -8,7 +8,8 @@ class LanguageMiddleware extends AppUnit {
 	}
 
 	obtainLanguage(req, res, next) {
-		req.ln = req.query.ln || req.body.ln;
+		const ln = req.query.ln || req.body.ln;
+		req.ln = ln;
 		return next();
 	}
 }

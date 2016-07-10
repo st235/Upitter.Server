@@ -12,7 +12,8 @@ module.exports = {
 	},
 	category: {
 		obtain: '/categories',
-		find: '/categories/find/:id'
+		find: '/categories/find/:id',
+		getParent: '/categories/get/parent/:id'
 	},
 	comment: {
 		obtain: '/comments',
