@@ -94,6 +94,8 @@ class PostsManager extends AppUnit {
 	}
 
 	like(userId, postId) {
+		let resultPost;
+
 		return this
 			.postModel
 			.findOne({ customId: postId })
@@ -110,6 +112,14 @@ class PostsManager extends AppUnit {
 				}
 
 				return post.save();
+			})
+			.then(post => {
+				resultPost = post;
+				return this.companyModel.findById(post.author);
+			})
+			.then(user => {
+				resultPost.author = user;
+				return resultPost;
 			})
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
