@@ -78,10 +78,10 @@ class AppRoutes extends AppUnit {
 	registerAuthorization(app, paths, controller) {
 		app.get(paths.verifyToken, controller.verifyToken);
 		app.get(paths.refreshToken, controller.refreshToken);
+
 		app.post(paths.googleVerify, controller.googleVerify);
 		app.post(paths.facebookVerify, controller.facebookVerify);
 		app.post(paths.twitterVerify, controller.twitterVerify);
-
 		app.post(paths.authorizeByPhone, controller.authorizeByPhone);
 		app.post(paths.verifyCode, controller.verifyCode);
 		app.post(paths.addInfo, controller.addInfo);
@@ -94,34 +94,40 @@ class AppRoutes extends AppUnit {
 	}
 
 	registerComment(app, paths, controller) {
-		app.post(paths.create, this.checkAuthorization, controller.create);
 		app.get(paths.remove, this.checkAuthorization, controller.remove);
 		app.get(paths.obtain, this.checkAuthorization, controller.obtain);
+
+		app.post(paths.create, this.checkAuthorization, controller.create);
 	}
 
 	registerCompany(app, paths, controller) {
+		app.get(paths.findByAlias, controller.findByAlias);
+
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
 		app.post(paths.getSubscribers, this.checkAuthorization, controller.getSubscribers);
-		app.get(paths.findByAlias, controller.findByAlias);
 	}
 
 	registerFeedback(app, paths, controller) {
-		app.post(paths.feedback, this.checkAuthorization, controller.feedback);
 		app.get(paths.getFeedback, this.checkAuthorization, controller.getFeedback);
+
+		app.post(paths.feedback, this.checkAuthorization, controller.feedback);
 	}
 
 	registerLog(app, paths, controller) {
-		app.post(paths.log, this.checkAuthorization, controller.log);
 		app.get(paths.getLogs, this.checkAuthorization, controller.getLogs);
+
+		app.post(paths.log, this.checkAuthorization, controller.log);
 	}
 
 	registerPost(app, paths, controller) {
-		app.post(paths.create, this.checkAuthorization, controller.create);
-		app.post(paths.edit, this.checkAuthorization, controller.edit);
 		app.get(paths.remove, this.checkAuthorization, controller.remove);
 		app.get(paths.obtain, this.checkAuthorization, controller.obtain);
 		app.get(paths.like, this.checkAuthorization, controller.like);
 		app.get(paths.vote, this.checkAuthorization, controller.voteForVariant);
+		app.get(paths.favorite, this.checkAuthorization, controller.favorite);
+
+		app.post(paths.create, this.checkAuthorization, controller.create);
+		app.post(paths.edit, this.checkAuthorization, controller.edit);
 	}
 
 	registerUser(app, paths, controller) {

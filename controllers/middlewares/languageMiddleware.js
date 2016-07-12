@@ -1,6 +1,7 @@
 'use strict';
 
 const AppUnit = require('../../app/unit');
+const DEFAULT_LANGUAGE = 'en';
 
 class LanguageMiddleware extends AppUnit {
 	_onBind() {
@@ -9,7 +10,7 @@ class LanguageMiddleware extends AppUnit {
 
 	obtainLanguage(req, res, next) {
 		const ln = req.query.ln || req.body.ln;
-		req.ln = ln;
+		req.ln = ln || DEFAULT_LANGUAGE;
 		return next();
 	}
 }

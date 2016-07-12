@@ -1,9 +1,11 @@
 'use strict';
 
 const _ = require('underscore');
+const moment = require('moment');
+
 const CompanyResponseModel = require('./companyResponseModel');
 
-module.exports = (userId, post) => {
+module.exports = (userId, post, lang = 'en') => {
 	const inVoters = !!_.find(post.voters, voterId => voterId === userId);
 
 	const postResponse = {
@@ -12,7 +14,7 @@ module.exports = (userId, post) => {
 		title: post.title,
 		text: post.text,
 		category: post.category,
-		createdDate: post.createdDate,
+		fromNow: moment(post.createdDate).locale(lang).fromNow(),
 		likes: post.rating, 	//  TODO: Изменить нейминг поля rating (непонятный).
 		isLikedByMe: inVoters
 	};

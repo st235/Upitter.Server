@@ -6,14 +6,15 @@ const ValidationUtils = require('../utils/validationUtils');
 const PostResponse = require('../models/response/postResponseModel');
 
 class PostsController extends BaseController {
-	constructor(postsManager) {
-		super({ postsManager });
+	constructor(postsManager, userManager) {
+		super({ postsManager, userManager });
 	}
 
 	_onBind() {
 		super._onBind();
 		this.create = this.create.bind(this);
 		this.edit = this.edit.bind(this);
+		this.favorite = this.favorite.bind(this);
 		this.remove = this.remove.bind(this);
 		this.obtain = this.obtain.bind(this);
 		this.like = this.like.bind(this);
@@ -46,7 +47,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.create(companyId, title, text, category, latitude, longitude)
-			.then(post => PostResponse(req.userId, post))
+			.then(post => PostResponse(req.userId, post, req.ln))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
@@ -67,7 +68,18 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.edit(companyId, body.postId, body)
-			.then(post => PostResponse(req.userId, post))
+			.then(post => PostResponse(req.userId, post, req.ln))
+			.then(response => this.success(res, response))
+			.catch(next);
+	}
+
+	favorite(req, res, next) {
+		const { postId } = req.params;
+		const { ln, userId } = req;
+
+		this
+			.userManager(userId, postId)
+			.then(post => PostResponse(userId, post, ln))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
@@ -102,7 +114,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.obtain(latitude, longitude, radius, limit, offset)
-			.then(posts => _.map(posts, post => PostResponse(req.userId, post)))
+			.then(posts => _.map(posts, post => PostResponse(req.userId, post, req.ln)))
 			.then(response => this.success(res, { offset: parseInt(offset, 10) + response.length, posts: response }))
 			.catch(next);
 	}
@@ -121,7 +133,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.like(userId, postId)
-			.then(post => PostResponse(req.userId, post))
+			.then(post => PostResponse(req.userId, post, req.ln))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
@@ -142,7 +154,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.voteForVariant(userId, postId, variantIndex)
-			.then(post => PostResponse(req.userId, post))
+			.then(post => PostResponse(req.userId, post, req.ln))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}

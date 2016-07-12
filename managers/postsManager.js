@@ -27,9 +27,19 @@ class PostsManager extends AppUnit {
 			category
 		};
 
+		let postResult;
+
 		const post = new this.postModel(data);
 		return post
 			.save()
+			.then(post => {
+				postResult = post;
+				return this.companyModel.findById(post.author);
+			})
+			.then(author => {
+				postResult.author = author;
+				return postResult;
+			})
 			.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
 	}
 

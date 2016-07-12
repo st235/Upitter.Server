@@ -44,6 +44,7 @@ module.exports = mongoose => {
 			type: String,
 			ref: 'Companies'
 		}],
+		favorite: [String],
 		createdDate: {
 			type: Date
 		},

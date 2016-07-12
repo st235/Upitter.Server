@@ -12,6 +12,7 @@ class UsersManager extends AppUnit {
 		this.checkSocialExistence = this.checkSocialExistence.bind(this);
 		this.create = this.create.bind(this);
 		this.edit = this.edit.bind(this);
+		this.favorite = this.favorite.bind(this);
 		this.getObjectId = this.getObjectId.bind(this);
 		this.addCompanyToSubscriptions = this.addCompanyToSubscriptions.bind(this);
 		this.removeCompanyFromSubscriptions = this.removeCompanyFromSubscriptions.bind(this);
@@ -78,6 +79,19 @@ class UsersManager extends AppUnit {
 				return user.save();
 			}).catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	favorite(customId, postId) {
+		return this
+			.userModel
+			.findOne({ customId })
+			.exec()
+			.then(user => {
+				const findQuery = _.find(user.favorites, favorite => favorite === postId);
+				if (findQuery) user.favorites = _.without(user.favorites, postId);
+				else user.favorites.push(postId);
+				return user.save();
 			});
 	}
 
