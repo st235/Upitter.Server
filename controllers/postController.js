@@ -6,8 +6,8 @@ const ValidationUtils = require('../utils/validationUtils');
 const PostResponse = require('../models/response/postResponseModel');
 
 class PostsController extends BaseController {
-	constructor(postsManager, userManager) {
-		super({ postsManager, userManager });
+	constructor(postsManager, usersManager) {
+		super({ postsManager, usersManager });
 	}
 
 	_onBind() {
@@ -76,9 +76,11 @@ class PostsController extends BaseController {
 	favorite(req, res, next) {
 		const { postId } = req.params;
 		const { ln, userId } = req;
+		console.log(postId, ln, userId);
 
 		this
-			.userManager(userId, postId)
+			.usersManager
+			.favorite(userId, postId)
 			.then(post => PostResponse(userId, post, ln))
 			.then(response => this.success(res, response))
 			.catch(next);

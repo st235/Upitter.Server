@@ -88,6 +88,7 @@ class UsersManager extends AppUnit {
 			.findOne({ customId })
 			.exec()
 			.then(user => {
+				if (!user) throw 'INTERNAL_SERVER_ERROR';
 				const findQuery = _.find(user.favorites, favorite => favorite === postId);
 				if (findQuery) user.favorites = _.without(user.favorites, postId);
 				else user.favorites.push(postId);
