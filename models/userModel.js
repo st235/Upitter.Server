@@ -59,7 +59,7 @@ module.exports = mongoose => {
 
 		this
 			.model('_Counters')
-			.findAndModify(counterConfig.users.name, counterConfig.users.defaultIndex)
+			.findAndIncrement(counterConfig.users.name, counterConfig.users.defaultIndex)
 			.then(index => {
 				this.customId = index;
 				next();

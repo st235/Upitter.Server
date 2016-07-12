@@ -26,7 +26,7 @@ module.exports = mongoose => {
 
 		this
 			.model('_Counters')
-			.findAndModify(counterConfig.feedbacks.name, counterConfig.feedbacks.defaultIndex)
+			.findAndIncrement(counterConfig.feedbacks.name, counterConfig.feedbacks.defaultIndex)
 			.then(index => {
 				this.customId = index;
 				next();

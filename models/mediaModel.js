@@ -24,7 +24,7 @@ module.exports = mongoose => {
 
 		this
 			.model('_Counters')
-			.findAndModify(counterConfig.media.name, counterConfig.media.defaultIndex)
+			.findAndIncrement(counterConfig.media.name, counterConfig.media.defaultIndex)
 			.then(index => {
 				this.customId = index;
 				next();

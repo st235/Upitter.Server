@@ -22,7 +22,7 @@ module.exports = mongoose => {
 		}
 	});
 
-	counterSchema.statics.findAndModify = function (name, index = 0) {
+	counterSchema.statics.findAndIncrement = function (name, index = 0) {
 		return this
 			.findOne()
 			.exec()
@@ -35,6 +35,21 @@ module.exports = mongoose => {
 			.then(counterModel => mathUtils.inCollection(counterModel.collections, 'name', name))
 			.then(counter => counter.index);
 	};
+
+	counterSchema.statics.findAndDecrement = function (name, index = 0) {
+		return this
+			.findOne()
+			.exec()
+			.then(counterModel => {
+				if (mathUtils.inCollection(counterModel.collections, 'name', name)) return counterModel;
+				counterModel.collections.push({ name, index });
+				return counterModel.save();
+			})
+			.then(() => this.findOneAndUpdate({ 'collections.name': name }, { $inc: { 'collections.$.index': -1 } }, { new: true }).exec())
+			.then(counterModel => mathUtils.inCollection(counterModel.collections, 'name', name))
+			.then(counter => counter.index);
+	};
+
 
 	counterSchema.statics.create = function () {
 		return this

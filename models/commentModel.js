@@ -32,7 +32,7 @@ module.exports = mongoose => {
 
 		this
 			.model('_Counters')
-			.findAndModify(counterConfig.comments.name, counterConfig.comments.defaultIndex)
+			.findAndIncrement(counterConfig.comments.name, counterConfig.comments.defaultIndex)
 			.then(index => {
 				this.customId = index;
 				next();
