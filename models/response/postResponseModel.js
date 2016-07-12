@@ -10,7 +10,7 @@ module.exports = (userId, post, lang = 'en') => {
 
 	const postResponse = {
 		customId: post.customId,
-		author: post.author,
+		author: { id: post.author }, // TODO: Отдавать полноценного пользователя
 		title: post.title,
 		text: post.text,
 		category: post.category,

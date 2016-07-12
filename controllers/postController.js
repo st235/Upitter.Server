@@ -129,6 +129,7 @@ class PostsController extends BaseController {
 
 		const { userId } = req;
 		const { postId } = req.params;
+		console.log(userId, postId);
 
 		this
 			.postsManager
