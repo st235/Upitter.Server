@@ -30,7 +30,7 @@ module.exports = (userId, post, lang = 'en') => {
 		});
 	}
 
-	if (post.voters.length > 0) postResponse.voters = post.voters;
+	if (post.likeVoters.length > 0) postResponse.likeVoters = post.likeVoters;
 	if (post.votersForVariants > 0) postResponse.votersForVariants = post.votersForVariants;
 	if (post.logoUrl) postResponse.logoUrl = post.logoUrl;
 	if (post.updatedDate) postResponse.updatedDate = post.updatedDate;
