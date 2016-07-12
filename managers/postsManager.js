@@ -106,14 +106,14 @@ class PostsManager extends AppUnit {
 			.findOne({ customId: postId })
 			.then(post => {
 				if (!post) throw 'INTERNAL_SERVER_ERROR';
-				const find = !!_.find(post.voters, voterId => voterId === userId);
+				const find = !!_.find(post.likeVoters, voterId => voterId === userId);
 
 				if (find) {
-					post.voters = _.without(post.voters, userId);
-					post.rating--;
+					post.likeVoters = _.without(post.likeVoters, userId);
+					post.likes--;
 				} else {
-					post.voters.push(userId);
-					post.rating++;
+					post.likeVoters.push(userId);
+					post.likes++;
 				}
 
 				return post.save();

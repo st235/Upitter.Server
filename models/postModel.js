@@ -43,10 +43,14 @@ module.exports = mongoose => {
 		updatedDate: {
 			type: Date
 		},
-		rating: {
+		likes: {
 			type: Number,
 			default: 0
 		},
+		likeVoters: [{
+			type: String,
+			ref: 'Users'
+		}],
 		variants: [{
 			value: {
 				type: String
@@ -54,6 +58,10 @@ module.exports = mongoose => {
 			count: {
 				type: Number,
 				default: 0
+			},
+			voters: {
+				type: [String],
+				default: []
 			}
 		}],
 		media: [{
@@ -65,10 +73,6 @@ module.exports = mongoose => {
 			required: true,
 			index: '2dsphere'
 		},
-		voters: [{
-			type: String,
-			ref: 'Users'
-		}],
 		votersForVariants: [{
 			type: String,
 			ref: 'Users'
@@ -111,17 +115,6 @@ module.exports = mongoose => {
 			.skip(offset)
 			.limit(limit)
 			.exec();
-	};
-
-	postSchema.statics.ratingPlus = function (userId) {
-		if (_.indexOf(this.voters, userId) > -1) {
-			this.voters = _.without(this.voters, userId);
-			this.rating--;
-		} else {
-			this.voters.push(userId);
-			this.rating++;
-		}
-		return this.save();
 	};
 
 	return mongoose.model('Posts', postSchema);

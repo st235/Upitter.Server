@@ -6,7 +6,7 @@ const moment = require('moment');
 const CompanyResponseModel = require('./companyResponseModel');
 
 module.exports = (userId, post, lang = 'en') => {
-	const inVoters = !!_.find(post.voters, voterId => voterId === userId);
+	const inVoters = !!_.find(post.likeVoters, voterId => voterId === userId);
 
 	const postResponse = {
 		customId: post.customId,
@@ -15,7 +15,7 @@ module.exports = (userId, post, lang = 'en') => {
 		text: post.text,
 		category: post.category,
 		fromNow: moment(post.createdDate).locale(lang).fromNow(),
-		likesAmount: post.rating, 	//  TODO: Изменить нейминг поля rating (непонятный).
+		likesAmount: post.likes,
 		commentsAmount: post.comments.length,
 		isLikedByMe: inVoters
 	};
