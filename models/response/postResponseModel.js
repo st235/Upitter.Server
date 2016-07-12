@@ -15,7 +15,8 @@ module.exports = (userId, post, lang = 'en') => {
 		text: post.text,
 		category: post.category,
 		fromNow: moment(post.createdDate).locale(lang).fromNow(),
-		likes: post.rating, 	//  TODO: Изменить нейминг поля rating (непонятный).
+		likesAmount: post.rating, 	//  TODO: Изменить нейминг поля rating (непонятный).
+		commentsAmount: post.comments.length,
 		isLikedByMe: inVoters
 	};
 
