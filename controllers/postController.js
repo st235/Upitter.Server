@@ -38,15 +38,18 @@ class PostsController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const variants = req.body.variants;
-		if (variants && variants.length !== 0 && !this.validationUtils.checkArray(variants, 1, 12)) return next('PROPERTY_NOT_SUPPLIED');
+		const companyId = req.userId;
+		const { variants } = req.body;
+
+		if (variants &&
+			variants.length < 0 &&
+			!this.validationUtils.checkArray(variants, 1, 12)) return next('PROPERTY_NOT_SUPPLIED');
 
 		const { title, text, category, latitude, longitude } = req.body;
-		const companyId = req.userId;
 
 		this
 			.postsManager
-			.create(companyId, title, text, category, latitude, longitude)
+			.create(companyId, title, text, category, latitude, longitude, variants)
 			.then(post => PostResponse(req.userId, post, req.ln))
 			.then(response => this.success(res, response))
 			.catch(next);

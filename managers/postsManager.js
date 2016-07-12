@@ -18,10 +18,15 @@ class PostsManager extends AppUnit {
 		this.voteForVariant = this.voteForVariant.bind(this);
 	}
 
-	create(companyId, title, text, category, latitude, longitude) {
+	create(companyId, title, text, category, latitude, longitude, variants) {
 		const data = {
 			author: companyId,
 			location: [latitude, longitude],
+			variants: _.map(variants, variant => {
+				return {
+					value: variant
+				};
+			}),
 			title,
 			text,
 			category

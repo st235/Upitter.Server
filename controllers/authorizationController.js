@@ -261,7 +261,7 @@ class AuthorizationController extends BaseController {
 
 		const { number, countryCode } = req.params;
 		const phone = `${countryCode}${number}`;
-		const { temporaryToken, name, site, coordinates, category, logoUrl } = req.body;
+		const { temporaryToken, name, site, coordinates, category, contactsPhones, logoUrl } = req.body;
 
 		authUtils.getOrgTempModel(this.authorizationClient, phone)
 			.then(model => {
@@ -281,6 +281,7 @@ class AuthorizationController extends BaseController {
 								site,
 								logoUrl,
 								coordinates,
+								contactsPhones,
 								phone: {
 									body: number,
 									code: countryCode,
