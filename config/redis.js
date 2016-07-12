@@ -1,8 +1,9 @@
 module.exports = {
 	authorizations: {
 		ports: [
-			6379
+			19787
 		],
-		database: 1
+		database: 0,
+		authPass: 'upitteruser'
 	}
 };

@@ -5,7 +5,7 @@ const RedisUtils = require('../utils/redisUtils');
 class RedisService {
 	static init(config) {
 		this._config = config;
-		this._defaultHost = '127.0.0.1';
+		this._defaultHost = 'pub-redis-19787.us-east-1-3.1.ec2.garantiadata.com';
 		this.clients = Object.create(null);
 		const databaseNames = Object.keys(config);
 		databaseNames.forEach(dbName => this._addClient(dbName));
