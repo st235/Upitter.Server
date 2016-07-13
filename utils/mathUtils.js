@@ -9,8 +9,14 @@ module.exports = {
 	},
 
 	union(collection, predicate) {
+		if (!collection) return [];
+
 		let result = [];
-		_.each(collection, object => _.each(object[predicate], item => result.push(item)));
+		_.each(collection, object => {
+			if (!object[predicate]) return;
+			_.each(object[predicate], item => result.push(item));
+		});
+
 		return result;
 	}
 };
