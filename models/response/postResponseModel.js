@@ -18,7 +18,7 @@ module.exports = (userId, post, lang = 'en') => {
 		fromNow: moment(post.createdDate).locale(lang).fromNow(),
 		likesAmount: post.likes,
 		commentsAmount: post.comments.length,
-		votersAmount: voters.length,
+		votersAmount: post.votersForVariants.length,
 		isLikedByMe: likedByMe,
 		isVotedByMe: votedByMe
 	};
