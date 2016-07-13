@@ -26,7 +26,6 @@ module.exports = (userId, post, lang = 'en') => {
 
 	if (post.comments.length > 0) postResponse.comments = post.comments;
 	if (post.variants.length > 0) {
-
 		postResponse.variants = _.map(post.variants, variant => {
 			let currentVoted = false;
 			if (votedByMe)
