@@ -74,8 +74,8 @@ module.exports = mongoose => {
 			index: '2dsphere'
 		},
 		votersForVariants: [{
-			type: String,
-			ref: 'Users'
+			type: [String],
+			default: []
 		}]
 	});
 
