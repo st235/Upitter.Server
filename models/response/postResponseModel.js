@@ -20,6 +20,7 @@ module.exports = (userId, post, lang = 'en') => {
 		fromNow: moment(post.createdDate).locale(lang).fromNow(),
 		likesAmount: post.likes,
 		commentsAmount: post.comments.length,
+		votersAmount: voters.length,
 		isLikedByMe: likedByMe,
 		isVotedByMe: votedByMe
 	};
