@@ -132,6 +132,8 @@ class PostsManager extends AppUnit {
 	}
 
 	voteForVariant(userId, postId, variantIndex) {
+		let resultPost;
+
 		return this
 			.postModel
 			.findOne({ customId: postId })
@@ -140,10 +142,17 @@ class PostsManager extends AppUnit {
 				if (_.indexOf(post.voters, userId) !== -1) throw 'USER_ALREADY_VOTED';
 				post.variants[variantIndex].voters.push(userId);
 				post.variants[variantIndex].count++;
-				return post
-					.save()
-					.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
-			});
+				return post.save();
+			})
+			.then(post => {
+				resultPost = post;
+				return this.companyModel.findById(post.author);
+			})
+			.then(author => {
+				resultPost.author = author;
+				return resultPost;
+			})
+			.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
 	}
 }
 
