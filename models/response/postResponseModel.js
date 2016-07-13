@@ -4,7 +4,6 @@ const _ = require('underscore');
 const moment = require('moment');
 
 const CompanyResponseModel = require('./companyResponseModel');
-const mathUtils = require('../../utils/mathUtils');
 
 module.exports = (userId, post, lang = 'en') => {
 	const likedByMe = !!_.find(post.likeVoters, voterId => voterId === userId);

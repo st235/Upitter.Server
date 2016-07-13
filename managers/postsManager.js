@@ -139,7 +139,7 @@ class PostsManager extends AppUnit {
 			.findOne({ customId: postId })
 			.then(post => {
 				if (!post) throw 'INTERNAL_SERVER_ERROR';
-				if (!_.find(post.votersForVariants, userId)) throw 'USER_ALREADY_VOTED';
+				if (_.find(post.votersForVariants, userId)) throw 'USER_ALREADY_VOTED';
 				post.votersForVariants.push(userId);
 				post.variants[variantIndex].voters.push(userId);
 				post.variants[variantIndex].count++;
