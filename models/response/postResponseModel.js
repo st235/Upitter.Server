@@ -7,9 +7,8 @@ const CompanyResponseModel = require('./companyResponseModel');
 const mathUtils = require('../../utils/mathUtils');
 
 module.exports = (userId, post, lang = 'en') => {
-	const voters = mathUtils.union(post.variants, 'voters');
 	const likedByMe = !!_.find(post.likeVoters, voterId => voterId === userId);
-	const votedByMe = !!_.find(voters, voterId => voterId === userId);
+	const votedByMe = !!_.find(post.votersForVariants, voterId => voterId === userId);
 
 	const postResponse = {
 		customId: post.customId,
