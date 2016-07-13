@@ -138,7 +138,7 @@ class PostsManager extends AppUnit {
 			.then(post => {
 				if (!post) throw 'INTERNAL_SERVER_ERROR';
 				if (_.indexOf(post.voters, userId) !== -1) throw 'USER_ALREADY_VOTED';
-				post.votersForVariants.push(userId);
+				post.variants[variantIndex].voters.push(userId);
 				post.variants[variantIndex].count++;
 				return post
 					.save()
