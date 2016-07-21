@@ -15,8 +15,11 @@ module.exports = (userId, post, lang = 'en') => {
 		title: post.title,
 		text: post.text,
 		category: post.category,
-		coordinates: post.coordinates,
-	fromNow: moment(post.createdDate).locale(lang).fromNow(),
+		coordinates: {
+			latitude: post.location[0],
+			longitude: post.location[1]
+		},
+		fromNow: moment(post.createdDate).locale(lang).fromNow(),
 		likesAmount: post.likes,
 		commentsAmount: post.comments.length,
 		votersAmount: post.votersForVariants.length,
