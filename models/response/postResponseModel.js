@@ -48,6 +48,7 @@ module.exports = (userId, post, lang = 'en') => {
 	if (post.likeVoters.length > 0) postResponse.likeVoters = post.likeVoters;
 	if (post.logoUrl) postResponse.logoUrl = post.logoUrl;
 	if (post.updatedDate) postResponse.updatedDate = post.updatedDate;
+	if (post.media && post.media.length) postResponse.media = post.media;
 
 	return postResponse;
 };

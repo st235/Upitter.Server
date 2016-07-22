@@ -18,7 +18,7 @@ class PostsManager extends AppUnit {
 		this.voteForVariant = this.voteForVariant.bind(this);
 	}
 
-	create(companyId, title, text, category, latitude, longitude, variants) {
+	create(companyId, title, text, category, latitude, longitude, variants, imagesArray) {
 		const data = {
 			author: companyId,
 			location: [latitude, longitude],
@@ -31,6 +31,12 @@ class PostsManager extends AppUnit {
 			text,
 			category
 		};
+
+		if (imagesArray && imagesArray.length) {
+			data.media = _.map(imagesArray, url => {
+				return { kind: 'image', url };
+			});
+		}
 
 		let postResult;
 

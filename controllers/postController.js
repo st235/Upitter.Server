@@ -45,11 +45,11 @@ class PostsController extends BaseController {
 			variants.length < 0 &&
 			!this.validationUtils.checkArray(variants, 1, 12)) return next('PROPERTY_NOT_SUPPLIED');
 
-		const { title, text, category, latitude, longitude } = req.body;
+		const { title, text, category, latitude, longitude, imagesArray } = req.body;
 
 		this
 			.postsManager
-			.create(companyId, title, text, category, latitude, longitude, variants)
+			.create(companyId, title, text, category, latitude, longitude, variants, imagesArray)
 			.then(post => PostResponse(req.userId, post, req.ln))
 			.then(response => this.success(res, response))
 			.catch(next);
