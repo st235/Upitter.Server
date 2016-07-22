@@ -137,6 +137,36 @@ class PostsManager extends AppUnit {
 			});
 	}
 
+	watch(userId, postId) {
+		let resultPost;
+
+		return this
+			.postModel
+			.findOne({ customId: postId })
+			.then(post => {
+				if (!post) throw 'INTERNAL_SERVER_ERROR';
+				const found = !!_.find(post.watchers, watcherId => watcherId === userId);
+
+				if (!found) {
+					post.watchers.push(userId);
+					post.watches++;
+				}
+
+				return post.save();
+			})
+			.then(post => {
+				resultPost = post;
+				return this.companyModel.findById(post.author);
+			})
+			.then(user => {
+				resultPost.author = user;
+				return resultPost;
+			})
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
 	voteForVariant(userId, postId, variantIndex) {
 		let resultPost;
 

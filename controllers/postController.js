@@ -147,6 +147,15 @@ class PostsController extends BaseController {
 		const invalid = this.validate(req)
 			.add('postId').should.exist().and.have.type('String')
 			.validate();
+		
+		const { userId } = req;
+		const { postId } = req.params;
+		
+		this.postsManager
+			.watch(userId, postId)
+			.then(post => PostResponse(req.userId, post, req.ln))
+			.then(response => this.success(res, response))
+			.catch(next);
 	}
 
 	voteForVariant(req, res, next) {

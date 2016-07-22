@@ -24,7 +24,8 @@ module.exports = (userId, post, lang = 'en') => {
 		commentsAmount: post.comments.length,
 		votersAmount: post.votersForVariants.length,
 		isLikedByMe: likedByMe,
-		isVotedByMe: votedByMe
+		isVotedByMe: votedByMe,
+		watchedCount: post.watches
 	};
 
 	if (post.comments.length > 0) postResponse.comments = post.comments;

@@ -51,6 +51,14 @@ module.exports = mongoose => {
 			type: String,
 			ref: 'Users'
 		}],
+		watches: {
+			type: Number,
+			default: 0
+		},
+		watchers: [{
+			type: String,
+			ref: 'Users'
+		}],
 		variants: [{
 			value: {
 				type: String

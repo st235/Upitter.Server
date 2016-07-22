@@ -123,6 +123,7 @@ class AppRoutes extends AppUnit {
 		app.get(paths.remove, this.checkAuthorization, controller.remove);
 		app.get(paths.obtain, this.checkAuthorization, controller.obtain);
 		app.get(paths.like, this.checkAuthorization, controller.like);
+		app.get(paths.watch, this.checkAuthorization, controller.watch);
 		app.get(paths.vote, this.checkAuthorization, controller.voteForVariant);
 		app.get(paths.favorite, this.checkAuthorization, controller.favorite);
 
