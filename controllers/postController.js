@@ -45,11 +45,11 @@ class PostsController extends BaseController {
 			variants.length < 0 &&
 			!this.validationUtils.checkArray(variants, 1, 12)) return next('PROPERTY_NOT_SUPPLIED');
 
-		const { title, text, category, latitude, longitude, imagesArray } = req.body;
+		const { title, text, category, latitude, longitude, images } = req.body;
 
 		this
 			.postsManager
-			.create(companyId, title, text, category, latitude, longitude, variants, imagesArray)
+			.create(companyId, title, text, category, latitude, longitude, variants, images)
 			.then(post => PostResponse(req.userId, post, req.ln))
 			.then(response => this.success(res, response))
 			.catch(next);
@@ -141,6 +141,12 @@ class PostsController extends BaseController {
 			.then(post => PostResponse(req.userId, post, req.ln))
 			.then(response => this.success(res, response))
 			.catch(next);
+	}
+
+	watch(req, res, next) {
+		const invalid = this.validate(req)
+			.add('postId').should.exist().and.have.type('String')
+			.validate();
 	}
 
 	voteForVariant(req, res, next) {
