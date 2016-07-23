@@ -147,6 +147,8 @@ class PostsController extends BaseController {
 		const invalid = this.validate(req)
 			.add('postId').should.exist().and.have.type('String')
 			.validate();
+
+		if (invalid) return next(invalid.name);
 		
 		const { userId } = req;
 		const { postId } = req.params;
