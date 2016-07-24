@@ -92,7 +92,7 @@ class PostsManager extends AppUnit {
 
 		return this
 			.postModel
-			.getPosts(latitude, longitude, radius, parseInt(limit), category)
+			.getPosts(latitude, longitude, radius, limit, category)
 			.then(posts => {
 				if (!posts) throw 'INTERNAL_SERVER_ERROR';
 				resultPost = posts;

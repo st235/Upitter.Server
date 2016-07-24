@@ -116,8 +116,15 @@ class PostsController extends BaseController {
 			.validate();
 
 		if (invalid) return next(invalid.name);
+		if (req.query.limit) {
+			try {
+				req.query.limit = JSON.parse(req.query.limit);
+			} catch (e) {
+				req.query.limit = 20;
+			}
+		}
 
-		const { latitude, longitude, radius = 0, limit = 20, category } = req.query;
+		const { latitude, longitude, radius = 0, limit, category } = req.query;
 
 		this
 			.postsManager
