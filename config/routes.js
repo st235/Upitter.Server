@@ -28,6 +28,7 @@ module.exports = {
 	post: {
 		obtain: '/post/obtain',
 		obtainNew: '/post/obtainNew',
+		obtainOld: '/post/obtainOld',
 		create: '/post/create',
 		edit: '/post/edit',
 		remove: '/post/remove',
