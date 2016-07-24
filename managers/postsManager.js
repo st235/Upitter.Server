@@ -104,12 +104,12 @@ class PostsManager extends AppUnit {
 			.then(() => resultPost);
 	}
 
-	obtainNew(latitude, longitude, radius, category) {
+	obtainNew(postId, latitude, longitude, radius, category) {
 		let resultPost;
 
 		return this
 			.postModel
-			.getNew(latitude, longitude, radius, parseInt(limit), parseInt(offset), category)
+			.getNew(postId, latitude, longitude, radius, category)
 			.then(posts => {
 				if (!posts) throw 'INTERNAL_SERVER_ERROR';
 				resultPost = posts;

@@ -132,17 +132,18 @@ class PostsController extends BaseController {
 			.add('latitude').should.exist.and.have.type('String')
 			.add('longitude').should.exist.and.have.type('String')
 			.add('category').should.exist().and.have.type('String')
+			.add('postId').should.exist().and.have.type('String')
 			.validate();
 
 		if (invalid) return next(invalid.name);
 
-		const { latitude, longitude, radius = 0, category } = req.query;
+		const { postId, latitude, longitude, radius = 0, category } = req.query;
 
 		this
 			.postsManager
-			.obtainNew(latitude, longitude, radius, category)
+			.obtainNew(postId, latitude, longitude, radius, category)
 			.then(posts => _.map(posts, post => PostResponse(req.userId, post, req.ln)))
-			.then(response => this.success(res, { offset: parseInt(offset, 10) + response.length, posts: response }))
+			.then(response => this.success(res, { posts: response }))
 			.catch(next);
 	}
 
