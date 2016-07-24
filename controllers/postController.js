@@ -17,6 +17,8 @@ class PostsController extends BaseController {
 		this.favorite = this.favorite.bind(this);
 		this.remove = this.remove.bind(this);
 		this.obtain = this.obtain.bind(this);
+		this.obtainNew = this.obtain.bind(this);
+		this.obtainOld = this.obtain.bind(this);
 		this.like = this.like.bind(this);
 		this.voteForVariant = this.voteForVariant.bind(this);
 	}
@@ -134,12 +136,11 @@ class PostsController extends BaseController {
 	}
 
 	obtainNew(req, res, next) {
-		const invalid = this.validate(req)
-			.add('latitude').should.exist().and.have.type('String')
-			.add('longitude').should.exist().and.have.type('String')
-			.add('category').should.have.type('String')
-			.add('postId').should.exist().and.have.type('String')
-			.validate();
+			const invalid = this.validate(req)
+				.add('latitude').should.exist().and.have.type('String')
+				.add('longitude').should.exist().and.have.type('String')
+				.add('postId').should.exist().and.have.type('String')
+				.validate();
 
 		if (invalid) return next(invalid.name);
 
