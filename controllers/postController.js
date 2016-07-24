@@ -109,13 +109,12 @@ class PostsController extends BaseController {
 
 	obtain(req, res, next) {
 		const invalid = this.validate(req)
-			.add('limit').should.have.type('String')
-			.add('latitude').should.exist.and.have.type('String')
-			.add('longitude').should.exist.and.have.type('String')
-			.add('category').should.have.type('String')
+			.add('latitude').should.exist().and.have.type('String')
+			.add('longitude').should.exist().and.have.type('String')
 			.validate();
 
 		if (invalid) return next(invalid.name);
+
 		if (req.query.limit) {
 			try {
 				req.query.limit = JSON.parse(req.query.limit);
@@ -136,8 +135,8 @@ class PostsController extends BaseController {
 
 	obtainNew(req, res, next) {
 		const invalid = this.validate(req)
-			.add('latitude').should.exist.and.have.type('String')
-			.add('longitude').should.exist.and.have.type('String')
+			.add('latitude').should.exist().and.have.type('String')
+			.add('longitude').should.exist().and.have.type('String')
 			.add('category').should.have.type('String')
 			.add('postId').should.exist().and.have.type('String')
 			.validate();
@@ -156,8 +155,8 @@ class PostsController extends BaseController {
 
 	obtainOld(req, res, next) {
 		const invalid = this.validate(req)
-			.add('latitude').should.exist.and.have.type('String')
-			.add('longitude').should.exist.and.have.type('String')
+			.add('latitude').should.exist().and.have.type('String')
+			.add('longitude').should.exist().and.have.type('String')
 			.add('category').should.have.type('String')
 			.add('limit').should.have.type('String')
 			.add('postId').should.exist().and.have.type('String')

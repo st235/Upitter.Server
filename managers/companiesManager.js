@@ -41,7 +41,7 @@ class CompaniesManager extends AppUnit {
 		return businessUser
 			.save()
 			.catch(() => {
-			throw 'INTERNAL_SERVER_ERROR';
+				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 

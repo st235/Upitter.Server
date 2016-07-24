@@ -244,7 +244,6 @@ class AuthorizationController extends BaseController {
 
 	addInfo(req, res, next) {
 		let businessUser;
-		console.log(req.body);
 		//  TODO: Добавить в валидатрон метод length с четким указанием длинны
 		//  TODO: Добавить в валидатрон метод should.be.containedBy('body'/'query'/'params')
 		const invalid = this.validate(req)
