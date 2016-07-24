@@ -87,12 +87,29 @@ class PostsManager extends AppUnit {
 			.then(post => post.customId);
 	}
 
-	obtain(latitude, longitude, radius, limit = 20, offset) {
+	obtain(latitude, longitude, radius, limit = 20, offset, category) {
 		let resultPost;
 
 		return this
 			.postModel
-			.getPosts(latitude, longitude, radius, parseInt(limit), parseInt(offset))
+			.getPosts(latitude, longitude, radius, parseInt(limit), parseInt(offset), category)
+			.then(posts => {
+				if (!posts) throw 'INTERNAL_SERVER_ERROR';
+				resultPost = posts;
+				return posts;
+			})
+			.then(posts => _.map(posts, post => this.companyModel.findById(post.author)))
+			.then(promises => Promise.all(promises))
+			.then(companies => _.each(companies, (company, i) => resultPost[i].author = company))
+			.then(() => resultPost);
+	}
+
+	obtainNew(latitude, longitude, radius, category) {
+		let resultPost;
+
+		return this
+			.postModel
+			.getNew(latitude, longitude, radius, parseInt(limit), parseInt(offset), category)
 			.then(posts => {
 				if (!posts) throw 'INTERNAL_SERVER_ERROR';
 				resultPost = posts;

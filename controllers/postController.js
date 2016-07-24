@@ -110,15 +110,37 @@ class PostsController extends BaseController {
 	obtain(req, res, next) {
 		const invalid = this.validate(req)
 			.add('limit').should.exist().and.have.type('String')
+			.add('latitude').should.exist.and.have.type('String')
+			.add('longitude').should.exist.and.have.type('String')
+			.add('category').should.exist().and.have.type('String')
 			.validate();
 
 		if (invalid) return next(invalid.name);
 
-		const { latitude, longitude, radius = 0, limit, offset = 0 } = req.query;
+		const { latitude, longitude, radius = 0, limit, offset = 0, category } = req.query;
 
 		this
 			.postsManager
-			.obtain(latitude, longitude, radius, limit, offset)
+			.obtain(latitude, longitude, radius, limit, offset, category)
+			.then(posts => _.map(posts, post => PostResponse(req.userId, post, req.ln)))
+			.then(response => this.success(res, { offset: parseInt(offset, 10) + response.length, posts: response }))
+			.catch(next);
+	}
+
+	obtainNew(req, res, next) {
+		const invalid = this.validate(req)
+			.add('latitude').should.exist.and.have.type('String')
+			.add('longitude').should.exist.and.have.type('String')
+			.add('category').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
+		const { latitude, longitude, radius = 0, category } = req.query;
+
+		this
+			.postsManager
+			.obtainNew(latitude, longitude, radius, category)
 			.then(posts => _.map(posts, post => PostResponse(req.userId, post, req.ln)))
 			.then(response => this.success(res, { offset: parseInt(offset, 10) + response.length, posts: response }))
 			.catch(next);

@@ -100,7 +100,7 @@ module.exports = mongoose => {
 			.catch(error => next(error));
 	});
 
-	postSchema.statics.getPosts = function (latitude, longitude, radius, limit, offset) {
+	postSchema.statics.getPosts = function (latitude, longitude, radius, limit, offset, category) {
 		const query = {
 			location: {
 				$near: {
@@ -116,12 +116,42 @@ module.exports = mongoose => {
 			},
 			isRemoved: false
 		};
+		
+		if (category) query.category = category;
 
 		return this
 			.find(query)
 			.sort({ createdDate: -1 })
 			.skip(offset)
 			.limit(limit)
+			.exec();
+	};
+
+	postSchema.statics.getNew = function (postId, latitude, longitude, radius, category) {
+		const query = {
+			location: {
+				$near: {
+					$geometry: {
+						type: 'Point',
+						coordinates: [
+							parseFloat(latitude),
+							parseFloat(longitude)
+						]
+					},
+					$maxDistance: radius
+				}
+			},
+			isRemoved: false,
+			customId: {
+				$gt: postId
+			}
+		};
+
+		if (category) query.category = category;
+
+		return this
+			.find(query)
+			.sort({ createdDate: -1 })
 			.exec();
 	};
 
