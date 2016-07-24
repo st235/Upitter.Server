@@ -123,7 +123,7 @@ class PostsController extends BaseController {
 			.postsManager
 			.obtain(latitude, longitude, radius, limit, category)
 			.then(posts => _.map(posts, post => PostResponse(req.userId, post, req.ln)))
-			.then(response => this.success(res, { offset: parseInt(offset, 10) + response.length, posts: response }))
+			.then(response => this.success(res, { posts: response }))
 			.catch(next);
 	}
 
