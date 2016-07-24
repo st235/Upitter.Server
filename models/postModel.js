@@ -8,7 +8,7 @@ module.exports = mongoose => {
 
 	const postSchema = new Schema({
 		customId: {
-			type: String,
+			type: Number,
 			unique: true
 		},
 		author: {
@@ -127,6 +127,8 @@ module.exports = mongoose => {
 	};
 
 	postSchema.statics.getNew = function (postId, latitude, longitude, radius, category) {
+		postId = parseInt(postId, 10);
+
 		const query = {
 			location: {
 				$near: {
