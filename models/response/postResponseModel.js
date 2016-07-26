@@ -4,6 +4,7 @@ const _ = require('underscore');
 const moment = require('moment');
 
 const CompanyResponseModel = require('./companyResponseModel');
+//TODO: Разобраться, почему CompanyResponseModel валит сервере
 
 module.exports = (userId, post, lang = 'en') => {
 	const likedByMe = !!_.find(post.likeVoters, voterId => voterId === userId);
