@@ -138,7 +138,7 @@ class PostsController extends BaseController {
 		const invalid = this.validate(req)
 			.add('latitude').should.exist().and.have.type('String')
 			.add('longitude').should.exist().and.have.type('String')
-			.add('postId').should.exist().and.have.type('String')
+			.add('postId').should.exist().and.have.type('Number')
 			.validate();
 
 		if (invalid) return next(invalid.name);
@@ -159,7 +159,7 @@ class PostsController extends BaseController {
 			.add('longitude').should.exist().and.have.type('String')
 			.add('category').should.have.type('String')
 			.add('limit').should.have.type('String')
-			.add('postId').should.exist().and.have.type('String')
+			.add('postId').should.exist().and.have.type('Number')
 			.validate();
 
 		if (invalid) return next(invalid.name);
