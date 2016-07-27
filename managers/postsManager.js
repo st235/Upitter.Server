@@ -95,55 +95,71 @@ class PostsManager extends AppUnit {
 			.then(post => post.customId);
 	}
 
-	obtain(latitude, longitude, radius, limit, category) {
-		let resultPost;
+	obtain(latitude, longitude, radius, limit, category, activity) {
+		let resultPosts;
 
 		return this
 			.postModel
 			.getPosts(latitude, longitude, radius, limit, category)
 			.then(posts => {
 				if (!posts) throw 'INTERNAL_SERVER_ERROR';
-				resultPost = posts;
+				resultPosts = posts;
 				return posts;
 			})
 			.then(posts => _.map(posts, post => this.companyModel.findById(post.author)))
 			.then(promises => Promise.all(promises))
-			.then(companies => _.each(companies, (company, i) => resultPost[i].author = company))
-			.then(() => resultPost);
+			.then(companies => _.each(companies, (company, i) => resultPosts[i].author = company))
+			.then(() => {
+				if (!activity || !activity.length) return resultPosts;
+				return _.filter(resultPosts, singlePost => {
+					return _.intersection(activity, singlePost.author.activity).length;
+				});
+			})
+			.then(posts => posts.splice(0, limit));
 	}
 
-	obtainNew(postId, latitude, longitude, radius, category) {
-		let resultPost;
+	obtainNew(postId, latitude, longitude, radius, category, activity) {
+		let resultPosts;
 
 		return this
 			.postModel
 			.getNew(postId, latitude, longitude, radius, category)
 			.then(posts => {
 				if (!posts) throw 'INTERNAL_SERVER_ERROR';
-				resultPost = posts;
+				resultPosts = posts;
 				return posts;
 			})
 			.then(posts => _.map(posts, post => this.companyModel.findById(post.author)))
 			.then(promises => Promise.all(promises))
-			.then(companies => _.each(companies, (company, i) => resultPost[i].author = company))
-			.then(() => resultPost);
+			.then(companies => _.each(companies, (company, i) => resultPosts[i].author = company))
+			.then(() => {
+				if (!activity || !activity.length) return resultPosts;
+				return _.filter(resultPosts, singlePost => {
+					return _.intersection(activity, singlePost.author.activity).length;
+				});
+			});
 	}
 
-	obtainOld(postId, latitude, longitude, radius, category, limit) {
-		let resultPost;
+	obtainOld(postId, latitude, longitude, radius, category, limit, activity) {
+		let resultPosts;
 
 		return this
 			.postModel
 			.getOld(postId, latitude, longitude, radius, category, limit)
 			.then(posts => {
 				if (!posts) throw 'INTERNAL_SERVER_ERROR';
-				resultPost = posts;
+				resultPosts = posts;
 				return posts;
 			})
 			.then(posts => _.map(posts, post => this.companyModel.findById(post.author)))
 			.then(promises => Promise.all(promises))
-			.then(companies => _.each(companies, (company, i) => resultPost[i].author = company))
-			.then(() => resultPost);
+			.then(companies => _.each(companies, (company, i) => resultPosts[i].author = company))
+			.then(() => {
+				if (!activity || !activity.length) return resultPosts;
+				return _.filter(resultPosts, singlePost => {
+					return _.intersection(activity, singlePost.author.activity).length;
+				});
+			})
 	}
 
 	like(userId, postId) {

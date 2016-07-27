@@ -124,11 +124,11 @@ class PostsController extends BaseController {
 			}
 		}
 
-		const { latitude, longitude, radius = 0, limit, category } = req.query;
+		const { latitude, longitude, radius = 0, limit, category, activity } = req.query;
 
 		this
 			.postsManager
-			.obtain(latitude, longitude, radius, limit, category)
+			.obtain(latitude, longitude, radius, limit, category, activity)
 			.then(posts => _.map(posts, post => PostResponse(req.userId, post, req.ln)))
 			.then(response => this.success(res, { posts: response }))
 			.catch(next);
@@ -143,11 +143,11 @@ class PostsController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const { postId, latitude, longitude, radius = 0, category } = req.query;
+		const { postId, latitude, longitude, radius = 0, category, activity } = req.query;
 
 		this
 			.postsManager
-			.obtainNew(postId, latitude, longitude, radius, category)
+			.obtainNew(postId, latitude, longitude, radius, category, activity)
 			.then(posts => _.map(posts, post => PostResponse(req.userId, post, req.ln)))
 			.then(response => this.success(res, { posts: response }))
 			.catch(next);
@@ -164,11 +164,11 @@ class PostsController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const { postId, latitude, longitude, radius = 0, category, limit = 20 } = req.query;
+		const { postId, latitude, longitude, radius = 0, category, limit = 20, activity } = req.query;
 
 		this
 			.postsManager
-			.obtainOld(postId, latitude, longitude, radius, category, limit)
+			.obtainOld(postId, latitude, longitude, radius, category, limit, activity)
 			.then(posts => _.map(posts, post => PostResponse(req.userId, post, req.ln)))
 			.then(response => this.success(res, { posts: response }))
 			.catch(next);
