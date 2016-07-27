@@ -143,7 +143,7 @@ class PostsController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const { postId, latitude, longitude, radius = 0, category } = req.query;
+		const { postId, latitude, longitude, radius = 0, category, activity } = req.query;
 
 		this
 			.postsManager
@@ -168,7 +168,7 @@ class PostsController extends BaseController {
 
 		this
 			.postsManager
-			.obtainOld(postId, latitude, longitude, radius, category, limit)
+			.obtainOld(postId, latitude, longitude, radius, category, limit, activity)
 			.then(posts => _.map(posts, post => PostResponse(req.userId, post, req.ln)))
 			.then(response => this.success(res, { posts: response }))
 			.catch(next);
