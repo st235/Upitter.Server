@@ -74,7 +74,10 @@ module.exports = mongoose => {
 		}],
 		media: [{
 			kind: String,
-			url: String
+			url: String,
+			extra: {
+				type: Schema.Types.Mixed
+			}
 		}],
 		location: {
 			type: [Number],

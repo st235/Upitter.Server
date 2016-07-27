@@ -18,7 +18,7 @@ class PostsManager extends AppUnit {
 		this.voteForVariant = this.voteForVariant.bind(this);
 	}
 
-	create(companyId, title, text, category, latitude, longitude, variants, imagesArray) {
+	create(companyId, title, text, category, latitude, longitude, variants, images) {
 		const data = {
 			author: companyId,
 			location: [latitude, longitude],
@@ -32,9 +32,17 @@ class PostsManager extends AppUnit {
 			category
 		};
 
-		if (imagesArray && imagesArray.length) {
-			data.media = _.map(imagesArray, url => {
-				return { kind: 'image', url };
+		if (images) {
+			data.media = _.map(images, image => {
+				return {
+					kind: 'Image',
+					url: image.path,
+					extra: {
+						width: image.width,
+						height: image.height,
+						aspectRatio: image.aspectRatio
+					}
+				};
 			});
 		}
 

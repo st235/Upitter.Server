@@ -118,7 +118,7 @@ class PostsController extends BaseController {
 
 		if (req.query.limit) {
 			try {
-				req.query.limit = JSON.parse(req.query.limit);
+				req.query.limit = JSON.parse(req.query.limit); //   FIXME: seriously?)
 			} catch (e) {
 				req.query.limit = 20;
 			}
@@ -199,10 +199,10 @@ class PostsController extends BaseController {
 			.validate();
 
 		if (invalid) return next(invalid.name);
-		
+
 		const { userId } = req;
 		const { postId } = req.params;
-		
+
 		this.postsManager
 			.watch(userId, postId)
 			.then(post => PostResponse(req.userId, post, req.ln))
