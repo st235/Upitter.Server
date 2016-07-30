@@ -3,7 +3,6 @@
 const _ = require('underscore');
 
 const AppUnit = require('../app/unit');
-const businessUserResponse = require('../models/response/companyResponseModel');
 
 class CompaniesManager extends AppUnit {
 	constructor(companyModel) {
@@ -55,12 +54,12 @@ class CompaniesManager extends AppUnit {
 			});
 	}
 
-	edit(companyId, aliasId, description, logoUrl, site) {
-		const data = _.omit({ aliasId, description, logoUrl, site }, field => !field);
+	edit(customId, companyInfo) {
+		const data = _.omit(companyInfo, field => _.isUndefined(field));
 
 		return this
 			.companyModel
-			.findOneAndUpdate({ customId: companyId }, data, { new: true })
+			.findOneAndUpdate({ customId }, data, { new: true })
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});

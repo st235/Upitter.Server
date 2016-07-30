@@ -69,7 +69,7 @@ module.exports = mongoose => {
 				type: String
 			}
 		}],
-		contactsPhones: {
+		contactPhones: {
 			type: [String]
 		}
 	});

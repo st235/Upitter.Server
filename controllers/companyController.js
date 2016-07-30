@@ -3,6 +3,7 @@
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
 const CompanyResponseModel = require('../models/response/companyResponseModel');
+const _ = require('underscore');
 
 class CompanyController extends BaseController {
 	constructor(companiesManager) {
@@ -24,7 +25,6 @@ class CompanyController extends BaseController {
 
 	edit(req, res, next) {
 		const invalid = this.validate(req)
-			.add('accessToken').should.exist().and.have.type('String')
 			//.add('name').should.have.type('String').and.be.in.rangeOf(3, 63)
 			//.add('description').should.have.type('String').and.be.in.rangeOf(3, 400)
 			//.add('site').should.have.type('String').and.be.in.rangeOf(3, 63)
@@ -32,13 +32,22 @@ class CompanyController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const { aliasId, description, logoUrl, site } = req.body;
+		const companyInfo = _.pick(req.body,
+			'aliasId',
+			'description',
+			'logoUrl',
+			'site',
+			'contactPhones',
+			'activity',
+			'coordinates'
+		);
+
 		const companyId = req.userId;
 
 		this
 			.companiesManager
-			.edit(companyId, aliasId, description, logoUrl, site)
-			.then(businessUser => this.success(res, businessUser))
+			.edit(companyId, companyInfo)
+			.then(businessUser => this.success(res, CompanyResponseModel(businessUser)))
 			.catch(next);
 	}
 
