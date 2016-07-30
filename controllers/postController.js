@@ -118,13 +118,13 @@ class PostsController extends BaseController {
 
 		if (req.query.limit) {
 			try {
-				req.query.limit = JSON.parse(req.query.limit);
+				req.query.limit = parseInt(req.query.limit, 10);
 			} catch (e) {
 				req.query.limit = 20;
 			}
 		}
 
-		const { latitude, longitude, radius = 0, limit, category, activity } = req.query;
+		const { latitude, longitude, radius = 0, limit = 20, category, activity } = req.query;
 
 		this
 			.postsManager
@@ -199,10 +199,10 @@ class PostsController extends BaseController {
 			.validate();
 
 		if (invalid) return next(invalid.name);
-		
+
 		const { userId } = req;
 		const { postId } = req.params;
-		
+
 		this.postsManager
 			.watch(userId, postId)
 			.then(post => PostResponse(req.userId, post, req.ln))
