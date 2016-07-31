@@ -39,7 +39,8 @@ class CompanyController extends BaseController {
 			'site',
 			'contactPhones',
 			'activity',
-			'coordinates'
+			'coordinates',
+			'socialLinks'
 		);
 
 		const companyId = req.userId;

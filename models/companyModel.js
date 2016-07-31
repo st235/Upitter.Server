@@ -58,6 +58,32 @@ module.exports = mongoose => {
 		site: {
 			type: String
 		},
+		socialLinks: {
+			skype: {
+				type: String,
+			},
+			vk: {
+				type: String
+			},
+			facebook: {
+				type: String
+			},
+			instagram: {
+				type: String
+			},
+			twitter: {
+				type: String
+			},
+			youtube: {
+				type: String
+			},
+			googlePlus: {
+				type: String
+			},
+			ok: {
+				type: String
+			}
+		},
 		coordinates: [{
 			address: {
 				type: String

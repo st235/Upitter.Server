@@ -20,6 +20,7 @@ module.exports = company => {
 	if (company.description) companyResponse.description = company.description;
 	if (company.logoUrl) companyResponse.logoUrl = company.logoUrl;
 	if (company.site) companyResponse.site = company.site;
+	if (company.socialLinks) companyResponse.socialLinks = company.socialLinks;
 
 	if (company.accessToken) companyResponse.accessToken = company.accessToken;
 	if (company.subscribers.length > 0 && company.subscribers[0].customId) {
