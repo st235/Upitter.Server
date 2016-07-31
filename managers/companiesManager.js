@@ -76,10 +76,10 @@ class CompaniesManager extends AppUnit {
 			.then(company => company._id);
 	}
 
-	addUserToSubscribers(userId, companyId) {
+	addUserToSubscribers(userId, customId) {
 		return this
 			.companyModel
-			.findOne({ customId: companyId })
+			.findOne({ customId })
 			.exec()
 			.then(company => {
 				if (_.indexOf(company.subscribers, userId.toString()) !== -1) throw 'SUBSCRIBE_ERROR_1';
@@ -91,25 +91,10 @@ class CompaniesManager extends AppUnit {
 			});
 	}
 
-	removeUserFromSubscribers(userId, companyId) {
+	getSubscribers(customId) {
 		return this
 			.companyModel
-			.findOne({ customId: companyId })
-			.exec()
-			.then(company => {
-				if (_.indexOf(company.subscribers, userId.toString()) === -1) throw 'SUBSCRIBE_ERROR_2';
-				company.subscribers = _.without(company.subscribers, userId.toString());
-				return company.save();
-			})
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
-			});
-	}
-
-	getSubscribers(companyId) {
-		return this
-			.companyModel
-			.findOne({ customId: companyId })
+			.findOne({ customId })
 			.populate('subscribers')
 			.exec()
 			.catch(() => {

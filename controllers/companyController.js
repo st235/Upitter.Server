@@ -67,8 +67,7 @@ class CompanyController extends BaseController {
 		this
 			.companiesManager
 			.getSubscribers(req.userId)
-			.then(company => CompanyResponseModel(company))
-			.then(response => this.success(res, response))
+			.then(company => this.success(res, CompanyResponseModel(company)))
 			.catch(next);
 	}
 }
