@@ -16,7 +16,6 @@ class CompaniesManager extends AppUnit {
 		this.edit = this.edit.bind(this);
 		this.getObjectId = this.getObjectId.bind(this);
 		this.addUserToSubscribers = this.addUserToSubscribers.bind(this);
-		this.removeUserFromSubscribers = this.removeUserFromSubscribers.bind(this);
 		this.getSubscribers = this.getSubscribers.bind(this);
 	}
 
