@@ -14,8 +14,7 @@ class UsersManager extends AppUnit {
 		this.edit = this.edit.bind(this);
 		this.favorite = this.favorite.bind(this);
 		this.getObjectId = this.getObjectId.bind(this);
-		this.addCompanyToSubscriptions = this.addCompanyToSubscriptions.bind(this);
-		this.removeCompanyFromSubscriptions = this.removeCompanyFromSubscriptions.bind(this);
+		this.toggleCompanySubscription = this.toggleCompanySubscription.bind(this);
 		this.getSubscriptions = this.getSubscriptions.bind(this);
 	}
 
@@ -104,31 +103,17 @@ class UsersManager extends AppUnit {
 			.then(user => user._id);
 	}
 
-	addCompanyToSubscriptions(userId, companyId) {
+	toggleCompanySubscription(userId, companyId) {
 		return this
 			.userModel
 			.findOne({ customId: userId })
 			.exec()
 			.then(user => {
-				if (!user) throw new Error(500);
-				if (_.indexOf(user.subscriptions, companyId.toString()) !== -1) throw 'SUBSCRIBE_ERROR_1';
-				user.subscriptions.push(companyId.toString());
-				return user.save();
-			})
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
-			});
-	}
+				if (!user) throw 'INTERNAL SERVER ERROR';
+				const companyIdString = companyId.toString();
+				if (_.indexOf(user.subscriptions, companyIdString) !== -1) _.without(user.subscriptions, companyIdString);
+				else user.subscriptions.push(companyIdString);
 
-	removeCompanyFromSubscriptions(userId, companyId) {
-		return this
-			.userModel
-			.findOne({ customId: userId })
-			.exec()
-			.then(user => {
-				if (!user) throw new Error(500);
-				if (_.indexOf(user.subscriptions, companyId.toString()) === -1) throw 'SUBSCRIBE_ERROR_2';
-				user.subscriptions = _.without(user.subscriptions, companyId.toString());
 				return user.save();
 			})
 			.catch(() => {

@@ -3,6 +3,8 @@
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
 const CompanyResponseModel = require('../models/response/companyResponseModel');
+const SubscribersResponseModel = require('../models/response/subscribersResponseModel');
+
 const _ = require('underscore');
 
 class CompanyController extends BaseController {
@@ -67,7 +69,7 @@ class CompanyController extends BaseController {
 		this
 			.companiesManager
 			.getSubscribers(req.userId)
-			.then(company => this.success(res, CompanyResponseModel(company)))
+			.then(company => this.success(res, SubscribersResponseModel(company)))
 			.catch(next);
 	}
 }

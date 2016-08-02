@@ -3,7 +3,8 @@
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
 const userResponse = require('../models/response/userResponseModel');
-
+const subscribersResponseModel = require('../models/response/subscribersResponseModel');
+const subscriptionsResponseModel = require('../models/response/subscriptionsResponseModel');
 
 class UsersController extends BaseController {
 	constructor(usersManager, companiesManager) {
@@ -14,8 +15,7 @@ class UsersController extends BaseController {
 		super._onBind();
 		this.edit = this.edit.bind(this);
 		this._getObjectsIds = this._getObjectsIds.bind(this);
-		this.addToSubscriptions = this.addToSubscriptions.bind(this);
-		this.removeFromSubscriptions = this.removeFromSubscriptions.bind(this);
+		this.toggleSubscription = this.toggleSubscription.bind(this);
 		this.getSubscriptions = this.getSubscriptions.bind(this);
 	}
 
@@ -56,9 +56,8 @@ class UsersController extends BaseController {
 			.then(() => ids);
 	}
 
-	addToSubscriptions(req, res, next) {
+	toggleSubscription(req, res, next) {
 		const invalid = this.validate(req)
-			.add('accessToken').should.exist().and.have.type('String')
 			.add('companyId').should.exist().and.have.type('String')
 			.validate();
 
@@ -71,48 +70,20 @@ class UsersController extends BaseController {
 
 		this
 			._getObjectsIds(ids)
-			.then(() => this.companiesManager.addUserToSubscribers(ids.userObjectId, ids.companyId))
-			.then(() => this.usersManager.addCompanyToSubscriptions(ids.userId, ids.companyObjectId))
-			.then(user => userResponse(user))
-			.then(response => this.success(res, response))
-			.catch(next);
-	}
-
-	removeFromSubscriptions(req, res, next) {
-		const invalid = this.validate(req)
-			.add('accessToken').should.exist().and.have.type('String')
-			.add('companyId').should.exist().and.have.type('String')
-			.validate();
-
-		if (invalid) return next(invalid.name);
-
-		const ids = {
-			userId: req.userId,
-			companyId: req.params.companyId
-		};
-
-		this
-			._getObjectsIds(ids)
-			.then(() => this.companiesManager.removeUserFromSubscribers(ids.userObjectId, ids.companyId))
-			.then(() => this.usersManager.removeCompanyFromSubscriptions(ids.userId, ids.companyObjectId))
-			.then(user => userResponse(user))
+			.then(() => this.usersManager.toggleCompanySubscription(ids.userId, ids.companyObjectId))
+			.then(() => this.companiesManager.toggleUserSubscription(ids.userObjectId, ids.companyId))
+			.then(company => subscribersResponseModel(company, ids.userId))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
 
 	getSubscriptions(req, res, next) {
-		const invalid = this.validate(req)
-			.add('accessToken').should.exist().and.have.type('String')
-			.validate();
-
-		if (invalid) return next(invalid.name);
-
 		const userId = req.userId;
 
 		this
 			.usersManager
 			.getSubscriptions(userId)
-			.then(user => userResponse(user))
+			.then(user => subscriptionsResponseModel(user))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}

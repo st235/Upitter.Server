@@ -47,8 +47,7 @@ module.exports = {
 	},
 	user: {
 		edit: '/user/edit',
-		addToSubscriptions: '/user/subscribe/:companyId',
-		removeFromSubscriptions: '/user/unsubscribe/:companyId',
+		toggleSubscription: '/user/toggle_subscription/:companyId',
 		getSubscriptions: '/user/subscriptions'
 	}
 };

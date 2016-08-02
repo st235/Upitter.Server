@@ -15,7 +15,7 @@ class CompaniesManager extends AppUnit {
 		this.checkIfExists = this.checkIfExists.bind(this);
 		this.edit = this.edit.bind(this);
 		this.getObjectId = this.getObjectId.bind(this);
-		this.addUserToSubscribers = this.addUserToSubscribers.bind(this);
+		this.toggleUserSubscription = this.toggleUserSubscription.bind(this);
 		this.getSubscribers = this.getSubscribers.bind(this);
 	}
 
@@ -75,14 +75,18 @@ class CompaniesManager extends AppUnit {
 			.then(company => company._id);
 	}
 
-	addUserToSubscribers(userId, customId) {
+	toggleUserSubscription(userId, customId) {
 		return this
 			.companyModel
 			.findOne({ customId })
 			.exec()
 			.then(company => {
-				if (_.indexOf(company.subscribers, userId.toString()) !== -1) throw 'SUBSCRIBE_ERROR_1';
-				company.subscribers.push(userId.toString());
+				if (!company) throw 'INTERNAL SERVER ERROR';
+				
+				const userIdString = userId.toString();
+				if (_.indexOf(company.subscribers, userIdString) !== -1) _.without(company.subscribers, userIdString);
+				else company.subscribers.push(userIdString);
+
 				return company.save();
 			})
 			.catch(() => {
