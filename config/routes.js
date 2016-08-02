@@ -8,6 +8,8 @@ module.exports = {
 
 		authorizeByPhone: '/authorization/phone/set/:number/:countryCode',
 		verifyCode: '/authorization/phone/verify/:number/:countryCode',
+		//DEBUG ROOT
+		verifyDevelopmentCode: 'debug/authorization/phone/verify_development/:number/:countryCode',
 		addInfo: '/authorization/phone/add_info/:number/:countryCode'
 	},
 	category: {

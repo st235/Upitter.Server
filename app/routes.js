@@ -9,6 +9,7 @@ const AppUnit = require('./unit');
 const AuthorizationMiddleware = require('../controllers/middlewares/authorizationMiddlerware');
 const LanguageMiddleware = require('../controllers/middlewares/languageMiddleware');
 const ErrorMiddleware = require('../controllers/middlewares/errorMiddleware');
+const DebugMiddleware = require('../controllers/middlewares/debugMiddleware');
 
 const AuthorizationController = require('../controllers/authorizationController');
 const CategoryController = require('../controllers/categoryController');
@@ -44,6 +45,7 @@ class AppRoutes extends AppUnit {
 		this.checkAuthorization = new AuthorizationMiddleware().authorize;
 		this.obtainLanguage = new LanguageMiddleware().obtainLanguage;
 		this.errorHandler = new ErrorMiddleware();
+		this.checkIfDebug = new DebugMiddleware().checkIfDebug;
 
 		this.authorizationController = new AuthorizationController(this.managers.users, this.managers.companies);
 		this.categoryController = new CategoryController(this.managers.categories);
@@ -84,6 +86,8 @@ class AppRoutes extends AppUnit {
 		app.post(paths.twitterVerify, controller.twitterVerify);
 		app.post(paths.authorizeByPhone, controller.authorizeByPhone);
 		app.post(paths.verifyCode, controller.verifyCode);
+		//DEBUG ROOT
+		app.post(paths.verifyDevelopmentCode, this.checkIfDebug, controller.verifyDevelopmentCode);
 		app.post(paths.addInfo, controller.addInfo);
 	}
 

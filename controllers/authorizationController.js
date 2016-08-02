@@ -12,6 +12,8 @@ const secretUtils = require('../utils/secretUtils');
 const socialRequestUtils = require('../utils/socialRequestUtils');
 const TokenInfo = require('../config/methods');
 
+const devConfig = require('../config/development');
+
 class AuthorizationController extends BaseController {
 	constructor(usersManager, companiesManager) {
 		super({ usersManager, companiesManager });
@@ -238,6 +240,58 @@ class AuthorizationController extends BaseController {
 								temporaryToken: model.temporaryToken
 							}));
 					});
+			})
+			.catch(next);
+	}
+
+	verifyDevelopmentCode(req, res, next) {
+		let userModel;
+		const invalid = this.validate(req)
+			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
+			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
+		const { number, countryCode } = req.params;
+		const phone = `${countryCode}${number}`;
+
+		authUtils.getOrgTempModel(this.authorizationClient, phone)
+			.then(model => {
+				if (!model) throw 'PHONE_NOT_FOUND';
+				if (!model.code) throw 'INTERNAL_SERVER_ERROR';
+				if (model.code !== devConfig.devCode) {
+					return this.unsuccess(res, { message: 'Incorrect code' });
+				} else {
+					return this.companiesManager
+						.checkIfExists(phone)
+						.then(user => {
+							if (user) {
+								return authUtils.removeOrgTempModel(this.authorizationClient, phone)
+									.then(() => {
+										userModel = user;
+										return authUtils.createToken(this.authorizationClient, user.customId);
+									})
+									.then(accessToken => {
+										userModel.accessToken = accessToken;
+										return businessUserResponse(userModel);
+									})
+									.then((businessUser) => this.success(res, {
+										isAuthorized: true,
+										businessUser
+									}));
+							} else {
+								model.temporaryToken = secretUtils.getUniqueHash(phone);
+								model.code = null;
+								model.attempts = null;
+								return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
+									.then(model => this.success(res, {
+										isAuthorized: false,
+										temporaryToken: model.temporaryToken
+									}));
+							}
+						});
+				}
 			})
 			.catch(next);
 	}

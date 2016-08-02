@@ -7,7 +7,8 @@
   "license": "ISC",
   "main": "bin/start",
   "scripts": {
-    "start": "cd bin && node start"
+    "start": "cd bin && node start",
+    "startDev": "cd bin && node start isdebug"
   },
   "dependencies": {
     "body-parser": "^1.15.2",
