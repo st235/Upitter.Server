@@ -247,21 +247,28 @@ class AuthorizationController extends BaseController {
 	}
 
 	verifyDevelopmentCode(req, res, next) {
+		console.log('HELLO1');
 		const invalid = this.validate(req)
 			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
 			.add('code').should.exist().and.have.type('String')
 			.validate();
 
+		console.log('BEFORE INVALID');
 		if (invalid) return next(invalid.name);
+		console.log('AFTER INVALID');
 
 		const { number, countryCode } = req.params;
 		const { code } = req.body;
 		const phone = `${countryCode}${number}`;
 		let companyModel;
 
+		console.log(req.params);
+		console.log(phone);
+		console.log(code);
 		authUtils.getOrgTempModel(this.authorizationClient, phone)
 			.then(model => {
+				console.log('AFTER GETORG');
 				if (!model) throw 'PHONE_NOT_FOUND';
 				if (!model.code) throw 'INTERNAL_SERVER_ERROR';
 				if (code !== devConfig.devCode) {
