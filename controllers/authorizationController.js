@@ -248,11 +248,16 @@ class AuthorizationController extends BaseController {
 
 	verifyDevelopmentCode(req, res, next) {
 		console.log('HELLO1');
-		const invalid = this.validate(req)
-			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
-			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
-			.add('code').should.exist().and.have.type('String')
-			.validate();
+		try {
+
+			const invalid = this.validate(req)
+				.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
+				.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
+				.add('code').should.exist().and.have.type('String')
+				.validate();
+		} catch (e) {
+			console.log(e);
+		}
 
 		console.log('BEFORE INVALID');
 		if (invalid) return next(invalid.name);
