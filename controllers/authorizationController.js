@@ -29,6 +29,7 @@ class AuthorizationController extends BaseController {
 
 		this.authorizeByPhone = this.authorizeByPhone.bind(this);
 		this.verifyCode = this.verifyCode.bind(this);
+		this.verifyDevelopmentCode = this.verifyDevelopmentCode.bind(this);
 		this.addInfo = this.addInfo.bind(this);
 	}
 
@@ -247,17 +248,11 @@ class AuthorizationController extends BaseController {
 	}
 
 	verifyDevelopmentCode(req, res, next) {
-		console.log('HELLO1');
-		try {
-
-			const invalid = this.validate(req)
-				.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
-				.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
-				.add('code').should.exist().and.have.type('String')
-				.validate();
-		} catch (e) {
-			console.log(e);
-		}
+		const invalid = this.validate(req)
+			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
+			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
+			.add('code').should.exist().and.have.type('String')
+			.validate();
 
 		console.log('BEFORE INVALID');
 		if (invalid) return next(invalid.name);
