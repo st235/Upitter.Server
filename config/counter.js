@@ -38,5 +38,9 @@ module.exports = {
 	categories: {
 		name: 'Categories',
 		defaultIndex: 0
+	},
+	reports: {
+		name: 'Reports',
+		defaultIndex: 0
 	}
 };

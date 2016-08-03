@@ -1,9 +1,8 @@
 'use strict';
 
-const _ = require('underscore');
-
 const AppUnit = require('../app/unit');
 const categoriesConfig = require('../config/categories');
+const _ = require('underscore');
 
 class CategoriesManager extends AppUnit {
 	constructor(categoryModel) {
@@ -12,12 +11,12 @@ class CategoriesManager extends AppUnit {
 
 	_onBind() {
 		this._create = this._create.bind(this);
-		this.getCategories = this.getCategories.bind(this);
 		this.createDefault = this.createDefault.bind(this);
+		this.getCategories = this.getCategories.bind(this);
 	}
 
 	_create(data, customId) {
-		data.customId = customId;
+		Object.assign(data, { customId });
 		const category = this.categoryModel(data);
 		return category.save()
 			.catch(() => {
@@ -29,7 +28,7 @@ class CategoriesManager extends AppUnit {
 		this
 			.categoryModel
 			.remove({})
-			.then(_.map(categoriesConfig, (data, customId) => this._create(data, customId)))
+			.then(_.each(categoriesConfig, (data, customId) => this._create(data, customId)))
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
@@ -45,11 +44,10 @@ class CategoriesManager extends AppUnit {
 			});
 	}
 
-	findCategory(id) {
-
+	findCategory(customId) {
 		return this
 			.categoryModel
-			.findOne({ customId: id })
+			.findOne({ customId })
 			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';

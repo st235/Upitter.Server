@@ -11,6 +11,7 @@ const CompaniesManager = require('../managers/companiesManager');
 const FeedbackManager = require('../managers/feedbackManager');
 const LogsManager = require('../managers/logsManager');
 const PostsManager = require('../managers/postsManager');
+const ReportsManager = require('../managers/reportsManager');
 const UsersManager = require('../managers/usersManager');
 
 const categoryModel = require('../models/categoryModel');
@@ -22,6 +23,8 @@ const logModel = require('../models/logModel');
 const mediaModel = require('../models/mediaModel');
 const notificationModel = require('../models/notificationModel');
 const postModel = require('../models/postModel');
+const reportModel = require('../models/reportModel');
+const reportReasonModel = require('../models/reportReasonModel');
 const voteModel = require('../models/voteModel');
 const userModel = require('../models/userModel');
 
@@ -37,6 +40,7 @@ class AppDatabase extends AppUnit {
 
 	_onCreate() {
 		mongoose.connect(databaseConfig.devUri, databaseConfig.options, this._onStart);
+		//mongoose.connect(databaseConfig.prodUri, databaseConfig.options, this._onStart);
 
 		this.categoryModel = categoryModel(mongoose);
 		this.commentModel = commentModel(mongoose);
@@ -47,6 +51,8 @@ class AppDatabase extends AppUnit {
 		this.mediaModel = mediaModel(mongoose);
 		this.notificationModel = notificationModel(mongoose);
 		this.postModel = postModel(mongoose);
+		this.reportModel = reportModel(mongoose);
+		this.reportReasonModel = reportReasonModel(mongoose);
 		this.userModel = userModel(mongoose);
 		this.voteModel = voteModel(mongoose);
 
@@ -56,6 +62,7 @@ class AppDatabase extends AppUnit {
 		this.feedbackManager = new FeedbackManager(this.feedbackModel);
 		this.logsManager = new LogsManager(this.logModel);
 		this.postsManager = new PostsManager(this.postModel, this.companyModel);
+		this.reportsManager = new ReportsManager(this.reportModel, this.reportReasonModel);
 		this.usersManager = new UsersManager(this.userModel);
 	}
 
@@ -69,9 +76,8 @@ class AppDatabase extends AppUnit {
 			.then(counter => mixedLogger.info(`Created ${counter}`))
 			.catch(counterError => mixedLogger.error(counterError));
 
-		this
-			.categoriesManager
-			.createDefault();
+		this.categoriesManager.createDefault();
+		this.reportsManager.createDefaultReportReasons();
 	}
 
 	managers() {
@@ -82,6 +88,7 @@ class AppDatabase extends AppUnit {
 			feedback: this.feedbackManager,
 			logs: this.logsManager,
 			posts: this.postsManager,
+			reports: this.reportsManager,
 			users: this.usersManager
 		};
 	}
@@ -97,6 +104,8 @@ class AppDatabase extends AppUnit {
 			media: this.mediaModel,
 			notification: this.notificationModel,
 			post: this.postModel,
+			report: this.reportModel,
+			reportReason: this.reportReasonModel,
 			user: this.userModel,
 			vote: this.voteModel
 		};

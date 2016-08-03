@@ -151,6 +151,17 @@ module.exports = {
 	CATEGORY_1501: 'Visa Centers',
 	CATEGORY_1502: 'Recreation',
 	CATEGORY_1503: 'Tour Operators',
-	CATEGORY_1504: 'Travel Agencies'
+	CATEGORY_1504: 'Travel Agencies',
+
+	// Reports
+	REASON_100: 'Your company SHIT!!!',
+	REASON_101: 'ETC',
+	REASON_200: 'Fake info',
+	REASON_201: 'Child porn',
+	REASON_202: 'ETC',
+	REASON_300: 'Extremism',
+	REASON_301: 'Offensive language',
+	REASON_302: 'ETC'
+
 	//  Endregion
 };
