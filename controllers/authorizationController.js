@@ -224,7 +224,6 @@ class AuthorizationController extends BaseController {
 									return authUtils.createToken(this.authorizationClient, company.customId);
 								})
 								.then(accessToken => {
-									console.log(accessToken);
 									companyModel.accessToken = accessToken;
 									return CompanyResponseModel(companyModel);
 								})

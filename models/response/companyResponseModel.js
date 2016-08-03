@@ -17,7 +17,8 @@ module.exports = company => {
 			};
 		})
 	};
-	
+
+	if (company.accessToken) companyResponse.accessToken = company.accessToken;
 	if (company.subscribers.length > 0 && company.subscribers[0].customId) {
 		companyResponse.subscribers = _.map(company.subscribers, user => {
 			const obj = {
