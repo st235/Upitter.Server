@@ -9,8 +9,8 @@ class DebugMiddleware extends AppUnit {
 	}
 
 	checkIfDebug(req, res, next) {
-		const isDebug = process.argv[2];
-		if (isDebug && isDebug === 'isdebug') return next();
+		const isDebug = process.env.isDebug;
+		if (isDebug) return next();
 		else return res.redirect(domainConfig.baseUrl);
 	}
 }
