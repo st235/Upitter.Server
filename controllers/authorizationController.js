@@ -270,13 +270,16 @@ class AuthorizationController extends BaseController {
 					return this.companiesManager
 						.checkIfExists(phone)
 						.then(company => {
+							console.log('Company: ', company);
 							if (company) {
 								return authUtils.removeOrgTempModel(this.authorizationClient, phone)
 									.then(() => {
+										console.log('HERE 1');
 										companyModel = company;
 										return authUtils.createToken(this.authorizationClient, company.customId);
 									})
 									.then(accessToken => {
+										console.log('HERE 2');
 										companyModel.accessToken = accessToken;
 										return CompanyResponseModel(companyModel);
 									})
