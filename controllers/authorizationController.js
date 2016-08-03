@@ -29,6 +29,7 @@ class AuthorizationController extends BaseController {
 
 		this.authorizeByPhone = this.authorizeByPhone.bind(this);
 		this.verifyCode = this.verifyCode.bind(this);
+		this.verifyDevelopmentCode = this.verifyDevelopmentCode.bind(this);
 		this.addInfo = this.addInfo.bind(this);
 	}
 
@@ -247,36 +248,38 @@ class AuthorizationController extends BaseController {
 	}
 
 	verifyDevelopmentCode(req, res, next) {
-		let userModel;
 		const invalid = this.validate(req)
 			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
+			.add('code').should.exist().and.have.type('String')
 			.validate();
 
 		if (invalid) return next(invalid.name);
 
 		const { number, countryCode } = req.params;
+		const { code } = req.body;
 		const phone = `${countryCode}${number}`;
+		let companyModel;
 
 		authUtils.getOrgTempModel(this.authorizationClient, phone)
 			.then(model => {
 				if (!model) throw 'PHONE_NOT_FOUND';
 				if (!model.code) throw 'INTERNAL_SERVER_ERROR';
-				if (model.code !== devConfig.devCode) {
+				if (code !== devConfig.devCode) {
 					return this.unsuccess(res, { message: 'Incorrect code' });
 				} else {
 					return this.companiesManager
 						.checkIfExists(phone)
-						.then(user => {
-							if (user) {
+						.then(company => {
+							if (company) {
 								return authUtils.removeOrgTempModel(this.authorizationClient, phone)
 									.then(() => {
-										userModel = user;
-										return authUtils.createToken(this.authorizationClient, user.customId);
+										companyModel = company;
+										return authUtils.createToken(this.authorizationClient, company.customId);
 									})
 									.then(accessToken => {
-										userModel.accessToken = accessToken;
-										return CompanyResponseModel(userModel);
+										companyModel.accessToken = accessToken;
+										return CompanyResponseModel(companyModel);
 									})
 									.then((businessUser) => this.success(res, {
 										isAuthorized: true,

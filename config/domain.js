@@ -1,3 +1,3 @@
 module.exports = {
-	baseUrl: 'http://localhost:9000'
+	baseUrl: process.env.baseUrl || 'http://localhost:9000'
 };
