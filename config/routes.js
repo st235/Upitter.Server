@@ -40,6 +40,11 @@ module.exports = {
 		vote: '/post/vote/:postId/:variantIndex',
 		comment: '/post/comment'
 	},
+	report: {
+		obtain: '/report',
+		obtainReasons: '/report/reasons/:reportType',
+		create: '/report/create'
+	},
 	support: {
 		support: '/support',
 		log: '/support/:systemType/:id',

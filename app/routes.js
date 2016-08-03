@@ -18,6 +18,7 @@ const CompanyController = require('../controllers/companyController');
 const FeedbackController = require('../controllers/feedbackController');
 const LogController = require('../controllers/logController');
 const PostController = require('../controllers/postController');
+const ReportController = require('../controllers/reportController');
 const UserController = require('../controllers/userController');
 
 class AppRoutes extends AppUnit {
@@ -30,14 +31,14 @@ class AppRoutes extends AppUnit {
 
 		this.registerHeader = this.registerHeader.bind(this);
 		this.registerAuthorization = this.registerAuthorization.bind(this);
-		this.registerLog = this.registerLog.bind(this);
-		this.registerFeedback = this.registerFeedback.bind(this);
-		this.registerFooter = this.registerFooter.bind(this);
-		this.registerUser = this.registerUser.bind(this);
-		this.registerPost = this.registerPost.bind(this);
-		this.registerComment = this.registerComment.bind(this);
 		this.registerCategory = this.registerCategory.bind(this);
+		this.registerComment = this.registerComment.bind(this);
 		this.registerCompany = this.registerCompany.bind(this);
+		this.registerFeedback = this.registerFeedback.bind(this);
+		this.registerLog = this.registerLog.bind(this);
+		this.registerPost = this.registerPost.bind(this);
+		this.registerReport = this.registerReport.bind(this);
+		this.registerUser = this.registerUser.bind(this);
 		this.registerFooter = this.registerFooter.bind(this);
 	}
 
@@ -54,6 +55,7 @@ class AppRoutes extends AppUnit {
 		this.feedbackController = new FeedbackController(this.managers.feedback);
 		this.logController = new LogController(this.managers.logs);
 		this.postController = new PostController(this.managers.posts, this.managers.users);
+		this.reportController = new ReportController(this.managers.reports, this.managers.categories);
 		this.userController = new UserController(this.managers.users, this.managers.companies);
 	}
 
@@ -66,6 +68,7 @@ class AppRoutes extends AppUnit {
 		this.registerFeedback(this.app, routesConfig.support, this.feedbackController);
 		this.registerLog(this.app, routesConfig.support, this.logController);
 		this.registerPost(this.app, routesConfig.post, this.postController);
+		this.registerReport(this.app, routesConfig.report, this.reportController);
 		this.registerUser(this.app, routesConfig.user, this.userController);
 		this.registerFooter(this.app);
 	}
@@ -135,6 +138,12 @@ class AppRoutes extends AppUnit {
 
 		app.post(paths.create, this.checkAuthorization, controller.create);
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
+	}
+
+	registerReport(app, paths, controller) {
+		app.get(paths.obtain, controller.obtain);
+		app.get(paths.obtainReasons, controller.obtainReasons);
+		app.post(paths.create, controller.create);
 	}
 
 	registerUser(app, paths, controller) {
