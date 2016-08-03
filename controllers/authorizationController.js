@@ -1,7 +1,7 @@
 'use strict';
 
 const userResponse = require('../models/response/userResponseModel');
-const businessUserResponse = require('../models/response/companyResponseModel');
+const CompanyResponseModel = require('../models/response/companyResponseModel');
 
 const BaseController = require('./baseController');
 const SmsService = require('../services/smsService');
@@ -189,7 +189,7 @@ class AuthorizationController extends BaseController {
 	}
 
 	verifyCode(req, res, next) {
-		let userModel;
+		let companyModel;
 		const invalid = this.validate(req)
 			.add('number').should.exist().and.have.type('String').and.be.in.rangeOf(5, 20)
 			.add('countryCode').should.exist().and.have.type('String').and.be.in.rangeOf(1, 8)
@@ -216,29 +216,32 @@ class AuthorizationController extends BaseController {
 
 				return this.companiesManager
 					.checkIfExists(phone)
-					.then(user => {
-						if (user) return authUtils.removeOrgTempModel(this.authorizationClient, phone)
-							.then(() => {
-								userModel = user;
-								return authUtils.createToken(this.authorizationClient, user.customId);
-							})
-							.then(accessToken => {
-								userModel.accessToken = accessToken;
-								return businessUserResponse(userModel);
-							})
-							.then((businessUser) => this.success(res, {
-								isAuthorized: true,
-								businessUser
-							}));
-
-						model.temporaryToken = secretUtils.getUniqueHash(phone);
-						model.code = null;
-						model.attempts = null;
-						return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
-							.then(model => this.success(res, {
-								isAuthorized: false,
-								temporaryToken: model.temporaryToken
-							}));
+					.then(company => {
+						if (company) {
+							return authUtils.removeOrgTempModel(this.authorizationClient, phone)
+								.then(() => {
+									companyModel = company;
+									return authUtils.createToken(this.authorizationClient, company.customId);
+								})
+								.then(accessToken => {
+									console.log(accessToken);
+									companyModel.accessToken = accessToken;
+									return CompanyResponseModel(companyModel);
+								})
+								.then((businessUser) => this.success(res, {
+									isAuthorized: true,
+									businessUser
+								}));
+						} else {
+							model.temporaryToken = secretUtils.getUniqueHash(phone);
+							model.code = null;
+							model.attempts = null;
+							return authUtils.setOrgTempModel(this.authorizationClient, phone, model)
+								.then(model => this.success(res, {
+									isAuthorized: false,
+									temporaryToken: model.temporaryToken
+								}));
+						}
 					});
 			})
 			.catch(next);
@@ -274,7 +277,7 @@ class AuthorizationController extends BaseController {
 									})
 									.then(accessToken => {
 										userModel.accessToken = accessToken;
-										return businessUserResponse(userModel);
+										return CompanyResponseModel(userModel);
 									})
 									.then((businessUser) => this.success(res, {
 										isAuthorized: true,
@@ -354,7 +357,7 @@ class AuthorizationController extends BaseController {
 				businessUser.accessToken = accessToken;
 				return businessUser;
 			})
-			.then(businessUser => this.success(res, businessUserResponse(businessUser)))
+			.then(businessUser => this.success(res, CompanyResponseModel(businessUser)))
 			.catch(next);
 	}
 }
