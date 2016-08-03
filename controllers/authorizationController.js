@@ -254,21 +254,15 @@ class AuthorizationController extends BaseController {
 			.add('code').should.exist().and.have.type('String')
 			.validate();
 
-		console.log('BEFORE INVALID');
 		if (invalid) return next(invalid.name);
-		console.log('AFTER INVALID');
 
 		const { number, countryCode } = req.params;
 		const { code } = req.body;
 		const phone = `${countryCode}${number}`;
 		let companyModel;
 
-		console.log(req.params);
-		console.log(phone);
-		console.log(code);
 		authUtils.getOrgTempModel(this.authorizationClient, phone)
 			.then(model => {
-				console.log('AFTER GETORG');
 				if (!model) throw 'PHONE_NOT_FOUND';
 				if (!model.code) throw 'INTERNAL_SERVER_ERROR';
 				if (code !== devConfig.devCode) {
@@ -277,16 +271,13 @@ class AuthorizationController extends BaseController {
 					return this.companiesManager
 						.checkIfExists(phone)
 						.then(company => {
-							console.log('Company: ', company);
 							if (company) {
 								return authUtils.removeOrgTempModel(this.authorizationClient, phone)
 									.then(() => {
-										console.log('HERE 1');
 										companyModel = company;
 										return authUtils.createToken(this.authorizationClient, company.customId);
 									})
 									.then(accessToken => {
-										console.log('HERE 2');
 										companyModel.accessToken = accessToken;
 										return CompanyResponseModel(companyModel);
 									})
