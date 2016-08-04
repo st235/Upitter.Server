@@ -36,9 +36,6 @@ class LogsController extends BaseController {
 	getLogs(req, res) {
 		const query = req.query;
 
-		const invalidQuery = this.validationUtils.typeVerify(query, 'Number', 'limit', 'offset');
-		if (invalidQuery) return this.error(res, invalidQuery);
-
 		this
 			.logsManager
 			.getLogs(query.limit, query.offset)
