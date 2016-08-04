@@ -82,7 +82,7 @@ class CompaniesManager extends AppUnit {
 			.exec()
 			.then(company => {
 				if (!company) throw 'INTERNAL SERVER ERROR';
-				
+
 				const userIdString = userId.toString();
 				if (_.indexOf(company.subscribers, userIdString) !== -1) _.without(company.subscribers, userIdString);
 				else company.subscribers.push(userIdString);

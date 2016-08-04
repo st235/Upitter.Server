@@ -60,7 +60,7 @@ module.exports = mongoose => {
 		},
 		socialLinks: {
 			skype: {
-				type: String,
+				type: String
 			},
 			vk: {
 				type: String

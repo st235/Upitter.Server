@@ -8,28 +8,34 @@ module.exports = mongoose => {
 	const reportSchema = new Schema({
 		customId: {
 			type: String,
-			unique: true,
-			required: true
+			unique: true
 		},
 		type: {
 			type: String,
 			required: true
 		},
-		reason: {
+		reason: [{
 			type: String,
-			required: true
-		},
-		description: {
-			type: String
-		},
-		author: {
+			required: true,
+			ref: 'ReportReasons'
+		}],
+		author: [{
 			type: String,
-			required: true
-		},
-		targetId: {
+			required: true,
+			ref: 'Users'
+		}],
+		postId: [{
 			type: String,
-			required: true
-		},
+			ref: 'Posts'
+		}],
+		companyId: [{
+			type: String,
+			ref: 'Companies'
+		}],
+		commentId: [{
+			type: String,
+			ref: 'Comments'
+		}],
 		createdDate: {
 			type: Date
 		}

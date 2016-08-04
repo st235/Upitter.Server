@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = {
-	companyReport: {
+	company: {
 		100: {
 			title: 'Ваша компания говно!!!!'
 		},
@@ -10,7 +10,7 @@ module.exports = {
 		}
 	},
 
-	postReport: {
+	post: {
 		200: {
 			title: 'Фейковая информация'
 		},
@@ -22,7 +22,7 @@ module.exports = {
 		}
 	},
 
-	commentReport: {
+	comment: {
 		300: {
 			title: 'Экстремизм'
 		},

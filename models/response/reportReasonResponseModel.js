@@ -9,7 +9,5 @@ module.exports = (reason, language) => {
 		title: LocaleService.getString(`REASON_${reason.customId}`, language)
 	};
 
-	if (reason.logoUrl) reasonResponse.logoUrl = reason.logoUrl;
-
 	return reasonResponse;
 };

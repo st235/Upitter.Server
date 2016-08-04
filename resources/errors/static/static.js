@@ -69,6 +69,11 @@ module.exports = {
 		externalDescription: 'Supplied sms code is incorrect'
 	},
 
+	INCORRECT_REPORT_TYPE: {
+		internalDescription: 'Supplied report type is incorrect',
+		externalDescription: 'Supplied report type is incorrect'
+	},
+
 	NO_TEMPORARY_TOKEN_IN_DB: {
 		internalDescription: 'Temporary token doesn\'t exist in database',
 		externalDescription: 'Access denied'

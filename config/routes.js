@@ -41,9 +41,9 @@ module.exports = {
 		comment: '/post/comment'
 	},
 	report: {
-		obtain: '/report',
-		obtainReasons: '/report/reasons/:reportType',
-		create: '/report/create'
+		obtainReports: '/reports',
+		obtainReasons: '/report/reasons/:type',
+		create: '/report/create/:type'
 	},
 	support: {
 		support: '/support',

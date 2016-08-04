@@ -35,10 +35,6 @@ module.exports = {
 		name: 'Comments',
 		defaultIndex: 0
 	},
-	categories: {
-		name: 'Categories',
-		defaultIndex: 0
-	},
 	reports: {
 		name: 'Reports',
 		defaultIndex: 0
