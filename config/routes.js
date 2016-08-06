@@ -33,6 +33,7 @@ module.exports = {
 		obtainOld: '/post/obtainOld',
 		create: '/post/create',
 		edit: '/post/edit',
+		findById: '/post/find/:postId',
 		remove: '/post/remove',
 		like: '/post/like/:postId',
 		watch: '/post/watch/:postId',

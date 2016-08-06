@@ -13,6 +13,7 @@ class PostsManager extends AppUnit {
 		this.create = this.create.bind(this);
 		this.edit = this.edit.bind(this);
 		this.remove = this.remove.bind(this);
+		this.findById = this.findById.bind(this);
 		this.obtain = this.obtain.bind(this);
 		this.like = this.like.bind(this);
 		this.voteForVariant = this.voteForVariant.bind(this);
@@ -78,6 +79,12 @@ class PostsManager extends AppUnit {
 					.save()
 					.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
 			});
+	}
+
+	findById(postId) {
+		return this
+			.postModel
+			.findOne({ customId: postId });
 	}
 
 	remove(companyId, postId) {

@@ -16,6 +16,7 @@ class PostsController extends BaseController {
 		this.edit = this.edit.bind(this);
 		this.favorite = this.favorite.bind(this);
 		this.remove = this.remove.bind(this);
+		this.findById = this.findById.bind(this);
 		this.obtain = this.obtain.bind(this);
 		this.obtainNew = this.obtainNew.bind(this);
 		this.obtainOld = this.obtainOld.bind(this);
@@ -53,6 +54,27 @@ class PostsController extends BaseController {
 			.postsManager
 			.create(companyId, title, text, category, latitude, longitude, variants, images)
 			.then(post => PostResponse(req.userId, post, req.ln))
+			.then(response => this.success(res, response))
+			.catch(next);
+	}
+
+	findById(req, res, next) {
+		const invalid = this.validate(req)
+			.add('postId').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
+		const postId = req.params.postId;
+
+		this
+			.postsManager
+			.findById(postId)
+			.then(post => {
+				let postResponse = null;
+				if (!post) return postResponse;
+				return PostResponse(req.userId, post, req.ln)
+			})
 			.then(response => this.success(res, response))
 			.catch(next);
 	}

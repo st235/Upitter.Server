@@ -128,6 +128,7 @@ class AppRoutes extends AppUnit {
 
 	registerPost(app, paths, controller) {
 		app.get(paths.remove, this.checkAuthorization, controller.remove);
+		app.get(paths.findById, this.checkAuthorization, controller.findById);
 		app.get(paths.obtain, this.checkAuthorization, controller.obtain);
 		app.get(paths.obtainNew, this.checkAuthorization, controller.obtainNew);
 		app.get(paths.obtainOld, this.checkAuthorization, controller.obtainOld);
