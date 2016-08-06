@@ -10,12 +10,16 @@ class ReportsManager extends AppUnit {
 	}
 
 	_onBind() {
-		this._create = this._create.bind(this);
+		this._createReason = this._createReason.bind(this);
 		this.createDefaultReportReasons = this.createDefaultReportReasons.bind(this);
 		this.obtainReportReasons = this.obtainReportReasons.bind(this);
+		this.obtainReports = this.obtainReports.bind(this);
+		this.obtainReportsByType = this.obtainReportsByType.bind(this);
+		this.obtainAllReports = this.obtainAllReports.bind(this)
+
 	}
 
-	_create(data, customId, type) {
+	_createReason(data, customId, type) {
 		Object.assign(data, { customId }, { type });
 		const reason = this.reportReasonModel(data);
 		return reason.save()
@@ -29,7 +33,7 @@ class ReportsManager extends AppUnit {
 			.reportReasonModel
 			.remove({})
 			.then(_.each(reportsConfig, (reportReasons, reportType) =>
-				_.each(reportReasons, (data, customId) => this._create(data, customId, reportType))
+				_.each(reportReasons, (data, customId) => this._createReason(data, customId, reportType))
 			))
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
@@ -45,6 +49,50 @@ class ReportsManager extends AppUnit {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
+
+	create(author, type, reason, companyId, commentId, postId) {
+		const data = Object.assign(
+			{ author },
+			{ type },
+			{ reason },
+			{ companyId },
+			{ commentId },
+			{ postId },
+			{ createdDate: Date.now() }
+		);
+		const report = this.reportModel(data);
+		return report
+			.save()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	obtainReports(type) {
+		return type ? this.obtainReportsByType(type) : this.obtainAllReports();
+	}
+
+	obtainReportsByType(type) {
+		return this
+			.reportModel
+			.find({ type })
+			.exec()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	obtainAllReports() {
+		return this
+			.reportModel
+			.find()
+			.exec()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
 }
 
 module.exports = ReportsManager;
+

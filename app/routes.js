@@ -142,9 +142,9 @@ class AppRoutes extends AppUnit {
 	}
 
 	registerReport(app, paths, controller) {
-		app.get(paths.obtain, controller.obtain);
+		app.get(paths.obtainReports, controller.obtainReports);
 		app.get(paths.obtainReasons, controller.obtainReasons);
-		app.post(paths.create, controller.create);
+		app.post(paths.create, this.checkAuthorization, controller.create);
 	}
 
 	registerUser(app, paths, controller) {

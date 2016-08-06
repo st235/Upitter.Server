@@ -25,7 +25,7 @@ class LogsManager extends AppUnit {
 			});
 	}
 
-	getLogs(limit = 20, offset) {
+	getLogs(limit = 20, offset = 0) {
 		let logsObject;
 
 		return this

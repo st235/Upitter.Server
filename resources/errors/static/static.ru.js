@@ -54,6 +54,11 @@ module.exports = {
 		externalDescription: 'SMS-код введен неправильно'
 	},
 
+	INCORRECT_REPORT_TYPE: {
+		internalDescription: 'Переданный тип жалобы некорректен',
+		externalDescription: 'Неверный тип жалобы'
+	},
+
 	NUMBER_OF_ATTEMPTS_EXCEEDED: {
 		internalDescription: 'Число попыток ввода кода превышено',
 		externalDescription: 'Закончились попытки ввода кода. Перезапросите код еще раз'

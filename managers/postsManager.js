@@ -166,7 +166,7 @@ class PostsManager extends AppUnit {
 				return _.filter(resultPosts, singlePost => {
 					return _.intersection(activity, singlePost.author.activity).length;
 				});
-			})
+			});
 	}
 
 	like(userId, postId) {
