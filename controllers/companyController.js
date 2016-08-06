@@ -26,6 +26,7 @@ class CompanyController extends BaseController {
 	}
 
 	edit(req, res, next) {
+		//TODO: Проверка на наличие хотя бы одного строкового символа
 		const invalid = this.validate(req)
 			//.add('name').should.have.type('String').and.be.in.rangeOf(3, 63)
 			//.add('description').should.have.type('String').and.be.in.rangeOf(3, 400)
