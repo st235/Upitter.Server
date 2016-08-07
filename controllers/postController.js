@@ -71,10 +71,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.findById(postId)
-			.then(({ post, author }) => {
-				post.author = CompanyResponse(author);
-				return PostResponse(req.userId, post, req.ln);
-			})
+			.then(({ post, author }) => PostResponse(req.userId, post, req.ln, CompanyResponse(author)))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
