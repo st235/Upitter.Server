@@ -3,13 +3,13 @@
 const _ = require('underscore');
 const moment = require('moment');
 
-module.exports = (userId, post, lang = 'en') => {
+module.exports = (userId, post, lang = 'en', author) => {
 	const likedByMe = !!_.find(post.likeVoters, voterId => voterId === userId);
 	const votedByMe = !!_.find(post.votersForVariants, voterId => voterId === userId);
 
 	const postResponse = {
 		customId: post.customId,
-		author: post.author,
+		author: author || post.author,
 		title: post.title,
 		text: post.text,
 		category: post.category,
