@@ -4,6 +4,7 @@ const _ = require('underscore');
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
 const PostResponse = require('../models/response/postResponseModel');
+const CompanyResponse = require('../models/response/companyResponseModel');
 
 class PostsController extends BaseController {
 	constructor(postsManager, usersManager) {
@@ -70,10 +71,9 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.findById(postId)
-			.then(post => {
-				let postResponse = null;
-				if (!post) return postResponse;
-				return PostResponse(req.userId, post, req.ln)
+			.then(({ post, author }) => {
+				post.author = CompanyResponse(author);
+				return PostResponse(req.userId, post, req.ln);
 			})
 			.then(response => this.success(res, response))
 			.catch(next);

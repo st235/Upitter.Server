@@ -84,7 +84,14 @@ class PostsManager extends AppUnit {
 	findById(postId) {
 		return this
 			.postModel
-			.findOne({ customId: postId });
+			.findOne({ customId: postId })
+			.then(post => {
+				let postResponse = null;
+				if (!post) return postResponse;
+				const author = this.companyModel.findOne({ customId: post.author });
+				return { post, author };
+			})
+			.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
 	}
 
 	remove(companyId, postId) {
