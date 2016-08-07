@@ -4,6 +4,7 @@ const _ = require('underscore');
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
 const PostResponse = require('../models/response/postResponseModel');
+const fileServerUtils = require('../utils/fileServerUtils');
 
 class PostsController extends BaseController {
 	constructor(postsManager, usersManager) {
@@ -13,6 +14,7 @@ class PostsController extends BaseController {
 	_onBind() {
 		super._onBind();
 		this.create = this.create.bind(this);
+		this._savePost = this._savePost.bind(this);
 		this.edit = this.edit.bind(this);
 		this.favorite = this.favorite.bind(this);
 		this.remove = this.remove.bind(this);
@@ -27,6 +29,15 @@ class PostsController extends BaseController {
 	_onCreate() {
 		super._onCreate();
 		this.validationUtils = new ValidationUtils;
+	}
+
+	_savePost(companyId, title, text, category, latitude, longitude, variants, images, userId, ln, res, next) {
+		return this
+			.postsManager
+			.create(companyId, title, text, category, latitude, longitude, variants, images)
+			.then(post => PostResponse(userId, post, ln))
+			.then(response => this.success(res, response))
+			.catch(next);
 	}
 
 	create(req, res, next) {
@@ -50,12 +61,13 @@ class PostsController extends BaseController {
 
 		const { title, text, category, latitude, longitude, images } = req.body;
 
-		this
-			.postsManager
-			.create(companyId, title, text, category, latitude, longitude, variants, images)
-			.then(post => PostResponse(req.userId, post, req.ln))
-			.then(response => this.success(res, response))
-			.catch(next);
+		if (images && images.length) {
+			return fileServerUtils.getInfoByFidsArray(companyId, images).then(images => {
+				return this._savePost(companyId, title, text, category, latitude, longitude, variants, images, req.userId, req.ln, res, next);
+			});
+		} else {
+			return this._savePost(companyId, title, text, category, latitude, longitude, variants, images, req.userId, req.ln, res, next);
+		}
 	}
 
 	findById(req, res, next) {

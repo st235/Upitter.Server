@@ -57,5 +57,11 @@ module.exports = {
 		edit: '/user/edit',
 		toggleSubscription: '/user/toggle_subscription/:companyId',
 		getSubscriptions: '/user/subscriptions'
+	},
+	file: {
+		verifyFid: '/file/verify_fid'
+	},
+	external: {
+		verifyFid: '/verification/fid/verify'
 	}
 };

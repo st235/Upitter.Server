@@ -33,19 +33,7 @@ class PostsManager extends AppUnit {
 			category
 		};
 
-		if (images) {
-			data.media = _.map(images, image => {
-				return {
-					kind: 'Image',
-					url: image.path,
-					extra: {
-						width: image.width,
-						height: image.height,
-						aspectRatio: image.aspectRatio
-					}
-				};
-			});
-		}
+		if (images) data.images = images;
 
 		let postResult;
 

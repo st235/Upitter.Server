@@ -8,7 +8,8 @@ class RequestService {
 			url,
 			qs: query,
 			method: 'POST',
-			body
+			body,
+			json: true
 		}, (error, response, responseBody) => {
 			if (error || response.statusCode !== 200) return reject('REQUEST_SERVICE_ERROR');
 

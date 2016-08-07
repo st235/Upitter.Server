@@ -18,6 +18,7 @@ const CompanyController = require('../controllers/companyController');
 const FeedbackController = require('../controllers/feedbackController');
 const LogController = require('../controllers/logController');
 const PostController = require('../controllers/postController');
+const FileController = require('../controllers/fileController');
 const ReportController = require('../controllers/reportController');
 const UserController = require('../controllers/userController');
 
@@ -55,6 +56,7 @@ class AppRoutes extends AppUnit {
 		this.feedbackController = new FeedbackController(this.managers.feedback);
 		this.logController = new LogController(this.managers.logs);
 		this.postController = new PostController(this.managers.posts, this.managers.users);
+		this.fileController = new FileController();
 		this.reportController = new ReportController(this.managers.reports, this.managers.categories);
 		this.userController = new UserController(this.managers.users, this.managers.companies);
 	}
@@ -68,6 +70,7 @@ class AppRoutes extends AppUnit {
 		this.registerFeedback(this.app, routesConfig.support, this.feedbackController);
 		this.registerLog(this.app, routesConfig.support, this.logController);
 		this.registerPost(this.app, routesConfig.post, this.postController);
+		this.registerFile(this.app, routesConfig.file, this.fileController);
 		this.registerReport(this.app, routesConfig.report, this.reportController);
 		this.registerUser(this.app, routesConfig.user, this.userController);
 		this.registerFooter(this.app);
@@ -139,6 +142,10 @@ class AppRoutes extends AppUnit {
 
 		app.post(paths.create, this.checkAuthorization, controller.create);
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
+	}
+
+	registerFile(app, paths, controller) {
+		app.get(paths.verifyFid, this.checkAuthorization, controller.getFileInfoByFid);
 	}
 
 	registerReport(app, paths, controller) {

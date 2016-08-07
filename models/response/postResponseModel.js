@@ -3,9 +3,6 @@
 const _ = require('underscore');
 const moment = require('moment');
 
-const CompanyResponseModel = require('./companyResponseModel');
-//TODO: Разобраться, почему CompanyResponseModel валит сервере
-
 module.exports = (userId, post, lang = 'en') => {
 	const likedByMe = !!_.find(post.likeVoters, voterId => voterId === userId);
 	const votedByMe = !!_.find(post.votersForVariants, voterId => voterId === userId);
@@ -50,7 +47,18 @@ module.exports = (userId, post, lang = 'en') => {
 	if (post.likeVoters.length > 0) postResponse.likeVoters = post.likeVoters;
 	if (post.logoUrl) postResponse.logoUrl = post.logoUrl;
 	if (post.updatedDate) postResponse.updatedDate = post.updatedDate;
-	if (post.media && post.media.length) postResponse.media = post.media;
+	if (post.images && post.images.length) postResponse.images = _.map(post.images, image => {
+		return {
+			fid: image.fid,
+			uuid: image.uuid,
+			width: image.width,
+			height: image.height,
+			aspectRatio: image.aspectRatio,
+			type: image.type,
+			originalUrl: image.originalUrl,
+			thumbUrl: image.thumbUrl
+		}
+	});
 
 	return postResponse;
 };

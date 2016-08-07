@@ -72,11 +72,41 @@ module.exports = mongoose => {
 				default: []
 			}
 		}],
-		media: [{
-			kind: String,
-			url: String,
-			extra: {
-				type: Schema.Types.Mixed
+		images: [{
+			fid: {
+				type: String,
+				require: true
+			},
+			uuid: {
+				type: String,
+				require: true
+			},
+			width: {
+				type: Number,
+				require: true
+			},
+			height: {
+				type: Number,
+				require: true
+			},
+			aspectRatio: {
+				type: Number,
+				require: true
+			},
+			type: {
+				type: String,
+				require: true
+			},
+			originalUrl: {
+				type: String,
+				require: true
+			},
+			thumbUrl: {
+				type: String
+			},
+			hash: {
+				type: String,
+				require: true
 			}
 		}],
 		location: {

@@ -38,7 +38,8 @@ class CompaniesManager extends AppUnit {
 		const businessUser = new this.companyModel(data);
 		return businessUser
 			.save()
-			.catch(() => {
+			.catch((e) => {
+				console.log(e);
 				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
