@@ -226,7 +226,6 @@ class PostsController extends BaseController {
 	}
 
 	watch(req, res, next) {
-		console.log('PRIVET ANDREW');
 		const invalid = this.validate(req)
 			.add('postId').should.exist().and.have.type('String')
 			.validate();
