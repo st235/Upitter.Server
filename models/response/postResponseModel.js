@@ -25,6 +25,7 @@ module.exports = (userId, post, lang = 'en', author) => {
 		isVotedByMe: votedByMe,
 		watchesAmount: post.watches
 	};
+	console.log(postResponse);
 
 	if (post.comments.length > 0) postResponse.comments = post.comments;
 	if (post.variants.length > 0) {

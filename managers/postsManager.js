@@ -5,8 +5,8 @@ const AppUnit = require('../app/unit');
 
 
 class PostsManager extends AppUnit {
-	constructor(postModel, companyModel) {
-		super({ postModel, companyModel });
+	constructor(postModel, companyModel, postCommentsModel) {
+		super({ postModel, companyModel, postCommentsModel });
 	}
 
 	_onBind() {

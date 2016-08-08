@@ -38,6 +38,6 @@ module.exports = company => {
 			return obj;
 		});
 	}
-
+console.log(companyResponse);
 	return companyResponse;
 };

@@ -23,6 +23,7 @@ const logModel = require('../models/logModel');
 const mediaModel = require('../models/mediaModel');
 const notificationModel = require('../models/notificationModel');
 const postModel = require('../models/postModel');
+const postCommentsModel = require('../models/postCommentsModel');
 const reportModel = require('../models/reportModel');
 const reportReasonModel = require('../models/reportReasonModel');
 const voteModel = require('../models/voteModel');
@@ -39,8 +40,8 @@ class AppDatabase extends AppUnit {
 	}
 
 	_onCreate() {
-		mongoose.connect(databaseConfig.devUri, databaseConfig.options, this._onStart);
-		//mongoose.connect(databaseConfig.prodUri, databaseConfig.options, this._onStart);
+		//mongoose.connect(databaseConfig.devUri, databaseConfig.options, this._onStart);
+		mongoose.connect(databaseConfig.prodUri, databaseConfig.options, this._onStart);
 
 		this.categoryModel = categoryModel(mongoose);
 		this.commentModel = commentModel(mongoose);
@@ -51,17 +52,18 @@ class AppDatabase extends AppUnit {
 		this.mediaModel = mediaModel(mongoose);
 		this.notificationModel = notificationModel(mongoose);
 		this.postModel = postModel(mongoose);
+		this.postCommentsModel = postCommentsModel(mongoose);
 		this.reportModel = reportModel(mongoose);
 		this.reportReasonModel = reportReasonModel(mongoose);
 		this.userModel = userModel(mongoose);
 		this.voteModel = voteModel(mongoose);
 
 		this.categoriesManager = new CategoriesManager(this.categoryModel);
-		this.commentsManager = new CommentsManager(this.commentModel);
+		this.commentsManager = new CommentsManager(this.commentModel, this.postCommentsModel);
 		this.companiesManager = new CompaniesManager(this.companyModel);
 		this.feedbackManager = new FeedbackManager(this.feedbackModel);
 		this.logsManager = new LogsManager(this.logModel);
-		this.postsManager = new PostsManager(this.postModel, this.companyModel);
+		this.postsManager = new PostsManager(this.postModel, this.companyModel, this.postCommentsModel);
 		this.reportsManager = new ReportsManager(this.reportModel, this.reportReasonModel);
 		this.usersManager = new UsersManager(this.userModel);
 	}
@@ -104,6 +106,7 @@ class AppDatabase extends AppUnit {
 			media: this.mediaModel,
 			notification: this.notificationModel,
 			post: this.postModel,
+			postComments: this.postCommentsModel,
 			report: this.reportModel,
 			reportReason: this.reportReasonModel,
 			user: this.userModel,

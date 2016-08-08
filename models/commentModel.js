@@ -11,8 +11,18 @@ module.exports = mongoose => {
 			unique: true
 		},
 		author: {
-			type: String,
-			required: true
+			customId: {
+				type: Number,
+				unique: true
+			},
+			nickname: {
+				type: String,
+				sparse: true,
+				required: true
+			},
+			picture: {
+				type: String
+			}
 		},
 		text: {
 			type: String,

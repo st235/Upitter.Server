@@ -35,6 +35,10 @@ module.exports = {
 		name: 'Comments',
 		defaultIndex: 0
 	},
+	postComments: {
+		name: 'PostComments',
+		defaultIndex: 0
+	},
 	reports: {
 		name: 'Reports',
 		defaultIndex: 0

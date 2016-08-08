@@ -25,6 +25,7 @@ class PostsController extends BaseController {
 		this.obtainOld = this.obtainOld.bind(this);
 		this.like = this.like.bind(this);
 		this.voteForVariant = this.voteForVariant.bind(this);
+		this.watch = this.watch.bind(this);
 	}
 
 	_onCreate() {
@@ -225,6 +226,7 @@ class PostsController extends BaseController {
 	}
 
 	watch(req, res, next) {
+		console.log('PRIVET ANDREW');
 		const invalid = this.validate(req)
 			.add('postId').should.exist().and.have.type('String')
 			.validate();
