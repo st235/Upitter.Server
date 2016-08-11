@@ -92,11 +92,9 @@ class PostsController extends BaseController {
 		console.log('category: ', category);
 		console.log('latitude: ', latitude);
 		console.log('longitude: ', longitude);
-		console.log('images: ');
-		console.log(images);
 		console.log('=================PARAMETERS FINISHED================');
 		console.log('=================IMAGES START================');
-		console.log(images);
+		console.log(JSON.stringify(images));
 		console.log('=================IMAGES FINISHED================');
 
 		if (images && images.length) {
