@@ -187,8 +187,8 @@ class PostsController extends BaseController {
 
 	obtainOld(req, res, next) {
 		const invalid = this.validate(req)
-			.add('latitude').should.exist().and.have.type('String')
-			.add('longitude').should.exist().and.have.type('String')
+			.add('latitude').should.exist().and.have.type('Number')
+			.add('longitude').should.exist().and.have.type('Number')
 			.add('category').should.have.type('String')
 			.add('limit').should.have.type('String')
 			.add('postId').should.exist().and.have.type('Number')
