@@ -34,11 +34,35 @@ class PostsController extends BaseController {
 	}
 
 	_savePost(companyId, title, text, category, latitude, longitude, variants, images, userId, ln, res, next) {
+		console.log('=================PARAMETERS BEFORE CREATION START================');
+		console.log('companyId: ', companyId);
+		console.log('title: ', title);
+		console.log('text: ', text);
+		console.log('category: ', category);
+		console.log('latitude: ', latitude);
+		console.log('longitude: ', longitude);
+		console.log('variants: ', variants);
+		console.log('images: ', images);
+		console.log('userId: ', userId);
+		console.log('ln: ', ln);
+		console.log('=================PARAMETERS BEFORE CREATION FINISHED================');
 		return this
 			.postsManager
 			.create(companyId, title, text, category, latitude, longitude, variants, images)
+			.then(post => {
+				console.log('=================POST AFTER CREATION START================');
+				console.log(post);
+				console.log('=================POST AFTER CREATION FINISHED================');
+				return post;
+			})
 			.then(post => PostResponse(userId, post, ln))
 			.then(response => this.success(res, response))
+			.catch(err => {
+				console.log('=================ERROR START================');
+				console.log(error);
+				console.log('=================ERROR FINISHED================');
+				throw err;
+			})
 			.catch(next);
 	}
 
@@ -62,6 +86,18 @@ class PostsController extends BaseController {
 			!this.validationUtils.checkArray(variants, 1, 12)) return next('PROPERTY_NOT_SUPPLIED');
 
 		const { title, text, category, latitude, longitude, images } = req.body;
+		console.log('=================PARAMETERS START================');
+		console.log('title: ', title);
+		console.log('text: ', text);
+		console.log('category: ', category);
+		console.log('latitude: ', latitude);
+		console.log('longitude: ', longitude);
+		console.log('images: ');
+		console.log(images);
+		console.log('=================PARAMETERS FINISHED================');
+		console.log('=================IMAGES START================');
+		console.log(images);
+		console.log('=================IMAGES FINISHED================');
 
 		if (images && images.length) {
 			return fileServerUtils.getInfoByFidsArray(companyId, images).then(images => {
