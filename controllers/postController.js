@@ -59,7 +59,7 @@ class PostsController extends BaseController {
 			.then(response => this.success(res, response))
 			.catch(err => {
 				console.log('=================ERROR START================');
-				console.log(error);
+				console.log(err);
 				console.log('=================ERROR FINISHED================');
 				throw err;
 			})
