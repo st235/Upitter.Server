@@ -3,9 +3,9 @@ const _ = require('underscore');
 
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
-const PostResponse = require('../models/response/postResponseModel');
+const postResponse = require('../models/response/postResponseModel');
 const fileServerUtils = require('../utils/fileServerUtils');
-const CompanyResponse = require('../models/response/companyResponseModel');
+const companyResponse = require('../models/response/companyResponseModel');
 
 class PostsController extends BaseController {
 	constructor(postsManager, usersManager) {
@@ -37,7 +37,7 @@ class PostsController extends BaseController {
 		return this
 			.postsManager
 			.create(companyId, title, text, category, latitude, longitude, variants, images)
-			.then(post => PostResponse(userId, post, ln))
+			.then(post => postResponse(userId, post, ln))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
@@ -46,7 +46,7 @@ class PostsController extends BaseController {
 		const invalid = this.validate(req)
 			.add('accessToken').should.exist().and.have.type('String')
 			.add('title').should.exist().and.have.type('String').and.be.in.rangeOf(3, 63)
-			.add('text').should.exist().and.have.type('String').and.be.in.rangeOf(3, 500)
+			.add('text').should.exist().and.have.type('String').and.be.in.rangeOf(3, 1000)
 			.add('category').should.exist().and.have.type('String')
 			.add('latitude').should.exist().and.have.type('Number')
 			.add('longitude').should.exist().and.have.type('Number')
@@ -84,7 +84,10 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.findById(postId)
-			.then(({ post, author }) => PostResponse(req.userId, post, req.ln, CompanyResponse(author)))
+			.then(({ post, author }) => {
+				const company = companyResponse(author);
+				return postResponse(req.userId, post, req.ln, company);
+			})
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
@@ -94,7 +97,7 @@ class PostsController extends BaseController {
 		const invalid = this.validate(req)
 			.add('accessToken').should.exist().and.have.type('String')
 			//.add('title').should.have.type('String').and.be.in.rangeOf(3, 63)
-			//.add('text').should.have.type('String').and.be.in.rangeOf(3, 500)
+			//.add('text').should.have.type('String').and.be.in.rangeOf(3, 1000)
 			.validate();
 
 		if (invalid) return next(invalid.name);
@@ -105,7 +108,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.edit(companyId, body.postId, body)
-			.then(post => PostResponse(req.userId, post, req.ln))
+			.then(post => postResponse(req.userId, post, req.ln))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
@@ -117,7 +120,7 @@ class PostsController extends BaseController {
 		this
 			.usersManager
 			.favorite(userId, postId)
-			.then(post => PostResponse(userId, post, ln))
+			.then(post => postResponse(userId, post, ln))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
@@ -161,7 +164,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.obtain(latitude, longitude, radius, limit, category, activity)
-			.then(posts => _.map(posts, post => PostResponse(req.userId, post, req.ln)))
+			.then(posts => _.map(posts, post => postResponse(req.userId, post, req.ln)))
 			.then(response => this.success(res, { posts: response }))
 			.catch(next);
 	}
@@ -180,7 +183,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.obtainNew(postId, latitude, longitude, radius, category, activity)
-			.then(posts => _.map(posts, post => PostResponse(req.userId, post, req.ln)))
+			.then(posts => _.map(posts, post => postResponse(req.userId, post, req.ln)))
 			.then(response => this.success(res, { posts: response }))
 			.catch(next);
 	}
@@ -201,7 +204,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.obtainOld(postId, latitude, longitude, radius, category, limit, activity)
-			.then(posts => _.map(posts, post => PostResponse(req.userId, post, req.ln)))
+			.then(posts => _.map(posts, post => postResponse(req.userId, post, req.ln)))
 			.then(response => this.success(res, { posts: response }))
 			.catch(next);
 	}
@@ -220,7 +223,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.like(userId, postId)
-			.then(post => PostResponse(req.userId, post, req.ln))
+			.then(post => postResponse(req.userId, post, req.ln))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
@@ -237,7 +240,7 @@ class PostsController extends BaseController {
 
 		this.postsManager
 			.watch(userId, postId)
-			.then(post => PostResponse(req.userId, post, req.ln))
+			.then(post => postResponse(req.userId, post, req.ln))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
@@ -258,7 +261,7 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.voteForVariant(userId, postId, variantIndex)
-			.then(post => PostResponse(req.userId, post, req.ln))
+			.then(post => postResponse(req.userId, post, req.ln))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}

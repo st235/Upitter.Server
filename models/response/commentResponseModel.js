@@ -8,5 +8,7 @@ module.exports = comment => {
 		createdDate: comment.createdDate
 	};
 
+	if (comment.replyTo && comment.replyTo.customId && comment.replyTo.nickname) commentResponse.replyTo = comment.replyTo;
+
 	return commentResponse;
 };

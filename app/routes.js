@@ -104,10 +104,9 @@ class AppRoutes extends AppUnit {
 	}
 
 	registerComment(app, paths, controller) {
-		app.get(paths.remove, this.checkAuthorization, controller.remove);
-		app.get(paths.obtain, this.checkAuthorization, controller.obtain);
-
-		app.post(paths.create, this.checkAuthorization, controller.create);
+		app.post(paths.addComment, this.checkAuthorization, controller.addComment);
+		app.post(paths.editComment, this.checkAuthorization, controller.editComment);
+		app.post(paths.removeComment, this.checkAuthorization, controller.removeComment);
 	}
 
 	registerCompany(app, paths, controller) {

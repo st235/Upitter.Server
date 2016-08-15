@@ -5,8 +5,8 @@ const AppUnit = require('../app/unit');
 
 
 class PostsManager extends AppUnit {
-	constructor(postModel, companyModel, postCommentsModel) {
-		super({ postModel, companyModel, postCommentsModel });
+	constructor(postModel, companyModel) {
+		super({ postModel, companyModel });
 	}
 
 	_onBind() {
@@ -71,9 +71,11 @@ class PostsManager extends AppUnit {
 
 	findById(postId) {
 		let currentPost;
+
 		return this
 			.postModel
 			.findOne({ customId: postId })
+			.populate('comments')
 			.then(post => {
 				let postResponse = null;
 				if (!post) return postResponse;

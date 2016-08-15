@@ -59,11 +59,11 @@ class AppDatabase extends AppUnit {
 		this.voteModel = voteModel(mongoose);
 
 		this.categoriesManager = new CategoriesManager(this.categoryModel);
-		this.commentsManager = new CommentsManager(this.commentModel, this.postCommentsModel);
+		this.commentsManager = new CommentsManager(this.commentModel, this.postCommentsModel, this.userModel, this.postModel);
 		this.companiesManager = new CompaniesManager(this.companyModel);
 		this.feedbackManager = new FeedbackManager(this.feedbackModel);
 		this.logsManager = new LogsManager(this.logModel);
-		this.postsManager = new PostsManager(this.postModel, this.companyModel, this.postCommentsModel);
+		this.postsManager = new PostsManager(this.postModel, this.companyModel);
 		this.reportsManager = new ReportsManager(this.reportModel, this.reportReasonModel);
 		this.usersManager = new UsersManager(this.userModel);
 	}

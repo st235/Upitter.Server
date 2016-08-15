@@ -23,6 +23,16 @@ module.exports = mongoose => {
 		text: {
 			type: String
 		},
+		replyTo: {
+			customId: {
+				type: Number,
+				sparse: true
+			},
+			nickname: {
+				type: String,
+				sparse: true
+			}
+		},
 		isRemoved: {
 			type: Boolean
 		},
@@ -41,7 +51,7 @@ module.exports = mongoose => {
 			unique: true
 		},
 		comments: {
-			type: [Comment], unique: true, sparse: true
+			type: [Comment]
 		}
 	});
 	postCommentsSchema.pre('save', function (next) {

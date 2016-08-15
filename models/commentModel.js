@@ -13,7 +13,7 @@ module.exports = mongoose => {
 		author: {
 			customId: {
 				type: Number,
-				unique: true
+				sparse: true
 			},
 			nickname: {
 				type: String,
@@ -27,6 +27,16 @@ module.exports = mongoose => {
 		text: {
 			type: String,
 			required: true
+		},
+		replyTo: {
+			customId: {
+				type: Number,
+				sparse: true
+			},
+			nickname: {
+				type: String,
+				sparse: true
+			}
 		},
 		isRemoved: {
 			type: Boolean,

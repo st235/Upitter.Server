@@ -18,9 +18,9 @@ module.exports = {
 		getParent: '/categories/get/parent/:id'
 	},
 	comment: {
-		obtain: '/comments',
-		create: '/comment/create',
-		remove: '/comment/remove'
+		addComment: '/comment/create',
+		editComment: '/comment/edit',
+		removeComment: '/comment/remove'
 	},
 	company: {
 		edit: '/company/edit',
@@ -38,8 +38,7 @@ module.exports = {
 		like: '/post/like/:postId',
 		watch: '/post/watch/:postId',
 		favorite: '/post/favorite/:postId',
-		vote: '/post/vote/:postId/:variantIndex',
-		comment: '/post/comment'
+		vote: '/post/vote/:postId/:variantIndex'
 	},
 	report: {
 		obtainReports: '/reports',

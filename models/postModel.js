@@ -33,8 +33,8 @@ module.exports = mongoose => {
 			default: false
 		},
 		comments: {
-			type: [String], //  TODO: add reference to comment Model
-			default: []
+			type: Schema.Types.ObjectId,
+			ref: 'PostComments'//  TODO: add reference to comment Model
 		},
 		createdDate: {
 			type: Date,

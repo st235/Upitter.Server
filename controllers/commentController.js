@@ -3,6 +3,8 @@
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
 
+const commentResponse = require('../models/response/commentResponseModel');
+
 class CommentsController extends BaseController {
 	constructor(commentsManager) {
 		super({ commentsManager });
@@ -10,9 +12,9 @@ class CommentsController extends BaseController {
 
 	_onBind() {
 		super._onBind();
-		this.create = this.create.bind(this);
-		this.remove = this.remove.bind(this);
-		this.obtain = this.obtain.bind(this);
+		this.addComment = this.addComment.bind(this);
+		this.editComment = this.editComment.bind(this);
+		this.removeComment = this.removeComment.bind(this);
 	}
 
 	_onCreate() {
@@ -20,60 +22,80 @@ class CommentsController extends BaseController {
 		this.validationUtils = new ValidationUtils;
 	}
 
-	create(req, res) {
+	addComment(req, res, next) {
 		const invalid = this.validate(req)
-			.add('accessToken').should.exist().and.have.type('String')
+			.add('postId').should.exist().and.have.type('String')
 			.add('text').should.exist().and.have.type('String').and.be.in.rangeOf(3, 400)
 			.validate();
 
 		if (invalid) return next(invalid.name);
 
-		const body = req.body;
+		const { userId } = req;
+		const { text, postId, replyTo } = req.body;
+
+		let comment;
 
 		this
 			.commentsManager
-			.create(req.userId, body)
-			.then(comment => this.success(res, comment))
+			.createComment(userId, replyTo, text)
+			.then(currentComment => {
+				comment = currentComment;
+				return this.commentsManager.findPostComments(postId);
+			})
+			.then(postComments => {
+				if (!postComments) return this.commentsManager.createAndUpdatePostComments(comment, postId);
+				return this.commentsManager.updatePostComments(comment, postId);
+			})
+			.then(() => this.success(res, commentResponse(comment)))
 			.catch(next);
 	}
 
-	remove(req, res, next) {
+	editComment(req, res, next) {
 		const invalid = this.validate(req)
-			.add('accessToken').should.exist().and.have.type('String')
 			.add('postId').should.exist().and.have.type('String')
+			.add('commentId').should.exist().and.have.type('String')
+			.add('text').should.exist().and.have.type('String').and.be.in.rangeOf(3, 400)
 			.validate();
 
 		if (invalid) return next(invalid.name);
 
-		const postId = req.query.customId;
+		const { userId } = req;
+		const { text, postId, replyTo, commentId } = req.body;
+
+		let comment;
 
 		this
 			.commentsManager
-			.remove(postId)
-			.then(removedId => this.success(res, removedId))
+			.editComment(userId, replyTo, text, commentId)
+			.then(currentComment => {
+				comment = currentComment;
+				return this.commentsManager.editPostComments(comment, postId);
+			})
+			.then(() => this.success(res, commentResponse(comment)))
 			.catch(next);
 	}
 
-	obtain(req, res, next) {
+	removeComment(req, res, next) {
 		const invalid = this.validate(req)
-			.add('limit').should.exist().and.have.type('String')
-			.add('offset').should.exist().and.have.type('String')
+			.add('postId').should.exist().and.have.type('String')
+			.add('commentId').should.exist().and.have.type('String')
 			.validate();
 
 		if (invalid) return next(invalid.name);
 
-		let { limit, offset } = req.query;
-		try {
-			limit = parseInt(limit);
-			offset = parseInt(offset);
-		} catch (e) {
-			return next('PROPERTY_HAS_INCORRECT_TYPE');
-		}
+		const { userId } = req;
+		const { postId, commentId } = req.body;
+
+		let comment;
 
 		this
 			.commentsManager
-			.obtain(limit, offset)
-			.then(comments => this.success(res, comments))
+			.removeComment(userId, commentId)
+			.then(currentComment => {
+				comment = currentComment;
+				return this.commentsManager.removeFromPostComments(comment, postId);
+			})
+			.then(() => this.success(res, commentResponse(comment)))
 			.catch(next);
 	}
 }

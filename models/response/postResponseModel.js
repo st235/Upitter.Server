@@ -2,6 +2,7 @@
 
 const _ = require('underscore');
 const moment = require('moment');
+const commentResponse = require('./commentResponseModel');
 
 module.exports = (userId, post, lang = 'en', author) => {
 	const likedByMe = !!_.find(post.likeVoters, voterId => voterId === userId);
@@ -19,14 +20,22 @@ module.exports = (userId, post, lang = 'en', author) => {
 		},
 		fromNow: moment(post.createdDate).locale(lang).format('DD.MM.YYYY'),
 		likesAmount: post.likes,
-		commentsAmount: post.comments.length,
 		votersAmount: post.votersForVariants.length,
 		isLikedByMe: likedByMe,
 		isVotedByMe: votedByMe,
 		watchesAmount: post.watches
 	};
 
-	if (post.comments.length > 0) postResponse.comments = post.comments;
+	if (post.comments && post.comments.comments.length > 0) {
+		postResponse.comments = _.compact(_.map(post.comments.comments, comment => {
+			if (comment.isRemoved === false) return commentResponse(comment);
+		}));
+		postResponse.commentsAmount = postResponse.comments.length;
+	} else {
+		postResponse.commentsAmount = 0;
+		postResponse.comments = [];
+	}
+
 	if (post.variants.length > 0) {
 		postResponse.variants = _.map(post.variants, variant => {
 			let currentVoted = false;
@@ -57,7 +66,7 @@ module.exports = (userId, post, lang = 'en', author) => {
 			type: image.type,
 			originalUrl: image.originalUrl,
 			thumbUrl: image.thumbUrl
-		}
+		};
 	});
 
 	return postResponse;

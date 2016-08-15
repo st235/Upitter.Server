@@ -332,7 +332,6 @@ class AuthorizationController extends BaseController {
 				return this.companiesManager.checkIfExists(phone)
 					.then(user => {
 						if (!user) {
-							console.log(coordinates);
 							return this.companiesManager.create({
 								//TODO: проверка категории на существование в нашем списке
 								name,

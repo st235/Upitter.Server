@@ -24,19 +24,19 @@ class UsersManager extends AppUnit {
 		};
 
 		switch (type) {
-			case 'google':
-				result.picture = data.picture;
-				result.nickname = data.name;
-				result.socialId = `google_${data.email}`;
-				break;
-			case 'facebook':
-				result.nickname = data.name;
-				result.socialId = `facebook_${data.id}`;
-				break;
-			case 'twitter':
-				result.nickname = data.name;
-				result.socialId = `twitter_${data.id}`;
-				break;
+		case 'google':
+			result.picture = data.picture;
+			result.nickname = data.name;
+			result.socialId = `google_${data.email}`;
+			break;
+		case 'facebook':
+			result.nickname = data.name;
+			result.socialId = `facebook_${data.id}`;
+			break;
+		case 'twitter':
+			result.nickname = data.name;
+			result.socialId = `twitter_${data.id}`;
+			break;
 		}
 
 		return result;
