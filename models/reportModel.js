@@ -14,28 +14,33 @@ module.exports = mongoose => {
 			type: String,
 			required: true
 		},
-		reason: [{
-			type: String,
-			required: true,
-			ref: 'ReportReasons'
-		}],
-		author: [{
-			type: String,
-			required: true,
-			ref: 'Users'
-		}],
-		postId: [{
-			type: String,
-			ref: 'Posts'
-		}],
-		companyId: [{
-			type: String,
-			ref: 'Companies'
-		}],
-		commentId: [{
-			type: String,
-			ref: 'Comments'
-		}],
+		reason: {
+			customId: {
+				type: String,
+				sparse: true,
+				required: true
+			},
+			title: {
+				type: String,
+				sparse: true,
+				required: true
+			}
+		},
+		author: {
+			customId: {
+				type: Number,
+				sparse: true,
+				required: true
+			},
+			nickname: {
+				type: String,
+				sparse: true,
+				required: true
+			}
+		},
+		targetId: {
+			type: String
+		},
 		createdDate: {
 			type: Date
 		}

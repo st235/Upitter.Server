@@ -20,7 +20,7 @@ module.exports = {
 	comment: {
 		addComment: '/comment/create',
 		editComment: '/comment/edit',
-		removeComment: '/comment/remove'
+		removeComment: '/comment/remov'
 	},
 	company: {
 		edit: '/company/edit',
@@ -41,9 +41,10 @@ module.exports = {
 		vote: '/post/vote/:postId/:variantIndex'
 	},
 	report: {
+		create: '/report/create',
 		obtainReports: '/reports',
 		obtainReasons: '/report/reasons/:type',
-		create: '/report/create/:type'
+		obtainTarget: '/:type/:targetId'
 	},
 	support: {
 		support: '/support',

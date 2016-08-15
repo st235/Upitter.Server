@@ -16,6 +16,7 @@ class UsersManager extends AppUnit {
 		this.getObjectId = this.getObjectId.bind(this);
 		this.toggleCompanySubscription = this.toggleCompanySubscription.bind(this);
 		this.getSubscriptions = this.getSubscriptions.bind(this);
+		this.findById = this.findById.bind(this);
 	}
 
 	_formSocialData(type, data) {
@@ -126,6 +127,16 @@ class UsersManager extends AppUnit {
 			.userModel
 			.findOne({ customId: userId })
 			.populate('subscriptions')
+			.exec()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	findById(userId) {
+		return this
+			.userModel
+			.findOne({ customId: userId })
 			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';

@@ -57,7 +57,7 @@ class AppRoutes extends AppUnit {
 		this.logController = new LogController(this.managers.logs);
 		this.postController = new PostController(this.managers.posts, this.managers.users);
 		this.fileController = new FileController();
-		this.reportController = new ReportController(this.managers.reports, this.managers.categories);
+		this.reportController = new ReportController(this.managers.reports, this.managers.users, this.managers.posts, this.managers.companies, this.managers.comments);
 		this.userController = new UserController(this.managers.users, this.managers.companies);
 	}
 
@@ -148,9 +148,10 @@ class AppRoutes extends AppUnit {
 	}
 
 	registerReport(app, paths, controller) {
-		app.get(paths.obtainReports, controller.obtainReports);
-		app.get(paths.obtainReasons, controller.obtainReasons);
+		app.get(paths.obtainReports, this.checkAuthorization, controller.obtainReports);
+		app.get(paths.obtainReasons, this.checkAuthorization, controller.obtainReasons);
 		app.post(paths.create, this.checkAuthorization, controller.create);
+		app.get(paths.obtainTarget, this.checkAuthorization, controller.obtainTargetOfReport);
 	}
 
 	registerUser(app, paths, controller) {

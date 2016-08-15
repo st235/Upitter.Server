@@ -6,7 +6,10 @@ const _ = require('underscore');
 
 class ReportsManager extends AppUnit {
 	constructor(reportModel, reportReasonModel) {
-		super({ reportModel, reportReasonModel });
+		super({
+			reportModel,
+			reportReasonModel
+		});
 	}
 
 	_onBind() {
@@ -15,13 +18,14 @@ class ReportsManager extends AppUnit {
 		this.obtainReportReasons = this.obtainReportReasons.bind(this);
 		this.obtainReports = this.obtainReports.bind(this);
 		this.obtainReportsByType = this.obtainReportsByType.bind(this);
-		this.obtainAllReports = this.obtainAllReports.bind(this)
+		this.obtainAllReports = this.obtainAllReports.bind(this);
+		this.findReasonById = this.findReasonById.bind(this);
 
 	}
 
 	_createReason(data, customId, type) {
 		Object.assign(data, { customId }, { type });
-		const reason = this.reportReasonModel(data);
+		const reason = new this.reportReasonModel(data);
 		return reason.save()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
@@ -50,17 +54,17 @@ class ReportsManager extends AppUnit {
 			});
 	}
 
-	create(author, type, reason, companyId, commentId, postId) {
-		const data = Object.assign(
-			{ author },
-			{ type },
-			{ reason },
-			{ companyId },
-			{ commentId },
-			{ postId },
-			{ createdDate: Date.now() }
-		);
-		const report = this.reportModel(data);
+	create(author, type, reason, targetId) {
+		const data = {
+			author,
+			type,
+			reason,
+			targetId,
+			createdDate: Date.now()
+		};
+
+		const report = new this.reportModel(data);
+
 		return report
 			.save()
 			.catch(() => {
@@ -68,31 +72,45 @@ class ReportsManager extends AppUnit {
 			});
 	}
 
-	obtainReports(type) {
-		return type ? this.obtainReportsByType(type) : this.obtainAllReports();
+	obtainReports(type, limit, offset) {
+		return type ? this.obtainReportsByType(limit, offset, type) : this.obtainAllReports(limit, offset);
 	}
 
-	obtainReportsByType(type) {
+	obtainReportsByType(limit, offset, type) {
 		return this
 			.reportModel
 			.find({ type })
+			.sort({ createdDate: -1 })
+			.limit(limit)
+			.skip(offset)
 			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 
-	obtainAllReports() {
+	obtainAllReports(limit, offset) {
 		return this
 			.reportModel
 			.find()
+			.sort({ createdDate: -1 })
+			.limit(limit)
+			.skip(offset)
 			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 
+	findReasonById(reasonId) {
+		return this
+			.reportReasonModel
+			.findOne({ customId: reasonId })
+			.exec()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
 }
 
 module.exports = ReportsManager;
-

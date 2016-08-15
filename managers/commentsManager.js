@@ -10,6 +10,7 @@ class CommentsManager extends AppUnit {
 
 	_onBind() {
 		this.createComment = this.createComment.bind(this);
+		this.findComment = this.findComment.bind(this);
 		this.findPostComments = this.findPostComments.bind(this);
 		this.createAndUpdatePostComments = this.createAndUpdatePostComments.bind(this);
 		this.updatePostComments = this.updatePostComments.bind(this);
@@ -25,9 +26,10 @@ class CommentsManager extends AppUnit {
 		return this
 			.userModel
 			.findOne({ customId: userId })
+			.exec()
 			.then(author => {
 				currentAuthor = author;
-				if (replyTo) return this.userModel.findOne({ customId: replyTo });
+				if (replyTo) return this.userModel.findOne({ customId: replyTo }).exec();
 			})
 			.then(replyTo => {
 				_.pick(currentAuthor, 'customId', 'nickname', 'picture');
@@ -40,10 +42,20 @@ class CommentsManager extends AppUnit {
 			});
 	}
 
+	findComment(commentId) {
+		return this
+			.commentModel
+			.findOne({ customId: commentId })
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
 	findPostComments(postId) {
 		return this
 			.postCommentsModel
 			.findOne({ postId })
+			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
@@ -60,7 +72,7 @@ class CommentsManager extends AppUnit {
 			.save()
 			.then(postComments => {
 				postCommentsObjId = postComments._id;
-				return this.postModel.findOne(postId);
+				return this.postModel.findOne(postId).exec();
 			})
 			.then(post => {
 				post.comments = postCommentsObjId;
@@ -94,7 +106,7 @@ class CommentsManager extends AppUnit {
 				currentComment = comment;
 				if (!comment || comment.author.customId !== parseInt(userId, 10)) throw 'INTERNAL_SERVER_ERROR';
 				if (Date.parse(comment.createdDate) + 900000 < new Date()) throw 'INTERNAL_SERVER_ERROR';
-				return (replyTo) ? this.userModel.findOne({ customId: replyTo }) : null;
+				return (replyTo) ? this.userModel.findOne({ customId: replyTo }).exec() : null;
 			})
 			.then(replyTo => {
 				replyTo ? _.pick(replyTo, 'customId, nickname') : replyTo = { customId: null, nickname: null };
@@ -113,6 +125,7 @@ class CommentsManager extends AppUnit {
 		return this
 			.postCommentsModel
 			.findOne({ postId })
+			.exec()
 			.then(postComments => {
 				currentPostComments = postComments;
 				return _.map(postComments.comments, currentComment => (currentComment.customId !== comment.customId) ? currentComment : comment);
@@ -130,6 +143,7 @@ class CommentsManager extends AppUnit {
 		return this
 			.commentModel
 			.findOne({ customId: commentId })
+			.exec()
 			.then(comment => {
 				if (!comment || comment.author.customId !== parseInt(userId, 10)) throw 'INTERNAL_SERVER_ERROR';
 				if (Date.parse(comment.createdDate) + 900000 < new Date()) throw 'INTERNAL_SERVER_ERROR';
@@ -148,6 +162,7 @@ class CommentsManager extends AppUnit {
 		return this
 			.postCommentsModel
 			.findOne({ postId })
+			.exec()
 			.then(postComments => {
 				currentPostComments = postComments;
 				return _.map(postComments.comments, currentComment => {

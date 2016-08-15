@@ -14,6 +14,7 @@ class CompaniesManager extends AppUnit {
 		this.create = this.create.bind(this);
 		this.checkIfExists = this.checkIfExists.bind(this);
 		this.edit = this.edit.bind(this);
+		this.findById = this.findById.bind(this);
 		this.getObjectId = this.getObjectId.bind(this);
 		this.toggleUserSubscription = this.toggleUserSubscription.bind(this);
 		this.getSubscribers = this.getSubscribers.bind(this);
@@ -60,6 +61,15 @@ class CompaniesManager extends AppUnit {
 		return this
 			.companyModel
 			.findOneAndUpdate({ customId }, data, { new: true })
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	findById(companyId) {
+		return this
+			.companyModel
+			.findOne({ customId: companyId })
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
