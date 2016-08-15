@@ -56,11 +56,11 @@ class CompanyController extends BaseController {
 	}
 
 	findByAlias(req, res, next) {
-		const { aliasId } = req.params;
+		const { alias } = req.params;
 
 		this
 			.companiesManager
-			.findByAlias(aliasId)
+			.findByAlias(alias)
 			.then(company => CompanyResponseModel(company))
 			.then(response => this.success(res, response))
 			.catch(next);

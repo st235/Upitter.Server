@@ -25,7 +25,7 @@ module.exports = {
 	company: {
 		edit: '/company/edit',
 		getSubscribers: '/company/subscribers',
-		findByAlias: '/company/:aliasId'
+		findByAlias: '/company/:alias'
 	},
 	post: {
 		obtain: '/post/obtain',
