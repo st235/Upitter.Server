@@ -10,7 +10,7 @@ module.exports = mongoose => {
 			type: Number,
 			unique: true
 		},
-		aliasId: {
+		alias: {
 			type: String,
 			unique: true,
 			sparse: true
@@ -119,9 +119,9 @@ module.exports = mongoose => {
 			.exec();
 	};
 
-	companySchema.statics.findByAlias = function (aliasId) {
+	companySchema.statics.findByAlias = function (alias) {
 		return this
-			.findOne({ aliasId })
+			.findOne({ alias })
 			.exec();
 	};
 

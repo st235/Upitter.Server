@@ -36,7 +36,7 @@ class CompanyController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const companyInfo = _.pick(req.body,
-			'aliasId',
+			'alias',
 			'description',
 			'logoUrl',
 			'site',
