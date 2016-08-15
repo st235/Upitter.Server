@@ -61,6 +61,9 @@ module.exports = {
 	file: {
 		verifyFid: '/file/verify_fid'
 	},
+	general: {
+		getSocialInfo: '/general/socialInfo/get'
+	},
 	external: {
 		verifyFid: '/verification/fid/verify'
 	}

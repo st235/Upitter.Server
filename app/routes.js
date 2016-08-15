@@ -19,6 +19,7 @@ const FeedbackController = require('../controllers/feedbackController');
 const LogController = require('../controllers/logController');
 const PostController = require('../controllers/postController');
 const FileController = require('../controllers/fileController');
+const GeneralController = require('../controllers/generalController');
 const ReportController = require('../controllers/reportController');
 const UserController = require('../controllers/userController');
 
@@ -57,6 +58,7 @@ class AppRoutes extends AppUnit {
 		this.logController = new LogController(this.managers.logs);
 		this.postController = new PostController(this.managers.posts, this.managers.users);
 		this.fileController = new FileController();
+		this.generalController = new GeneralController();
 		this.reportController = new ReportController(this.managers.reports, this.managers.users, this.managers.posts, this.managers.companies, this.managers.comments);
 		this.userController = new UserController(this.managers.users, this.managers.companies);
 	}
@@ -71,6 +73,7 @@ class AppRoutes extends AppUnit {
 		this.registerLog(this.app, routesConfig.support, this.logController);
 		this.registerPost(this.app, routesConfig.post, this.postController);
 		this.registerFile(this.app, routesConfig.file, this.fileController);
+		this.registerGeneral(this.app, routesConfig.general, this.generalController);
 		this.registerReport(this.app, routesConfig.report, this.reportController);
 		this.registerUser(this.app, routesConfig.user, this.userController);
 		this.registerFooter(this.app);
@@ -145,6 +148,10 @@ class AppRoutes extends AppUnit {
 
 	registerFile(app, paths, controller) {
 		app.get(paths.verifyFid, this.checkAuthorization, controller.getFileInfoByFid);
+	}
+
+	registerGeneral(app, paths, controller) {
+		app.get(paths.getSocialInfo, this.checkAuthorization, controller.getSocialInfo);
 	}
 
 	registerReport(app, paths, controller) {
