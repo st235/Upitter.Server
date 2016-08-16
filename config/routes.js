@@ -25,7 +25,7 @@ module.exports = {
 	company: {
 		edit: '/company/edit',
 		getSubscribers: '/company/subscribers',
-		findByAlias: '/company/:aliasId'
+		findByAlias: '/company/:alias'
 	},
 	post: {
 		obtain: '/post/obtain',
@@ -60,6 +60,9 @@ module.exports = {
 	},
 	file: {
 		verifyFid: '/file/verify_fid'
+	},
+	general: {
+		getSocialInfo: '/general/socialInfo/get'
 	},
 	external: {
 		verifyFid: '/verification/fid/verify'

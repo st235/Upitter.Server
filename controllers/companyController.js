@@ -2,8 +2,8 @@
 
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
-const companyResponseModel = require('../models/response/companyResponseModel');
-const subscribersResponseModel = require('../models/response/subscribersResponseModel');
+const CompanyResponseModel = require('../models/response/companyResponseModel');
+const SubscribersResponseModel = require('../models/response/subscribersResponseModel');
 
 const _ = require('underscore');
 
@@ -36,7 +36,7 @@ class CompanyController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const companyInfo = _.pick(req.body,
-			'aliasId',
+			'alias',
 			'description',
 			'logoUrl',
 			'site',
@@ -51,17 +51,17 @@ class CompanyController extends BaseController {
 		this
 			.companiesManager
 			.edit(companyId, companyInfo)
-			.then(businessUser => this.success(res, companyResponseModel(businessUser)))
+			.then(businessUser => this.success(res, CompanyResponseModel(businessUser)))
 			.catch(next);
 	}
 
 	findByAlias(req, res, next) {
-		const { aliasId } = req.params;
+		const { alias } = req.params;
 
 		this
 			.companiesManager
-			.findByAlias(aliasId)
-			.then(company => companyResponseModel(company))
+			.findByAlias(alias)
+			.then(company => CompanyResponseModel(company))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
@@ -70,7 +70,7 @@ class CompanyController extends BaseController {
 		this
 			.companiesManager
 			.getSubscribers(req.userId)
-			.then(company => this.success(res, subscribersResponseModel(company)))
+			.then(company => this.success(res, SubscribersResponseModel(company)))
 			.catch(next);
 	}
 }

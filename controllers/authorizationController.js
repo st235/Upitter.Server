@@ -319,7 +319,7 @@ class AuthorizationController extends BaseController {
 
 		const { number, countryCode } = req.params;
 		const phone = `${countryCode}${number}`;
-		const { temporaryToken, name, site, coordinates, category, contactsPhones, logoUrl } = req.body;
+		const { temporaryToken, name, site, coordinates, category, contactPhones, logoUrl, description } = req.body;
 
 		authUtils.getOrgTempModel(this.authorizationClient, phone)
 			.then(model => {
@@ -336,10 +336,11 @@ class AuthorizationController extends BaseController {
 								//TODO: проверка категории на существование в нашем списке
 								name,
 								activity: category,
+								description,
 								site,
 								logoUrl,
 								coordinates,
-								contactsPhones,
+								contactPhones,
 								phone: {
 									body: number,
 									code: countryCode,

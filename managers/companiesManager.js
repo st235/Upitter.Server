@@ -20,12 +20,12 @@ class CompaniesManager extends AppUnit {
 		this.getSubscribers = this.getSubscribers.bind(this);
 	}
 
-	findByAlias(aliasId) {
+	findByAlias(alias) {
 		return this
 			.companyModel
-			.findByAlias(aliasId)
+			.findByAlias(alias)
 			.then(company => {
-				if (!company) return this.companyModel.findById(aliasId);
+				if (!company) return this.companyModel.findById(alias);
 				return company;
 			})
 			.then(company => {
