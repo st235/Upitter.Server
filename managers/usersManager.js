@@ -112,9 +112,11 @@ class UsersManager extends AppUnit {
 			.then(user => {
 				if (!user) throw 'INTERNAL SERVER ERROR';
 				const companyIdString = companyId.toString();
-				if (_.indexOf(user.subscriptions, companyIdString) !== -1) _.without(user.subscriptions, companyIdString);
-				else user.subscriptions.push(companyIdString);
-
+				if (_.indexOf(user.subscriptions, companyIdString) !== -1){
+					user.subscriptions = _.without(user.subscriptions, companyIdString);
+				} else {
+					user.subscriptions.push(companyIdString);
+				}
 				return user.save();
 			})
 			.catch(() => {

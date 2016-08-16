@@ -44,7 +44,7 @@ module.exports = {
 		create: '/report/create',
 		obtainReports: '/reports',
 		obtainReasons: '/report/reasons/:type',
-		obtainTarget: '/:type/:targetId'
+		obtainTarget: '/report/:type/:targetId'
 	},
 	support: {
 		support: '/support',
