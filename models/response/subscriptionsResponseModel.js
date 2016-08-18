@@ -18,7 +18,7 @@ module.exports = (user, companyId) => {
 			return {
 				customId: subscription.customId,
 				name: subscription.name,
-				logoUrl: subscription.sex
+				logoUrl: subscription.logoUrl
 			};
 		});
 	}

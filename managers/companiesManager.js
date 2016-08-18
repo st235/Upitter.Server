@@ -95,9 +95,11 @@ class CompaniesManager extends AppUnit {
 				if (!company) throw 'INTERNAL SERVER ERROR';
 
 				const userIdString = userId.toString();
-				if (_.indexOf(company.subscribers, userIdString) !== -1) _.without(company.subscribers, userIdString);
-				else company.subscribers.push(userIdString);
-
+				if (_.indexOf(company.subscribers, userIdString) !== -1) {
+					company.subscribers = _.without(company.subscribers, userIdString);
+				} else {
+					company.subscribers.push(userIdString);
+				}
 				return company.save();
 			})
 			.catch(() => {

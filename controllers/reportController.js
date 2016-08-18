@@ -109,7 +109,6 @@ class ReportsController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const { type, targetId } = req.params;
-
 		switch (type) {
 		case 'post':
 			this
@@ -132,7 +131,7 @@ class ReportsController extends BaseController {
 		case 'comment':
 			this
 				.commentsManager
-				.findById(targetId)
+				.findComment(targetId)
 				.then(comment => this.success(res, commentResponse(comment)))
 				.catch(next);
 			break;
