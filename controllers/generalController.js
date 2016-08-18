@@ -3,7 +3,7 @@
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
 
-const socialConfig = require('../config/socialConfig');
+const socialConfig = require('../config/social');
 
 class GeneralController extends BaseController {
 	_onBind() {

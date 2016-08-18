@@ -58,6 +58,7 @@ class CompaniesManager extends AppUnit {
 	edit(customId, companyInfo) {
 		const data = _.omit(companyInfo, field => _.isUndefined(field));
 
+		//TODO: Добавить проверку по соц сетям
 		return this
 			.companyModel
 			.findOneAndUpdate({ customId }, data, { new: true })

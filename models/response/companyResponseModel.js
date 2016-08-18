@@ -23,6 +23,7 @@ module.exports = company => {
 	if (company.site) companyResponse.site = company.site;
 	if (company.contactPhones) companyResponse.contactPhones = company.contactPhones;
 	if (company.accessToken) companyResponse.accessToken = company.accessToken;
+	if (company.socialLinks) companyResponse.socialLinks = company.socialLinks;
 	if (company.subscribers.length > 0 && company.subscribers[0].customId) {
 		companyResponse.subscribers = _.map(company.subscribers, user => {
 			const obj = {

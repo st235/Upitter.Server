@@ -1,6 +1,7 @@
 'use strict';
 
 const counterConfig = require('../config/counter');
+const socialList = require('../config/socialList');
 
 module.exports = mongoose => {
 	const Schema = mongoose.Schema;
@@ -58,32 +59,17 @@ module.exports = mongoose => {
 		site: {
 			type: String
 		},
-		socialLinks: {
-			skype: {
-				type: String
+		socialLinks: [{
+			type: {
+				type: String,
+				required: true,
+				enum: socialList
 			},
-			vk: {
-				type: String
-			},
-			facebook: {
-				type: String
-			},
-			instagram: {
-				type: String
-			},
-			twitter: {
-				type: String
-			},
-			youtube: {
-				type: String
-			},
-			googlePlus: {
-				type: String
-			},
-			ok: {
-				type: String
+			link: {
+				type: String,
+				required: true
 			}
-		},
+		}],
 		coordinates: [{
 			address: {
 				type: String
