@@ -64,6 +64,12 @@ module.exports = {
 	general: {
 		getSocialInfo: '/general/socialInfo/get'
 	},
+	service: {
+		version: {
+			get: '/service/info/android/get/v',
+			set: '/service/info/android/set/v'
+		}
+	},
 	external: {
 		verifyFid: '/verification/fid/verify'
 	}

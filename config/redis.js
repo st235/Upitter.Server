@@ -5,5 +5,12 @@ module.exports = {
 		],
 		database: 0,
 		authPass: 'upitteruser'
+	},
+	versions: {
+		ports: [
+			19788
+		],
+		database: 1,
+		authPass: 'upitterversions'
 	}
 };
