@@ -89,9 +89,10 @@ class UsersManager extends AppUnit {
 			.exec()
 			.then(user => {
 				if (!user) throw 'INTERNAL_SERVER_ERROR';
-				const findQuery = _.find(user.favorites, favorite => favorite === postId);
-				if (findQuery) user.favorites = _.without(user.favorites, postId);
-				else user.favorites.push(postId);
+				const postIdString = postId.toString();
+				const findQuery = _.find(user.favorites, favorite => favorite === postIdString);
+				if (findQuery) user.favorites = _.without(user.favorites, postIdString);
+				else user.favorites.push(postIdString);
 				return user.save();
 			});
 	}
@@ -101,7 +102,10 @@ class UsersManager extends AppUnit {
 			.userModel
 			.findOne({ customId: userId })
 			.exec()
-			.then(user => user._id);
+			.then(user => user._id)
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 
 	toggleCompanySubscription(userId, companyId) {
@@ -112,7 +116,7 @@ class UsersManager extends AppUnit {
 			.then(user => {
 				if (!user) throw 'INTERNAL SERVER ERROR';
 				const companyIdString = companyId.toString();
-				if (_.indexOf(user.subscriptions, companyIdString) !== -1){
+				if (_.indexOf(user.subscriptions, companyIdString) !== -1) {
 					user.subscriptions = _.without(user.subscriptions, companyIdString);
 				} else {
 					user.subscriptions.push(companyIdString);

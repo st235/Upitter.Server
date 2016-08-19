@@ -24,7 +24,7 @@ class UsersController extends BaseController {
 		this.validationUtils = new ValidationUtils;
 	}
 
-	edit(req, res) {
+	edit(req, res, next) {
 		const invalid = this.validate(req)
 			//.add('nickname').should.have.type('String').and.be.in.rangeOf(2, 20)
 			//.add('name').should.have.type('String').and.be.in.rangeOf(2, 20)
@@ -43,7 +43,7 @@ class UsersController extends BaseController {
 			.edit(req.userId, body)
 			.then(user => userResponse(user))
 			.then(response => this.success(res, response))
-			.catch(error => this.error(res, error));
+			.catch(next);
 	}
 
 	_getObjectsIds(ids) {
@@ -71,10 +71,6 @@ class UsersController extends BaseController {
 		this
 			._getObjectsIds(ids)
 			.then(() => this.usersManager.toggleCompanySubscription(ids.userId, ids.companyObjectId))
-			.then(a => {
-				console.log(a);
-				return a;
-			})
 			.then(() => this.companiesManager.toggleUserSubscription(ids.userObjectId, ids.companyId))
 			.then(company => subscribersResponseModel(company, ids.userId))
 			.then(response => this.success(res, response))

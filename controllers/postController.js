@@ -3,9 +3,11 @@ const _ = require('underscore');
 
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
-const postResponse = require('../models/response/postResponseModel');
 const fileServerUtils = require('../utils/fileServerUtils');
+
+const postResponse = require('../models/response/postResponseModel');
 const companyResponse = require('../models/response/companyResponseModel');
+const userResponse = require('../models/response/userResponseModel');
 
 class PostsController extends BaseController {
 	constructor(postsManager, usersManager) {
@@ -114,14 +116,21 @@ class PostsController extends BaseController {
 	}
 
 	favorite(req, res, next) {
+		const invalid = this.validate(req)
+			.add('postId').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
 		const { postId } = req.params;
-		const { ln, userId } = req;
+		const { userId } = req;
 
 		this
-			.usersManager
-			.favorite(userId, postId)
-			.then(post => postResponse(userId, post, ln))
-			.then(response => this.success(res, response))
+			.postsManager
+			.getObjectId(postId)
+			.then(postObjId => this.usersManager.favorite(userId, postObjId))
+			//.then(user => this.success(res, userResponse(user)))
+			.then(user => this.success(res, user))
 			.catch(next);
 	}
 

@@ -17,6 +17,7 @@ class PostsManager extends AppUnit {
 		this.obtain = this.obtain.bind(this);
 		this.like = this.like.bind(this);
 		this.voteForVariant = this.voteForVariant.bind(this);
+		this.getObjectId = this.getObjectId.bind(this);
 	}
 
 	create(companyId, title, text, category, latitude, longitude, variants, images) {
@@ -257,6 +258,17 @@ class PostsManager extends AppUnit {
 				return resultPost;
 			})
 			.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
+	}
+
+	getObjectId(postId) {
+		return this
+			.postModel
+			.findOne({ customId: postId })
+			.exec()
+			.then(post => post._id)
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 }
 
