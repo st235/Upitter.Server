@@ -144,6 +144,7 @@ class AppRoutes extends AppUnit {
 		app.get(paths.watch, this.checkAuthorization, controller.watch);
 		app.get(paths.vote, this.checkAuthorization, controller.voteForVariant);
 		app.get(paths.favorite, this.checkAuthorization, controller.favorite);
+		app.get(paths.obtainFavorites, this.checkAuthorization, controller.obtainFavorites);
 
 		app.post(paths.create, this.checkAuthorization, controller.create);
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
@@ -173,7 +174,6 @@ class AppRoutes extends AppUnit {
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
 		app.post(paths.toggleSubscription, this.checkAuthorization, controller.toggleSubscription);
 		app.post(paths.getSubscriptions, this.checkAuthorization, controller.getSubscriptions);
-		app.get(paths.getFavorites, this.checkAuthorization, controller.getFavorites);
 	}
 
 	registerFooter(app) {

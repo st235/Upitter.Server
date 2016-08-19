@@ -22,7 +22,6 @@ class UsersController extends BaseController {
 		this._getObjectsIds = this._getObjectsIds.bind(this);
 		this.toggleSubscription = this.toggleSubscription.bind(this);
 		this.getSubscriptions = this.getSubscriptions.bind(this);
-		this.getFavorites = this.getFavorites.bind(this);
 	}
 
 	_onCreate() {
@@ -91,33 +90,6 @@ class UsersController extends BaseController {
 			.getSubscriptions(userId)
 			.then(user => subscriptionsResponseModel(user))
 			.then(response => this.success(res, response))
-			.catch(next);
-	}
-
-	toogleFavorites(req, res, next) {
-	}
-
-	getFavorites(req, res, next) {
-		const { userId } = req;
-
-		this
-			.usersManager
-			.getFavorites(userId)
-			.then(favorites => {
-				return new Promise((resolve, reject) => {
-					const result = Promise.all(_.map(favorites, post => {
-						return this
-							.companiesManager
-							.findById(post.author)
-							.then(company => {
-								post.author = company;
-								return post;
-							});
-					}));
-					return result ? resolve(result) : reject(next('INTERNAL_SERVER_ERROR'));
-				});
-			})
-			.then(favorites => this.success(res, favorites))
 			.catch(next);
 	}
 }

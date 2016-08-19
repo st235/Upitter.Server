@@ -38,6 +38,7 @@ module.exports = {
 		like: '/post/like/:postId',
 		watch: '/post/watch/:postId',
 		favorite: '/post/favorite/:postId',
+		obtainFavorites: '/post/favorites',
 		vote: '/post/vote/:postId/:variantIndex'
 	},
 	report: {
@@ -56,8 +57,7 @@ module.exports = {
 	user: {
 		edit: '/user/edit',
 		toggleSubscription: '/user/toggle_subscription/:companyId',
-		getSubscriptions: '/user/subscriptions',
-		getFavorites: '/user/favorites'
+		getSubscriptions: '/user/subscriptions'
 	},
 	file: {
 		verifyFid: '/file/verify_fid'

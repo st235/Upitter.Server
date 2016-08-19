@@ -40,8 +40,8 @@ class AppDatabase extends AppUnit {
 	}
 
 	_onCreate() {
-		mongoose.connect(databaseConfig.devUri, databaseConfig.options, this._onStart);
-		//mongoose.connect(databaseConfig.prodUri, databaseConfig.options, this._onStart);
+		//mongoose.connect(databaseConfig.devUri, databaseConfig.options, this._onStart);
+		mongoose.connect(databaseConfig.prodUri, databaseConfig.options, this._onStart);
 
 		this.categoryModel = categoryModel(mongoose);
 		this.commentModel = commentModel(mongoose);

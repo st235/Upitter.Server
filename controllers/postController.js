@@ -23,6 +23,7 @@ class PostsController extends BaseController {
 		this._savePost = this._savePost.bind(this);
 		this.edit = this.edit.bind(this);
 		this.favorite = this.favorite.bind(this);
+		this.obtainFavorites = this.obtainFavorites.bind(this);
 		this.remove = this.remove.bind(this);
 		this.findById = this.findById.bind(this);
 		this.obtain = this.obtain.bind(this);
@@ -136,6 +137,33 @@ class PostsController extends BaseController {
 			.then(() => this.postsManager.favorite(userId, postId))
 			.then(post => postResponse(userId, post, req.ln))
 			.then(response => this.success(res, response))
+			.catch(next);
+	}
+
+	obtainFavorites(req, res, next) {
+		const { userId } = req;
+		const customId = parseInt(userId, 10);
+		//TODO Подумать, переделать!
+		new Promise((resolve, reject) => resolve(
+				customId > 0
+				? this.usersManager.getFavorites(customId)
+				: this.companiesManager.getFavorites(customId))
+			)
+			.then(favorites => {
+				return new Promise((resolve, reject) => {
+					const result = Promise.all(_.map(favorites, post => {
+						return this
+							.companiesManager
+							.findById(post.author)
+							.then(company => {
+								post.author = company;
+								return post;
+							});
+					}));
+					return result ? resolve(result) : reject(next('INTERNAL_SERVER_ERROR'));
+				});
+			})
+			.then(favorites => this.success(res, favorites))
 			.catch(next);
 	}
 

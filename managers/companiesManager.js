@@ -19,6 +19,7 @@ class CompaniesManager extends AppUnit {
 		this.toggleUserSubscription = this.toggleUserSubscription.bind(this);
 		this.getSubscribers = this.getSubscribers.bind(this);
 		this.favorite = this.favorite.bind(this);
+		this.getFavorites = this.getFavorites.bind(this);
 	}
 
 	findByAlias(alias) {
@@ -130,6 +131,18 @@ class CompaniesManager extends AppUnit {
 				if (findQuery) company.favorites = _.without(company.favorites, postIdString);
 				else company.favorites.push(postIdString);
 				return company.save();
+			});
+	}
+
+	getFavorites(customId) {
+		return this
+			.companyModel
+			.findOne({ customId })
+			.populate('favorites')
+			.exec()
+			.then(company => company.favorites)
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 }
