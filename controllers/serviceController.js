@@ -17,7 +17,7 @@ class GeneralController extends BaseController {
 	_onCreate() {
 		super._onCreate();
 		this.validationUtils = new ValidationUtils;
-		this.versionsClient = RedisService.getClientByName('versions');
+		this.versionsClient = RedisService.getClientByName('authorizations');
 	}
 
 	getVersionInfo(req, res, next) {
