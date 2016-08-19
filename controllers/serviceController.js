@@ -22,7 +22,9 @@ class GeneralController extends BaseController {
 
 	getVersionInfo(req, res, next) {
 		this.versionsClient.get('authorizations').then(version => {
-			this.success(res, JSON.parse(version));
+			let parsedVersion = JSON.parse(version);
+			if (!parsedVersion) parsedVersion = { code: 0, version: 0 };
+			this.success(res, parsedVersion);
 		}).catch(err => next('INTERNAL_SERVER_ERROR'));
 	}
 
