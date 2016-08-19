@@ -93,7 +93,7 @@ class UsersManager extends AppUnit {
 				return a;
 			})
 			.then(user => {
-				if (!user) throw 'INTERNAL_SERVER_ERROR';
+				console.log(user);
 				const postIdString = postId.toString();
 				const findQuery = _.find(user.favorites, favorite => favorite === postIdString);
 				if (findQuery) user.favorites = _.without(user.favorites, postIdString);
