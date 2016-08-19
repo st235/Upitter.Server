@@ -141,8 +141,9 @@ class PostsController extends BaseController {
 	}
 
 	obtainFavorites(req, res, next) {
-		const { userId } = req;
+		const { userId, ln } = req;
 		const customId = parseInt(userId, 10);
+		let resultPosts;
 
 		new Promise((resolve, reject) => resolve(
 				customId > 0
@@ -150,20 +151,14 @@ class PostsController extends BaseController {
 				: this.companiesManager.getFavorites(customId))
 			)
 			.then(favorites => {
-				return new Promise((resolve, reject) => {
-					const result = Promise.all(_.map(favorites, post => {
-						return this
-							.companiesManager
-							.findById(post.author)
-							.then(company => {
-								post.author = company;
-								return post;
-							});
-					}));
-					return result ? resolve(result) : reject(next('INTERNAL_SERVER_ERROR'));
-				});
+				if (!favorites) throw 'INTERNAL_SERVER_ERROR';
+				resultPosts = favorites;
+				return favorites;
 			})
-			.then(favorites => this.success(res, favorites))
+			.then(favorites => _.map(favorites, post => this.companiesManager.findById(post.author)))
+			.then(promises => Promise.all(promises))
+			.then(companies => _.each(companies, (company, i) => resultPosts[i] = postResponse(customId, resultPosts[i], ln, company)))
+			.then(() => this.success(res, resultPosts))
 			.catch(next);
 	}
 

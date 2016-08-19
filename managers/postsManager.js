@@ -126,12 +126,9 @@ class PostsManager extends AppUnit {
 				resultPosts = posts;
 				return posts;
 			})
-			.then(posts => _.map(posts, post => this.companyModel.findById(post.author).then(company => {
-				post.author = company;
-				return post;
-			})))
+			.then(posts => _.map(posts, post => this.companyModel.findById(post.author)))
 			.then(promises => Promise.all(promises))
-			//.then(companies => _.each(companies, (company, i) => resultPosts[i].author = company))
+			.then(companies => _.each(companies, (company, i) => resultPosts[i].author = company))
 			.then(() => {
 				if (!activity || !activity.length) return resultPosts;
 				return _.filter(resultPosts, singlePost => {
