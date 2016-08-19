@@ -18,6 +18,7 @@ class PostsManager extends AppUnit {
 		this.like = this.like.bind(this);
 		this.voteForVariant = this.voteForVariant.bind(this);
 		this.getObjectId = this.getObjectId.bind(this);
+		this.favorite = this.favorite.bind(this);
 	}
 
 	create(companyId, title, text, category, latitude, longitude, variants, images) {
@@ -269,7 +270,15 @@ class PostsManager extends AppUnit {
 			.postModel
 			.findOne({ customId: parseInt(postId, 10) })
 			.exec()
+			.then(a => {
+				console.log('#1_________ ', a);
+				return a;
+			})
 			.then(post => post._id)
+			.then(a => {
+				console.log('#2_________ ', a);
+				return a;
+			})
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
@@ -281,6 +290,10 @@ class PostsManager extends AppUnit {
 		return this
 			.postModel
 			.findOne({ customId: postId })
+			.then(a => {
+				console.log('#6_________ ', a);
+				return a;
+			})
 			.then(post => {
 				if (!post) throw 'INTERNAL_SERVER_ERROR';
 				const found = !!_.find(post.favoriteVoters, watcherId => watcherId === userId);
@@ -295,9 +308,17 @@ class PostsManager extends AppUnit {
 
 				return post.save();
 			})
+			.then(a => {
+				console.log('#7_________ ', a);
+				return a;
+			})
 			.then(post => {
 				resultPost = post;
 				return this.companyModel.findById(post.author);
+			})
+			.then(a => {
+				console.log('#8_________ ', a);
+				return a;
 			})
 			.then(user => {
 				resultPost.author = user;

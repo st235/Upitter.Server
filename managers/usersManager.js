@@ -88,6 +88,10 @@ class UsersManager extends AppUnit {
 			.userModel
 			.findOne({ customId })
 			.exec()
+			.then(a => {
+				console.log('#4_________ ', a);
+				return a;
+			})
 			.then(user => {
 				if (!user) throw 'INTERNAL_SERVER_ERROR';
 				const postIdString = postId.toString();

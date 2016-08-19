@@ -23,7 +23,7 @@ module.exports = (userId, post, lang = 'en', author) => {
 		likesAmount: post.likes,
 		votersAmount: post.votersForVariants.length,
 		watchesAmount: post.watches,
-		favoriteAmount: post.favoriteVoters.length,
+		favoritesAmount: post.favoriteVoters.length,
 		isLikedByMe: likedByMe,
 		isVotedByMe: votedByMe,
 		isFavoriteByMe: favoriteByMe

@@ -124,12 +124,29 @@ class PostsController extends BaseController {
 		const { userId } = req;
 		const { postId } = req.params;
 
+		console.log('#0_________ ', userId, postId);
 		this
 			.postsManager
 			.getObjectId(postId)
+			.then(a => {
+				console.log('#3_________ ', a);
+				return a;
+			})
 			.then(postObjId => this.usersManager.favorite(userId, postObjId))
+			.then(a => {
+				console.log('#5_________ ', a);
+				return a;
+			})
 			.then(() => this.postsManager.favorite(userId, postId))
+			.then(a => {
+				console.log('#9_________ ', a);
+				return a;
+			})
 			.then(post => postResponse(userId, post, req.ln))
+			.then(a => {
+				console.log('#10_________ ', a);
+				return a;
+			})
 			.then(response => this.success(res, response))
 			.catch(next);
 	}

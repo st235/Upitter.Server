@@ -22,7 +22,7 @@ const commentsModel = require('../../../models/commentModel');
 const UsersManager = require('../../../managers/usersManager');
 const BusinessUsersManager = require('../../../managers/companiesManager');
 const LogsManager = require('../../../managers/logsManager');
-const FeedbacksManager = require('../../../managers/feedbacksManager');
+const FeedbacksManager = require('../../../managers/feedbackManager');
 const PostsManager = require('../../../managers/postsManager');
 const CommentsManager = require('../../../managers/commentsManager');
 
