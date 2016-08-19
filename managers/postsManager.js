@@ -49,7 +49,9 @@ class PostsManager extends AppUnit {
 				postResult.author = author;
 				return postResult;
 			})
-			.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR'
+			});
 	}
 
 	edit(companyId, postId, data) {
@@ -172,6 +174,10 @@ class PostsManager extends AppUnit {
 			});
 	}
 
+	//obtainFavorites(userId) {
+	//
+	//}
+
 	like(userId, postId) {
 		let resultPost;
 
@@ -257,13 +263,15 @@ class PostsManager extends AppUnit {
 				resultPost.author = author;
 				return resultPost;
 			})
-			.catch(() => { throw 'INTERNAL_SERVER_ERROR' });
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	}
 
 	getObjectId(postId) {
 		return this
 			.postModel
-			.findOne({ customId: postId })
+			.findOne({ customId: parseInt(postId, 10) })
 			.exec()
 			.then(post => post._id)
 			.catch(() => {
