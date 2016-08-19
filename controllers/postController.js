@@ -143,7 +143,7 @@ class PostsController extends BaseController {
 	obtainFavorites(req, res, next) {
 		const { userId } = req;
 		const customId = parseInt(userId, 10);
-		//TODO Подумать, переделать!
+
 		new Promise((resolve, reject) => resolve(
 				customId > 0
 				? this.usersManager.getFavorites(customId)

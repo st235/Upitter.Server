@@ -1,7 +1,7 @@
 'use strict';
 
 const userResponse = require('../models/response/userResponseModel');
-const CompanyResponseModel = require('../models/response/companyResponseModel');
+const companyResponse = require('../models/response/companyResponseModel');
 
 const BaseController = require('./baseController');
 const SmsService = require('../services/smsService');
@@ -226,7 +226,7 @@ class AuthorizationController extends BaseController {
 								})
 								.then(accessToken => {
 									companyModel.accessToken = accessToken;
-									return CompanyResponseModel(companyModel);
+									return companyResponse(companyModel);
 								})
 								.then((businessUser) => this.success(res, {
 									isAuthorized: true,
@@ -279,7 +279,7 @@ class AuthorizationController extends BaseController {
 									})
 									.then(accessToken => {
 										companyModel.accessToken = accessToken;
-										return CompanyResponseModel(companyModel);
+										return companyResponse(companyModel);
 									})
 									.then((businessUser) => this.success(res, {
 										isAuthorized: true,
@@ -360,7 +360,7 @@ class AuthorizationController extends BaseController {
 				businessUser.accessToken = accessToken;
 				return businessUser;
 			})
-			.then(businessUser => this.success(res, CompanyResponseModel(businessUser)))
+			.then(company => this.success(res, companyResponse(company)))
 			.catch(next);
 	}
 }
