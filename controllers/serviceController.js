@@ -21,7 +21,7 @@ class GeneralController extends BaseController {
 	}
 
 	getVersionInfo(req, res, next) {
-		this.versionsClient.get('currentVersion').then(version => {
+		this.versionsClient.get('authorizations').then(version => {
 			this.success(res, JSON.parse(version));
 		}).catch(err => next('INTERNAL_SERVER_ERROR'));
 	}
@@ -37,7 +37,7 @@ class GeneralController extends BaseController {
 		if (req.userId !== 0) return next('ACCESS_DENIED');
 		const { version, code } = req.body;
 
-		this.versionsClient.set('currentVersion', JSON.stringify({version, code})).then(() => {
+		this.versionsClient.set('authorizations', JSON.stringify({version, code})).then(() => {
 			return this.success(res, true);
 		}).catch(err => next('INTERNAL_SERVER_ERROR'));
 	}
