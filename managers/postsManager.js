@@ -174,10 +174,6 @@ class PostsManager extends AppUnit {
 			});
 	}
 
-	//obtainFavorites(userId) {
-	//
-	//}
-
 	like(userId, postId) {
 		let resultPost;
 
@@ -274,6 +270,39 @@ class PostsManager extends AppUnit {
 			.findOne({ customId: parseInt(postId, 10) })
 			.exec()
 			.then(post => post._id)
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	favorite(userId, postId) {
+		let resultPost;
+
+		return this
+			.postModel
+			.findOne({ customId: postId })
+			.then(post => {
+				if (!post) throw 'INTERNAL_SERVER_ERROR';
+				const found = !!_.find(post.favoriteVoters, watcherId => watcherId === userId);
+
+				if (found) {
+					post.favoriteVoters = _.without(post.favoriteVoters, userId);
+					post.favorites--;
+				} else {
+					post.favoriteVoters.push(userId);
+					post.favorites++;
+				}
+
+				return post.save();
+			})
+			.then(post => {
+				resultPost = post;
+				return this.companyModel.findById(post.author);
+			})
+			.then(user => {
+				resultPost.author = user;
+				return resultPost;
+			})
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});

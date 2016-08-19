@@ -6,6 +6,7 @@ const commentResponse = require('./commentResponseModel');
 
 module.exports = (userId, post, lang = 'en', author) => {
 	const likedByMe = !!_.find(post.likeVoters, voterId => voterId === userId);
+	const favoriteByMe = !!_.find(post.favoriteVoters, voterId => voterId === userId);
 	const votedByMe = !!_.find(post.votersForVariants, voterId => voterId === userId);
 
 	const postResponse = {
@@ -21,20 +22,22 @@ module.exports = (userId, post, lang = 'en', author) => {
 		fromNow: moment(post.createdDate).locale(lang).format('DD.MM.YYYY'),
 		likesAmount: post.likes,
 		votersAmount: post.votersForVariants.length,
+		watchesAmount: post.watches,
+		favoriteAmount: post.favoriteVoters.length,
 		isLikedByMe: likedByMe,
 		isVotedByMe: votedByMe,
-		watchesAmount: post.watches
+		isFavoriteByMe: favoriteByMe
 	};
 
-	if (post.comments && post.comments.comments.length > 0) {
-		postResponse.comments = _.compact(_.map(post.comments.comments, comment => {
-			if (comment.isRemoved === false) return commentResponse(comment);
-		}));
-		postResponse.commentsAmount = postResponse.comments.length;
-	} else {
-		postResponse.commentsAmount = 0;
-		postResponse.comments = [];
-	}
+	//if (post.comments && post.comments.comments.length > 0) {
+	//	postResponse.comments = _.compact(_.map(post.comments.comments, comment => {
+	//		if (comment.isRemoved === false) return commentResponse(comment);
+	//	}));
+	//	postResponse.commentsAmount = postResponse.comments.length;
+	//} else {
+	//	postResponse.commentsAmount = 0;
+	//	postResponse.comments = [];
+	//}
 
 	if (post.variants.length > 0) {
 		postResponse.variants = _.map(post.variants, variant => {
@@ -54,6 +57,7 @@ module.exports = (userId, post, lang = 'en', author) => {
 	}
 
 	if (post.likeVoters.length > 0) postResponse.likeVoters = post.likeVoters;
+	if (post.favoriteVoters.length > 0) postResponse.favoriteVoters = post.favoriteVoters;
 	if (post.logoUrl) postResponse.logoUrl = post.logoUrl;
 	if (post.updatedDate) postResponse.updatedDate = post.updatedDate;
 	if (post.images && post.images.length) postResponse.images = _.map(post.images, image => {

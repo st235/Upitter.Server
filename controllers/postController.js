@@ -7,7 +7,6 @@ const fileServerUtils = require('../utils/fileServerUtils');
 
 const postResponse = require('../models/response/postResponseModel');
 const companyResponse = require('../models/response/companyResponseModel');
-const userResponse = require('../models/response/userResponseModel');
 
 class PostsController extends BaseController {
 	constructor(postsManager, usersManager) {
@@ -122,15 +121,16 @@ class PostsController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const { postId } = req.params;
 		const { userId } = req;
+		const { postId } = req.params;
 
 		this
 			.postsManager
 			.getObjectId(postId)
 			.then(postObjId => this.usersManager.favorite(userId, postObjId))
-			//.then(user => this.success(res, userResponse(user)))
-			.then(user => this.success(res, user))
+			.then(() => this.postsManager.favorite(userId, postId))
+			.then(post => postResponse(userId, post, req.ln))
+			.then(response => this.success(res, response))
 			.catch(next);
 	}
 
@@ -247,9 +247,10 @@ class PostsController extends BaseController {
 		const { userId } = req;
 		const { postId } = req.params;
 
-		this.postsManager
+		this
+			.postsManager
 			.watch(userId, postId)
-			.then(post => postResponse(req.userId, post, req.ln))
+			.then(post => postResponse(userId, post, req.ln))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}

@@ -59,6 +59,14 @@ module.exports = mongoose => {
 			type: String,
 			ref: 'Users'
 		}],
+		favorites: {
+			type: Number,
+			default: 0
+		},
+		favoriteVoters: [{
+			type: String,
+			ref: 'Users'
+		}],
 		variants: [{
 			value: {
 				type: String

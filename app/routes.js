@@ -173,6 +173,7 @@ class AppRoutes extends AppUnit {
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
 		app.post(paths.toggleSubscription, this.checkAuthorization, controller.toggleSubscription);
 		app.post(paths.getSubscriptions, this.checkAuthorization, controller.getSubscriptions);
+		app.get(paths.getFavorites, this.checkAuthorization, controller.getFavorites);
 	}
 
 	registerFooter(app) {

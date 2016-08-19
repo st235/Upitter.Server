@@ -56,7 +56,8 @@ module.exports = {
 	user: {
 		edit: '/user/edit',
 		toggleSubscription: '/user/toggle_subscription/:companyId',
-		getSubscriptions: '/user/subscriptions'
+		getSubscriptions: '/user/subscriptions',
+		getFavorites: '/user/favorites'
 	},
 	file: {
 		verifyFid: '/file/verify_fid'

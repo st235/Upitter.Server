@@ -17,6 +17,7 @@ class UsersManager extends AppUnit {
 		this.toggleCompanySubscription = this.toggleCompanySubscription.bind(this);
 		this.getSubscriptions = this.getSubscriptions.bind(this);
 		this.findById = this.findById.bind(this);
+		this.getFavorites = this.getFavorites.bind(this);
 	}
 
 	_formSocialData(type, data) {
@@ -144,6 +145,18 @@ class UsersManager extends AppUnit {
 			.userModel
 			.findOne({ customId: userId })
 			.exec()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	getFavorites(userId) {
+		return this
+			.userModel
+			.findOne({ customId: userId })
+			.populate('favorites')
+			.exec()
+			.then(user => user.favorites)
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
