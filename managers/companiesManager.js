@@ -18,6 +18,7 @@ class CompaniesManager extends AppUnit {
 		this.getObjectId = this.getObjectId.bind(this);
 		this.toggleUserSubscription = this.toggleUserSubscription.bind(this);
 		this.getSubscribers = this.getSubscribers.bind(this);
+		this.favorite = this.favorite.bind(this);
 	}
 
 	findByAlias(alias) {
@@ -39,8 +40,7 @@ class CompaniesManager extends AppUnit {
 		const businessUser = new this.companyModel(data);
 		return businessUser
 			.save()
-			.catch((e) => {
-				console.log(e);
+			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
@@ -116,6 +116,20 @@ class CompaniesManager extends AppUnit {
 			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	favorite(customId, postId) {
+		return this
+			.companyModel
+			.findOne({ customId })
+			.exec()
+			.then(company => {
+				const postIdString = postId.toString();
+				const findQuery = _.find(company.favorites, favorite => favorite === postIdString);
+				if (findQuery) company.favorites = _.without(company.favorites, postIdString);
+				else company.favorites.push(postIdString);
+				return company.save();
 			});
 	}
 }

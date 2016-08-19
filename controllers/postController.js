@@ -9,8 +9,12 @@ const postResponse = require('../models/response/postResponseModel');
 const companyResponse = require('../models/response/companyResponseModel');
 
 class PostsController extends BaseController {
-	constructor(postsManager, usersManager) {
-		super({ postsManager, usersManager });
+	constructor(postsManager, usersManager, companiesManager) {
+		super({
+			postsManager,
+			usersManager,
+			companiesManager
+		});
 	}
 
 	_onBind() {
@@ -123,30 +127,14 @@ class PostsController extends BaseController {
 
 		const { userId } = req;
 		const { postId } = req.params;
+		const customId = parseInt(userId, 10);
 
-		console.log('#0_________ ', userId, postId);
 		this
 			.postsManager
 			.getObjectId(postId)
-			.then(a => {
-				console.log('#3_________ ');
-				return a;
-			})
-			.then(postObjId => this.usersManager.favorite(userId, postObjId))
-			.then(a => {
-				console.log('#5_________ ');
-				return a;
-			})
+			.then(postObjId => customId > 0 ? this.usersManager.favorite(customId, postObjId) : this.companiesManager.favorite(customId, postObjId))
 			.then(() => this.postsManager.favorite(userId, postId))
-			.then(a => {
-				console.log('#9_________ ');
-				return a;
-			})
 			.then(post => postResponse(userId, post, req.ln))
-			.then(a => {
-				console.log('#10_________ ');
-				return a;
-			})
 			.then(response => this.success(res, response))
 			.catch(next);
 	}

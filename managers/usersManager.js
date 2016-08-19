@@ -86,23 +86,15 @@ class UsersManager extends AppUnit {
 	favorite(customId, postId) {
 		return this
 			.userModel
-			.findOne({ customId: parseInt(customId, 10) })
+			.findOne({ customId })
 			.exec()
-			.then(a => {
-				console.log('#4_________ ');
-				return a;
-			})
 			.then(user => {
-				console.log(user);
+				if (!user) throw 'INTERNAL_SERVER_ERROR';
 				const postIdString = postId.toString();
 				const findQuery = _.find(user.favorites, favorite => favorite === postIdString);
 				if (findQuery) user.favorites = _.without(user.favorites, postIdString);
 				else user.favorites.push(postIdString);
 				return user.save();
-			})
-			.catch((e) => {
-				console.log(e);
-				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 

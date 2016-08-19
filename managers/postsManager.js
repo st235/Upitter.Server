@@ -6,7 +6,10 @@ const AppUnit = require('../app/unit');
 
 class PostsManager extends AppUnit {
 	constructor(postModel, companyModel) {
-		super({ postModel, companyModel });
+		super({
+			postModel,
+			companyModel
+		});
 	}
 
 	_onBind() {
@@ -270,15 +273,7 @@ class PostsManager extends AppUnit {
 			.postModel
 			.findOne({ customId: parseInt(postId, 10) })
 			.exec()
-			.then(a => {
-				console.log('#1_________ ');
-				return a;
-			})
 			.then(post => post._id)
-			.then(a => {
-				console.log('#2_________ ');
-				return a;
-			})
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
@@ -290,10 +285,6 @@ class PostsManager extends AppUnit {
 		return this
 			.postModel
 			.findOne({ customId: postId })
-			.then(a => {
-				console.log('#6_________ ');
-				return a;
-			})
 			.then(post => {
 				if (!post) throw 'INTERNAL_SERVER_ERROR';
 				const found = !!_.find(post.favoriteVoters, watcherId => watcherId === userId);
@@ -308,24 +299,15 @@ class PostsManager extends AppUnit {
 
 				return post.save();
 			})
-			.then(a => {
-				console.log('#7_________ ');
-				return a;
-			})
 			.then(post => {
 				resultPost = post;
 				return this.companyModel.findById(post.author);
-			})
-			.then(a => {
-				console.log('#8_________ ');
-				return a;
 			})
 			.then(user => {
 				resultPost.author = user;
 				return resultPost;
 			})
-			.catch((e) => {
-				console.log(e);
+			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}

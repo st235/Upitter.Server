@@ -83,7 +83,11 @@ module.exports = mongoose => {
 		}],
 		contactPhones: {
 			type: [String]
-		}
+		},
+		favorites: [{
+			type: String,
+			ref: 'Posts'
+		}]
 	});
 
 	companySchema.pre('save', function (next) {

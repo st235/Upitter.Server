@@ -10,7 +10,10 @@ const subscriptionsResponseModel = require('../models/response/subscriptionsResp
 
 class UsersController extends BaseController {
 	constructor(usersManager, companiesManager) {
-		super({ usersManager, companiesManager });
+		super({
+			usersManager,
+			companiesManager
+		});
 	}
 
 	_onBind() {
