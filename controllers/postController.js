@@ -142,6 +142,7 @@ class PostsController extends BaseController {
 
 	obtainFavorites(req, res, next) {
 		const { userId, ln } = req;
+		const { limit } = req.query;
 		const customId = parseInt(userId, 10);
 		let resultPosts;
 
@@ -158,7 +159,8 @@ class PostsController extends BaseController {
 			.then(favorites => _.map(favorites, post => this.companiesManager.findById(post.author)))
 			.then(promises => Promise.all(promises))
 			.then(companies => _.each(companies, (company, i) => resultPosts[i] = postResponse(customId, resultPosts[i], ln, company)))
-			.then(() => this.success(res, resultPosts))
+			.then(() => resultPosts.splice(0, limit))
+			.then(posts => this.success(res, posts))
 			.catch(next);
 	}
 

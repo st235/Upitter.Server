@@ -35,23 +35,12 @@ class CompanyController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const companyInfo = _.pick(req.body,
-			'alias',
-			'description',
-			'logoUrl',
-			'site',
-			'contactPhones',
-			'activity',
-			'coordinates',
-			'socialLinks',
-			'name'
-		);
-
-		const companyId = req.userId;
+		const { userId } = req;
+		const { alias, description, logoUrl, site, contactPhones, activity, coordinates, socialLinks, name } = req.body;
 
 		this
 			.companiesManager
-			.edit(companyId, companyInfo)
+			.edit(userId, { alias, description, logoUrl, site, contactPhones, activity, coordinates, socialLinks, name })
 			.then(businessUser => this.success(res, companyResponseModel(businessUser)))
 			.catch(next);
 	}
