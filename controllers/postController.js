@@ -24,6 +24,7 @@ class PostsController extends BaseController {
 		this.edit = this.edit.bind(this);
 		this.favorite = this.favorite.bind(this);
 		this.obtainFavorites = this.obtainFavorites.bind(this);
+		this.obtainOldFavorites = this.obtainOldFavorites.bind(this);
 		this.remove = this.remove.bind(this);
 		this.findById = this.findById.bind(this);
 		this.obtain = this.obtain.bind(this);
@@ -142,7 +143,7 @@ class PostsController extends BaseController {
 
 	obtainFavorites(req, res, next) {
 		const { userId, ln } = req;
-		const { limit } = req.query;
+		const { limit = 20 } = req.query;
 		const customId = parseInt(userId, 10);
 		let resultPosts;
 
@@ -160,6 +161,37 @@ class PostsController extends BaseController {
 			.then(promises => Promise.all(promises))
 			.then(companies => _.each(companies, (company, i) => resultPosts[i] = postResponse(customId, resultPosts[i], ln, company)))
 			.then(() => resultPosts.splice(0, limit))
+			.then(posts => this.success(res, { posts }))
+			.catch(next);
+	}
+
+	obtainOldFavorites(req, res, next) {
+		const { userId, ln } = req;
+		const { postId, limit = 20 } = req.query;
+		const customId = parseInt(userId, 10);
+		let resultPosts;
+		let index;
+
+		new Promise((resolve, reject) => resolve(
+			customId > 0
+				? this.usersManager.getFavorites(customId, limit)
+				: this.companiesManager.getFavorites(customId, limit))
+		)
+			.then(favorites => {
+				if (!favorites) throw 'INTERNAL_SERVER_ERROR';
+				resultPosts = favorites;
+				return favorites;
+			})
+			.then(favorites => _.map(favorites, post => this.companiesManager.findById(post.author)))
+			.then(promises => Promise.all(promises))
+			.then(companies => _.each(companies, (company, i) => resultPosts[i] = postResponse(customId, resultPosts[i], ln, company)))
+			.then(() => {
+				_.each(resultPosts, (post, i) => {
+					if (post.customId = parseInt(postId, 10)) index = i;
+				});
+			})
+			.then(promises => Promise.all(promises))
+			.then(() => resultPosts.splice(index - limit, index))
 			.then(posts => this.success(res, posts))
 			.catch(next);
 	}

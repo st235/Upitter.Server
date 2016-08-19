@@ -39,6 +39,7 @@ module.exports = {
 		watch: '/post/watch/:postId',
 		favorite: '/post/favorite/:postId',
 		obtainFavorites: '/post/favorites',
+		obtainOldFavorites: '/post/favoritesOld',
 		vote: '/post/vote/:postId/:variantIndex'
 	},
 	report: {
