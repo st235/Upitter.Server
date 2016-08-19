@@ -86,7 +86,7 @@ class UsersManager extends AppUnit {
 	favorite(customId, postId) {
 		return this
 			.userModel
-			.findOne({ customId })
+			.findOne({ customId: parseInt(customId, 10) })
 			.exec()
 			.then(a => {
 				console.log('#4_________ ');
