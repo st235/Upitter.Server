@@ -89,7 +89,7 @@ class UsersManager extends AppUnit {
 			.findOne({ customId })
 			.exec()
 			.then(a => {
-				console.log('#4_________ ', a);
+				console.log('#4_________ ');
 				return a;
 			})
 			.then(user => {
@@ -99,6 +99,10 @@ class UsersManager extends AppUnit {
 				if (findQuery) user.favorites = _.without(user.favorites, postIdString);
 				else user.favorites.push(postIdString);
 				return user.save();
+			})
+			.catch((e) => {
+				console.log(e);
+				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 

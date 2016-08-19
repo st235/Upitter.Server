@@ -271,12 +271,12 @@ class PostsManager extends AppUnit {
 			.findOne({ customId: parseInt(postId, 10) })
 			.exec()
 			.then(a => {
-				console.log('#1_________ ', a);
+				console.log('#1_________ ');
 				return a;
 			})
 			.then(post => post._id)
 			.then(a => {
-				console.log('#2_________ ', a);
+				console.log('#2_________ ');
 				return a;
 			})
 			.catch(() => {
@@ -291,7 +291,7 @@ class PostsManager extends AppUnit {
 			.postModel
 			.findOne({ customId: postId })
 			.then(a => {
-				console.log('#6_________ ', a);
+				console.log('#6_________ ');
 				return a;
 			})
 			.then(post => {
@@ -309,7 +309,7 @@ class PostsManager extends AppUnit {
 				return post.save();
 			})
 			.then(a => {
-				console.log('#7_________ ', a);
+				console.log('#7_________ ');
 				return a;
 			})
 			.then(post => {
@@ -317,14 +317,15 @@ class PostsManager extends AppUnit {
 				return this.companyModel.findById(post.author);
 			})
 			.then(a => {
-				console.log('#8_________ ', a);
+				console.log('#8_________ ');
 				return a;
 			})
 			.then(user => {
 				resultPost.author = user;
 				return resultPost;
 			})
-			.catch(() => {
+			.catch((e) => {
+				console.log(e);
 				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
