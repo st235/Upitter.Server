@@ -176,7 +176,7 @@ class PostsController extends BaseController {
 			customId > 0
 				? this.usersManager.getFavorites(customId, limit)
 				: this.companiesManager.getFavorites(customId, limit))
-		)
+			)
 			.then(favorites => {
 				if (!favorites) throw 'INTERNAL_SERVER_ERROR';
 				resultPosts = favorites;
@@ -185,14 +185,10 @@ class PostsController extends BaseController {
 			.then(favorites => _.map(favorites, post => this.companiesManager.findById(post.author)))
 			.then(promises => Promise.all(promises))
 			.then(companies => _.each(companies, (company, i) => resultPosts[i] = postResponse(customId, resultPosts[i], ln, company)))
-			.then(() => {
-				_.each(resultPosts, (post, i) => {
-					if (post.customId = parseInt(postId, 10)) index = i;
-				});
-			})
+			.then(() => _.each(resultPosts, (post, i) => (post.customId === parseInt(postId, 10)) ? index = i : index))
 			.then(promises => Promise.all(promises))
-			.then(() => resultPosts.splice(index - limit, index))
-			.then(posts => this.success(res, posts))
+			.then(() => resultPosts.splice(index + 1, limit))
+			.then(posts => this.success(res, { posts }))
 			.catch(next);
 	}
 
