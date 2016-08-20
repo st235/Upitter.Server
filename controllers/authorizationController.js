@@ -360,7 +360,7 @@ class AuthorizationController extends BaseController {
 				businessUser.accessToken = accessToken;
 				return businessUser;
 			})
-			.then(company => this.success(res, companyResponse(company)))
+			.then(businessUser => this.success(res, companyResponse(businessUser)))
 			.catch(next);
 	}
 }
