@@ -311,7 +311,7 @@ class AuthorizationController extends BaseController {
 			.add('temporaryToken').should.exist().and.have.type('String')
 			.add('name').should.exist().and.have.type('String').and.be.in.rangeOf(2, 25)
 			//.add('site').should.have.type('String')
-			.add('category').should.exist()
+			.add('activity').should.exist()
 			.add('coordinates').should.exist()
 			.validate();
 
@@ -319,7 +319,7 @@ class AuthorizationController extends BaseController {
 
 		const { number, countryCode } = req.params;
 		const phone = `${countryCode}${number}`;
-		const { temporaryToken, name, site, coordinates, category, contactPhones, logoUrl, description } = req.body;
+		const { temporaryToken, name, site, coordinates, activity, contactPhones, logoUrl, description } = req.body;
 
 		authUtils.getOrgTempModel(this.authorizationClient, phone)
 			.then(model => {
@@ -335,7 +335,7 @@ class AuthorizationController extends BaseController {
 							return this.companiesManager.create({
 								//TODO: проверка категории на существование в нашем списке
 								name,
-								activity: category,
+								activity,
 								description,
 								site,
 								logoUrl,
