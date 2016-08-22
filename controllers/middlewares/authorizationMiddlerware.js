@@ -29,11 +29,11 @@ class AuthorizationMiddleware extends AppUnit {
 
 	getUser(req, res, next) {
 		const accessToken = req.query.accessToken || req.body.accessToken;
+
 		this
 			.authorizationClient
 			.get(accessToken)
 			.then(userId => {
-				if (!userId) return next('UNAUTHORIZED');
 				req.userId = userId;
 				return next();
 			})

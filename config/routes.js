@@ -40,7 +40,7 @@ module.exports = {
 		favorite: '/post/favorite/:postId',
 		obtainFavorites: '/post/favorites',
 		obtainOldFavorites: '/post/favoritesOld',
-		obtainByCompany: '/post/obtainByCompany',
+		obtainByCompany: '/post/obtainByCompany/:type',
 		vote: '/post/vote/:postId/:variantIndex'
 	},
 	report: {

@@ -288,7 +288,8 @@ class PostsController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const { companyId, limit = 20, postId, type } = req.query;
+		const { type } = req.params;
+		const { companyId, limit = 20, postId } = req.query;
 		let count;
 
 		this

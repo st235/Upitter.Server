@@ -47,7 +47,7 @@ class AppRoutes extends AppUnit {
 
 	_onCreate() {
 		this.checkAuthorization = new AuthorizationMiddleware().authorize;
-		this.getUser = new AuthorizationMiddleware().authorize;
+		this.getUser = new AuthorizationMiddleware().getUser;
 		this.obtainLanguage = new LanguageMiddleware().obtainLanguage;
 		this.errorHandler = new ErrorMiddleware();
 		this.checkIfDebug = new DebugMiddleware().checkIfDebug;
