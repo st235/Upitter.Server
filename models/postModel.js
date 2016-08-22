@@ -226,5 +226,31 @@ module.exports = mongoose => {
 			.exec();
 	};
 
+	postSchema.statics.getPostsByCompany = function (companyId, limit, postId, type) {
+		const query = { author: companyId };
+		if (postId) {
+			switch (type) {
+			case 'old':
+				query.customId = { $lt: postId };
+				break;
+			case 'new':
+				query.customId = { $gt: postId };
+				break;
+			default:
+				throw 'INTERNAL_SERVER_ERROR';
+				break;
+			}
+		}
+
+		return this
+			.find(query)
+			.sort({ createdDate: -1 })
+			.limit(parseInt(limit, 10))
+			.exec()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	};
+
 	return mongoose.model('Posts', postSchema);
 };

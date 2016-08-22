@@ -15,10 +15,14 @@ class PostsManager extends AppUnit {
 	_onBind() {
 		this.create = this.create.bind(this);
 		this.edit = this.edit.bind(this);
-		this.remove = this.remove.bind(this);
 		this.findById = this.findById.bind(this);
+		this.remove = this.remove.bind(this);
 		this.obtain = this.obtain.bind(this);
+		this.obtainNew = this.obtainNew.bind(this);
+		this.obtainOld = this.obtainOld.bind(this);
+		this.obtainByCompany = this.obtainByCompany.bind(this);
 		this.like = this.like.bind(this);
+		this.watch = this.watch.bind(this);
 		this.voteForVariant = this.voteForVariant.bind(this);
 		this.getObjectId = this.getObjectId.bind(this);
 		this.favorite = this.favorite.bind(this);
@@ -179,6 +183,34 @@ class PostsManager extends AppUnit {
 				return _.filter(resultPosts, singlePost => {
 					return _.intersection(activity, singlePost.author.activity).length;
 				});
+			});
+	}
+
+	obtainByCompany(companyId, limit, postId, type) {
+		let resultPosts;
+
+		return this
+			.postModel
+			.getPostsByCompany(companyId, limit, postId, type)
+			.then(posts => {
+				if (!posts) throw 'INTERNAL_SERVER_ERROR';
+				resultPosts = posts;
+				return this.companyModel.findById(parseInt(companyId, 10));
+			})
+			.then(author => _.map(resultPosts, post => {
+				post.author = author;
+				return post;
+			}))
+			.then(promises => Promise.all(promises))
+			.then(posts => {
+				resultPosts = posts;
+				return this.postModel.count();
+			})
+			.then(count => {
+				return {
+					posts: resultPosts,
+					count
+				};
 			});
 	}
 

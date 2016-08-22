@@ -27,10 +27,6 @@ class CompaniesManager extends AppUnit {
 			.companyModel
 			.findByAlias(alias)
 			.then(company => {
-				if (!company) return this.companyModel.findById(alias);
-				return company;
-			})
-			.then(company => {
 				if (!company) throw 'INTERNAL_SERVER_ERROR';
 				return company;
 			});
