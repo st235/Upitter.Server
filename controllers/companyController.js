@@ -46,6 +46,12 @@ class CompanyController extends BaseController {
 	}
 
 	findByAlias(req, res, next) {
+		const invalid = this.validate(req)
+			.add('alias').should.have.type('String').and.be.in.rangeOf(3, 63)
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
 		const { alias } = req.params;
 
 		this

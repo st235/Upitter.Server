@@ -41,6 +41,10 @@ class CompaniesManager extends AppUnit {
 		const businessUser = new this.companyModel(data);
 		return businessUser
 			.save()
+			.then(company => {
+				company.alias = `id${-1 * company.customId}`;
+				return company.save();
+			})
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
