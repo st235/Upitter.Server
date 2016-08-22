@@ -47,6 +47,7 @@ class AppRoutes extends AppUnit {
 
 	_onCreate() {
 		this.checkAuthorization = new AuthorizationMiddleware().authorize;
+		this.getUser = new AuthorizationMiddleware().authorize;
 		this.obtainLanguage = new LanguageMiddleware().obtainLanguage;
 		this.errorHandler = new ErrorMiddleware();
 		this.checkIfDebug = new DebugMiddleware().checkIfDebug;
@@ -146,7 +147,7 @@ class AppRoutes extends AppUnit {
 		app.get(paths.favorite, this.checkAuthorization, controller.favorite);
 		app.get(paths.obtainFavorites, this.checkAuthorization, controller.obtainFavorites);
 		app.get(paths.obtainOldFavorites, this.checkAuthorization, controller.obtainOldFavorites);
-		app.get(paths.obtainByCompany, controller.obtainByCompany);
+		app.get(paths.obtainByCompany, this.getUser, controller.obtainByCompany);
 		app.post(paths.create, this.checkAuthorization, controller.create);
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
 	}

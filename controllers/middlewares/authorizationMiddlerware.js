@@ -6,6 +6,7 @@ const RedisService = require('../../services/redisService');
 class AuthorizationMiddleware extends AppUnit {
 	_onBind() {
 		this.authorize = this.authorize.bind(this);
+		this.getUser = this.getUser.bind(this);
 	}
 
 	_onCreate() {
@@ -15,6 +16,19 @@ class AuthorizationMiddleware extends AppUnit {
 	authorize(req, res, next) {
 		const accessToken = req.query.accessToken || req.body.accessToken;
 		if (!accessToken) return next('UNAUTHORIZED');
+		this
+			.authorizationClient
+			.get(accessToken)
+			.then(userId => {
+				if (!userId) return next('UNAUTHORIZED');
+				req.userId = userId;
+				return next();
+			})
+			.catch(() => next('INTERNAL_SERVER_ERROR'));
+	}
+
+	getUser(req, res, next) {
+		const accessToken = req.query.accessToken || req.body.accessToken;
 		this
 			.authorizationClient
 			.get(accessToken)
