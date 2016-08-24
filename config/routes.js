@@ -5,6 +5,7 @@ module.exports = {
 		googleVerify: '/authorization/google/verify',
 		facebookVerify: '/authorization/facebook/verify',
 		twitterVerify: '/authorization/twitter/verify',
+		vkVerify: '/authorization/vk/verify',
 
 		authorizeByPhone: '/authorization/phone/set/:number/:countryCode',
 		verifyCode: '/authorization/phone/verify/:number/:countryCode',

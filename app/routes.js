@@ -97,6 +97,7 @@ class AppRoutes extends AppUnit {
 		app.post(paths.googleVerify, controller.googleVerify);
 		app.post(paths.facebookVerify, controller.facebookVerify);
 		app.post(paths.twitterVerify, controller.twitterVerify);
+		app.post(paths.vkVerify, controller.vkVerify);
 		app.post(paths.authorizeByPhone, controller.authorizeByPhone);
 		app.post(paths.verifyCode, controller.verifyCode);
 		//DEBUG ROOT

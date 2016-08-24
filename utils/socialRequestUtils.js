@@ -28,6 +28,10 @@ class SocialRequestUtils {
 	static getFacebook(url, query) {
 		return requestService.get(url, query);
 	}
+
+	static getVk(url, query) {
+		return requestService.get(url, query);
+	}
 }
 
 module.exports = SocialRequestUtils;
