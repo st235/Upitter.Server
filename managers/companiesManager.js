@@ -38,7 +38,7 @@ class CompaniesManager extends AppUnit {
 		return businessUser
 			.save()
 			.then(company => {
-				company.alias = `id${-1 * company.customId}`;
+				company.alias = `id${ Math.abs(company.customId) }`;
 				return company.save();
 			})
 			.catch(() => {
