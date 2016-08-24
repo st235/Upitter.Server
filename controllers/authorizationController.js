@@ -145,13 +145,18 @@ class AuthorizationController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const { accessToken, user_id } = req.body;
+		let currentUser = null;
 		let userModel = null;
 
 		socialRequestUtils
 			.getVk(TokenInfo.vk, { access_token: accessToken })
-			.then(response => {
-				Object.assign(response, { user_id });
-				return this.usersManager.checkSocialExistence('vk', response);
+			.then(user => {
+				currentUser = Object.assign(user, { user_id });
+				return socialRequestUtils.getVk(TokenInfo.vkLogo, { user_ids: user_id, fields: 'photo_200' });
+			})
+			.then(user => {
+				Object.assign(currentUser, { picture: user.photo_200 });
+				return this.usersManager.checkSocialExistence('vk', currentUser);
 			})
 			.then(user => {
 				userModel = user;
