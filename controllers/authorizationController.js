@@ -25,6 +25,7 @@ class AuthorizationController extends BaseController {
 		this.refreshToken = this.refreshToken.bind(this);
 		this.googleVerify = this.googleVerify.bind(this);
 		this.facebookVerify = this.facebookVerify.bind(this);
+		this.vkVerify = this.vkVerify.bind(this);
 		this.twitterVerify = this.twitterVerify.bind(this);
 
 		this.authorizeByPhone = this.authorizeByPhone.bind(this);
@@ -122,6 +123,41 @@ class AuthorizationController extends BaseController {
 		socialRequestUtils
 			.getFacebook(TokenInfo.facebook, { access_token: accessToken })
 			.then(response => this.usersManager.checkSocialExistence('facebook', response))
+			.then(user => {
+				userModel = user;
+				return userModel;
+			})
+			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
+			.then(token => {
+				userModel.token = token;
+				return userModel;
+			})
+			.then(userResponse)
+			.then(response => this.success(res, response))
+			.catch(next);
+	}
+
+	vkVerify(req, res, next) {
+		const invalid = this.validate(req)
+			.add('accessToken').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
+		const { accessToken, user_id } = req.body;
+		let currentUser = null;
+		let userModel = null;
+
+		socialRequestUtils
+			.getVk(TokenInfo.vk, { access_token: accessToken })
+			.then(user => {
+				currentUser = Object.assign(user, { user_id });
+				return socialRequestUtils.getVk(TokenInfo.vkLogo, { user_ids: user_id, fields: 'photo_200' });
+			})
+			.then(user => {
+				Object.assign(currentUser, { picture: user.photo_200 });
+				return this.usersManager.checkSocialExistence('vk', currentUser);
+			})
 			.then(user => {
 				userModel = user;
 				return userModel;

@@ -30,13 +30,13 @@ class RequestService {
 			method: 'GET'
 		}, (error, response, responseBody) => {
 			if (error || response.statusCode !== 200) return reject('REQUEST_SERVICE_ERROR');
-			
+
 			try {
 				responseBody = JSON.parse(responseBody);
 			} catch(e) {
 				return reject('REQUEST_SERVICE_ERROR');
 			}
-			
+
 			return resolve(responseBody);
 		}));
 	}

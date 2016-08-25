@@ -23,13 +23,18 @@ class PostsController extends BaseController {
 		this._savePost = this._savePost.bind(this);
 		this.edit = this.edit.bind(this);
 		this.favorite = this.favorite.bind(this);
-		this.obtainFavorites = this.obtainFavorites.bind(this);
-		this.obtainOldFavorites = this.obtainOldFavorites.bind(this);
 		this.remove = this.remove.bind(this);
 		this.findById = this.findById.bind(this);
+
 		this.obtain = this.obtain.bind(this);
 		this.obtainNew = this.obtainNew.bind(this);
 		this.obtainOld = this.obtainOld.bind(this);
+
+		this.obtainByCompany = this.obtainByCompany.bind(this);
+
+		this.obtainFavorites = this.obtainFavorites.bind(this);
+		this.obtainOldFavorites = this.obtainOldFavorites.bind(this);
+
 		this.like = this.like.bind(this);
 		this.voteForVariant = this.voteForVariant.bind(this);
 		this.watch = this.watch.bind(this);
@@ -235,7 +240,7 @@ class PostsController extends BaseController {
 		}
 
 		const { latitude, longitude, radius = 0, limit = 20, category, activity } = req.query;
-
+		// category = скидки/распродажа/все дерьмо (с), activity = компания
 		this
 			.postsManager
 			.obtain(latitude, longitude, radius, limit, category, activity)
@@ -281,6 +286,28 @@ class PostsController extends BaseController {
 			.obtainOld(postId, latitude, longitude, radius, category, limit, activity)
 			.then(posts => _.map(posts, post => postResponse(req.userId, post, req.ln)))
 			.then(response => this.success(res, { posts: response }))
+			.catch(next);
+	}
+
+	obtainByCompany(req, res, next) {
+		const invalid = this.validate(req)
+			.add('companyId').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
+		const { type } = req.params;
+		const { companyId, limit = 20, postId } = req.query;
+		let count;
+
+		this
+			.postsManager
+			.obtainByCompany(companyId, limit, postId, type)
+			.then(result => {
+				count = result.count;
+				return _.map(result.posts, post => postResponse(req.userId, post, req.ln));
+			})
+			.then(response => this.success(res, { count, posts: response }))
 			.catch(next);
 	}
 

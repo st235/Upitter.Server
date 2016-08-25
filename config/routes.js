@@ -5,6 +5,7 @@ module.exports = {
 		googleVerify: '/authorization/google/verify',
 		facebookVerify: '/authorization/facebook/verify',
 		twitterVerify: '/authorization/twitter/verify',
+		vkVerify: '/authorization/vk/verify',
 
 		authorizeByPhone: '/authorization/phone/set/:number/:countryCode',
 		verifyCode: '/authorization/phone/verify/:number/:countryCode',
@@ -20,7 +21,7 @@ module.exports = {
 	comment: {
 		addComment: '/comment/create',
 		editComment: '/comment/edit',
-		removeComment: '/comment/remov'
+		removeComment: '/comment/remove'
 	},
 	company: {
 		edit: '/company/edit',
@@ -40,6 +41,7 @@ module.exports = {
 		favorite: '/post/favorite/:postId',
 		obtainFavorites: '/post/favorites',
 		obtainOldFavorites: '/post/favoritesOld',
+		obtainByCompany: '/post/obtainByCompany/:type',
 		vote: '/post/vote/:postId/:variantIndex'
 	},
 	report: {

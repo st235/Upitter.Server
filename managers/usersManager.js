@@ -39,6 +39,16 @@ class UsersManager extends AppUnit {
 			result.nickname = data.name;
 			result.socialId = `twitter_${data.id}`;
 			break;
+		case 'vk':
+			result.nickname = data.first_name;
+			result.socialId = `vk_${data.user_id}`;
+			result.sex = data.sex;
+			result.name = data.first_name;
+			result.surname = data.last_name;
+			result.picture = data.picture;
+			break;
+		default:
+			throw 'INTERNAL_SERVER_ERROR';
 		}
 
 		return result;

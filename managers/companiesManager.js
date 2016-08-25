@@ -27,10 +27,6 @@ class CompaniesManager extends AppUnit {
 			.companyModel
 			.findByAlias(alias)
 			.then(company => {
-				if (!company) return this.companyModel.findById(alias);
-				return company;
-			})
-			.then(company => {
 				if (!company) throw 'INTERNAL_SERVER_ERROR';
 				return company;
 			});
@@ -41,6 +37,10 @@ class CompaniesManager extends AppUnit {
 		const businessUser = new this.companyModel(data);
 		return businessUser
 			.save()
+			.then(company => {
+				company.alias = `id${ Math.abs(company.customId) }`;
+				return company.save();
+			})
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});

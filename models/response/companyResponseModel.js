@@ -5,6 +5,7 @@ const _ = require('underscore');
 module.exports = company => {
 	const companyResponse = {
 		customId: company.customId,
+		alias: company.alias,
 		activity: company.activity,
 		name: company.name,
 		isVerify: company.isVerify,
@@ -19,7 +20,6 @@ module.exports = company => {
 	};
 
 	if (company.logoUrl) companyResponse.logoUrl = company.logoUrl;
-	if (company.alias) companyResponse.alias = company.alias;
 	if (company.description) companyResponse.description = company.description;
 	if (company.site) companyResponse.site = company.site;
 	if (company.contactPhones) companyResponse.contactPhones = company.contactPhones;
