@@ -90,17 +90,13 @@ class PostsManager extends AppUnit {
 			.findOne({ customId: postId })
 			.populate('comments')
 			.then(post => {
-				console.log(post);
 				let postResponse = null;
 				if (!post) return postResponse;
 				currentPost = post;
 				const authorId = parseInt(post.author, 10);
-				console.log(authorId);
 				return this.companyModel.findOne({ customId: authorId });
 			})
 			.then(author => {
-				console.log('AUTHOR: ');
-				console.log(author);
 				return { post: currentPost, author };
 			})
 			.catch(() => {

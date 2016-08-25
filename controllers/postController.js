@@ -91,24 +91,16 @@ class PostsController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-
 		const postId = req.params.postId;
-		console.log(postId);
 
 		this
 			.postsManager
 			.findById(postId)
 			.then(({ post, author }) => {
-				console.log('BEFORE RESPONSE MODEL');
 				const company = companyResponse(author);
-				console.log('AFTER RESPONSE MODEL');
 				return postResponse(req.userId, post, req.ln, company);
 			})
 			.then(response => this.success(res, response))
-			.catch(err => {
-				console.log(err);
-				throw err;
-			})
 			.catch(next);
 	}
 

@@ -25,7 +25,7 @@ module.exports = company => {
 	if (company.contactPhones) companyResponse.contactPhones = company.contactPhones;
 	if (company.accessToken) companyResponse.accessToken = company.accessToken;
 	if (company.socialLinks) companyResponse.socialLinks = company.socialLinks;
-	if (company.subscribers.length > 0 && company.subscribers[0].customId) {
+	if (company.subscribers && company.subscribers.length && company.subscribers[0].customId) {
 		companyResponse.subscribers = _.map(company.subscribers, user => {
 			const obj = {
 				customId: user.customId,

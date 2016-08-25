@@ -24,7 +24,7 @@ module.exports = (userId, post, lang = 'en', author) => {
 		likesAmount: post.likes,
 		votersAmount: post.votersForVariants.length,
 		watchesAmount: post.watches,
-		favoritesAmount: post.favoriteVoters.length,
+		favoritesAmount: (post.favoriteVoters && post.favoriteVoters.length) ? post.favoriteVoters.length : 0,
 		isLikedByMe: likedByMe,
 		isVotedByMe: votedByMe,
 		isFavoriteByMe: favoriteByMe
