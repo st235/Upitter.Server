@@ -70,5 +70,11 @@ module.exports = mongoose => {
 			.catch(error => next(error));
 	});
 
+	userSchema.statics.findById = function (customId) {
+		return this
+			.findOne({ customId })
+			.exec();
+	};
+
 	return mongoose.model('Users', userSchema);
 };

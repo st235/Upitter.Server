@@ -7,36 +7,24 @@ module.exports = mongoose => {
 
 	const commentSchema = new Schema({
 		customId: {
-			type: String,
+			type: Number,
 			unique: true
 		},
+		postId: {
+			type: Number,
+			sparse: true
+		},
 		author: {
-			customId: {
-				type: Number,
-				sparse: true
-			},
-			nickname: {
-				type: String,
-				sparse: true,
-				required: true
-			},
-			picture: {
-				type: String
-			}
+			type: String,
+			ref: 'Users'
 		},
 		text: {
 			type: String,
 			required: true
 		},
 		replyTo: {
-			customId: {
-				type: Number,
-				sparse: true
-			},
-			nickname: {
-				type: String,
-				sparse: true
-			}
+			type: String,
+			ref: 'Users'
 		},
 		isRemoved: {
 			type: Boolean,
@@ -60,13 +48,44 @@ module.exports = mongoose => {
 			.catch(() => next('INTERNAL_SERVER_ERROR'));
 	});
 
-	commentSchema.statics.getComments = function (limit, offset) {
+	commentSchema.statics.getCommentById = function (customId) {
 		return this
-			.find({ isRemoved: false })
+			.findOne({ customId })
+			.populate('author')
+			.populate('replyTo')
+			.exec()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	};
+
+	commentSchema.statics.getComments = function (limit, postId, commentId, type) {
+		const query = { postId: parseInt(postId, 10), isRemoved: false };
+
+		if (commentId) {
+			switch (type) {
+			case 'old':
+				query.customId = { $lt: commentId };
+				break;
+			case 'new':
+				query.customId = { $gt: commentId };
+				break;
+			default:
+				throw 'INTERNAL_SERVER_ERROR';
+				break;
+			}
+		}
+
+		return this
+			.find(query)
+			.populate('author')
+			.populate('replyTo')
 			.sort({ createdDate: -1 })
-			.skip(offset)
-			.limit(limit)
-			.exec();
+			.limit(parseInt(limit))
+			.exec()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
 	};
 
 	return mongoose.model('Comments', commentSchema);

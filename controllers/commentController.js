@@ -2,12 +2,16 @@
 
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
+const _ = require('underscore');
 
 const commentResponse = require('../models/response/commentResponseModel');
 
 class CommentsController extends BaseController {
-	constructor(commentsManager) {
-		super({ commentsManager });
+	constructor(commentsManager, usersManager) {
+		super({
+			commentsManager,
+			usersManager
+		});
 	}
 
 	_onBind() {
@@ -15,6 +19,7 @@ class CommentsController extends BaseController {
 		this.addComment = this.addComment.bind(this);
 		this.editComment = this.editComment.bind(this);
 		this.removeComment = this.removeComment.bind(this);
+		this.obtain = this.obtain.bind(this);
 	}
 
 	_onCreate() {
@@ -32,27 +37,23 @@ class CommentsController extends BaseController {
 
 		const { userId } = req;
 		const { text, postId, replyTo } = req.body;
-
-		let comment;
+		let authorObjectId;
 
 		this
-			.commentsManager
-			.createComment(userId, replyTo, text)
-			.then(currentComment => {
-				comment = currentComment;
-				return this.commentsManager.findPostComments(postId);
+			.usersManager
+			.getObjectId(userId)
+			.then(userObjectId => {
+				authorObjectId = userObjectId;
+				return replyTo ? this.usersManager.getObjectId(replyTo) : null;
 			})
-			.then(postComments => {
-				if (!postComments) return this.commentsManager.createAndUpdatePostComments(comment, postId);
-				return this.commentsManager.updatePostComments(comment, postId);
-			})
-			.then(() => this.success(res, commentResponse(comment)))
+			.then(userObjectId => this.commentsManager.create(authorObjectId, postId, userObjectId, text))
+			.then(comment => this.commentsManager.findById(comment.customId))
+			.then(comment => this.success(res, commentResponse(comment)))
 			.catch(next);
 	}
 
 	editComment(req, res, next) {
 		const invalid = this.validate(req)
-			.add('postId').should.exist().and.have.type('String')
 			.add('commentId').should.exist().and.have.type('String')
 			.add('text').should.exist().and.have.type('String').and.be.in.rangeOf(3, 400)
 			.validate();
@@ -60,42 +61,55 @@ class CommentsController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const { userId } = req;
-		const { text, postId, replyTo, commentId } = req.body;
-
-		let comment;
+		const { text, replyTo, commentId } = req.body;
+		let authorObjectId;
 
 		this
-			.commentsManager
-			.editComment(userId, replyTo, text, commentId)
-			.then(currentComment => {
-				comment = currentComment;
-				return this.commentsManager.editPostComments(comment, postId);
+			.usersManager
+			.getObjectId(userId)
+			.then(userObjectId => {
+				authorObjectId = userObjectId;
+				return replyTo ? this.usersManager.getObjectId(replyTo) : null;
 			})
-			.then(() => this.success(res, commentResponse(comment)))
+			.then(userObjectId => this.commentsManager.edit(authorObjectId, userObjectId, text, commentId))
+			.then(comment => this.commentsManager.findById(comment.customId))
+			.then(comment => this.success(res, commentResponse(comment)))
 			.catch(next);
 	}
 
 	removeComment(req, res, next) {
 		const invalid = this.validate(req)
-			.add('postId').should.exist().and.have.type('String')
 			.add('commentId').should.exist().and.have.type('String')
 			.validate();
 
 		if (invalid) return next(invalid.name);
 
 		const { userId } = req;
-		const { postId, commentId } = req.body;
+		const { commentId } = req.body;
 
-		let comment;
+		this
+			.usersManager
+			.getObjectId(userId)
+			.then(userObjectId => this.commentsManager.remove(userObjectId, commentId))
+			.then(comment => comment.isRemoved ? { removed: true } : this.commentsManager.findById(comment.customId))
+			.then(result => result.removed ? this.success(res, result) : this.success(res, commentResponse(result)))
+			.catch(next);
+	}
+
+	obtain(req, res, next) {
+		const invalid = this.validate(req)
+			.add('postId').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
+		const { limit = 20, postId, commentId, type } = req.query;
 
 		this
 			.commentsManager
-			.removeComment(userId, commentId)
-			.then(currentComment => {
-				comment = currentComment;
-				return this.commentsManager.removeFromPostComments(comment, postId);
-			})
-			.then(() => this.success(res, commentResponse(comment)))
+			.obtain(limit, postId, commentId, type)
+			.then(comments => _.map(comments, comment => commentResponse(comment)))
+			.then(response => this.success(res, { comments: response }))
 			.catch(next);
 	}
 }

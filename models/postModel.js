@@ -228,6 +228,7 @@ module.exports = mongoose => {
 
 	postSchema.statics.getPostsByCompany = function (companyId, limit, postId, type) {
 		const query = { author: companyId };
+
 		if (postId) {
 			switch (type) {
 			case 'old':

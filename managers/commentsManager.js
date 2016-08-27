@@ -4,114 +4,38 @@ const _ = require('underscore');
 const AppUnit = require('../app/unit');
 
 class CommentsManager extends AppUnit {
-	constructor(commentModel, postCommentsModel, userModel, postModel) {
-		super({ commentModel, postCommentsModel, userModel, postModel });
+	constructor(commentModel, userModel) {
+		super({
+			commentModel,
+			userModel
+		});
 	}
 
 	_onBind() {
-		this.createComment = this.createComment.bind(this);
-		this.findComment = this.findComment.bind(this);
-		this.findPostComments = this.findPostComments.bind(this);
-		this.createAndUpdatePostComments = this.createAndUpdatePostComments.bind(this);
-		this.updatePostComments = this.updatePostComments.bind(this);
-		this.editComment = this.editComment.bind(this);
-		this.editPostComments = this.editPostComments.bind(this);
-		this.removeComment = this.removeComment.bind(this);
-		this.removeFromPostComments = this.removeFromPostComments.bind(this);
+		this.create = this.create.bind(this);
+		this.edit = this.edit.bind(this);
+		this.remove = this.remove.bind(this);
+		this.findById = this.findById.bind(this);
+		this.obtain = this.obtain.bind(this);
 	}
 
-	createComment(userId, replyTo, text) {
-		let currentAuthor;
-
-		return this
-			.userModel
-			.findOne({ customId: userId })
-			.exec()
-			.then(author => {
-				currentAuthor = author;
-				if (replyTo) return this.userModel.findOne({ customId: replyTo }).exec();
-			})
-			.then(replyTo => {
-				_.pick(currentAuthor, 'customId', 'nickname', 'picture');
-				_.pick(replyTo, 'customId, nickname');
-				const comment = new this.commentModel({ author: currentAuthor, text, replyTo, createdDate: Date.now() });
-				return comment.save();
-			})
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
-			});
-	}
-
-	findComment(commentId) {
-		return this
-			.commentModel
-			.findOne({ customId: commentId })
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
-			});
-	}
-
-	findPostComments(postId) {
-		return this
-			.postCommentsModel
-			.findOne({ postId })
-			.exec()
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
-			});
-	}
-
-	createAndUpdatePostComments(comment, postId) {
-		const comments = [];
-		let postCommentsObjId;
-		comments.push(comment);
-
-		const postCommentsModel = new this.postCommentsModel({ postId, comments });
-
-		postCommentsModel
+	create(author, postId, replyTo, text) {
+		const comment = new this.commentModel({ author, postId, replyTo, text, createdDate: Date.now() });
+		return comment
 			.save()
-			.then(postComments => {
-				postCommentsObjId = postComments._id;
-				return this.postModel.findOne(postId).exec();
-			})
-			.then(post => {
-				post.comments = postCommentsObjId;
-				return post.save();
-			})
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 
-	updatePostComments(comment, postId) {
-		return this
-			.postCommentsModel
-			.findOne({ postId })
-			.then(postComments => {
-				postComments.comments.push(comment);
-				return postComments.save();
-			})
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
-			});
-	}
-
-	editComment(userId, replyTo, text, commentId) {
-		let currentComment;
-
+	edit(author, replyTo, text, commentId) {
 		return this
 			.commentModel
-			.findOne({ customId: commentId })
+			.findOne({ customId: parseInt(commentId, 10) })
 			.then(comment => {
-				currentComment = comment;
-				if (!comment || comment.author.customId !== parseInt(userId, 10)) throw 'INTERNAL_SERVER_ERROR';
+				if (!comment || comment.author !== author.toString()) throw 'INTERNAL_SERVER_ERROR'; //TODO переделать ошибки
 				if (Date.parse(comment.createdDate) + 900000 < new Date()) throw 'INTERNAL_SERVER_ERROR';
-				return (replyTo) ? this.userModel.findOne({ customId: replyTo }).exec() : null;
-			})
-			.then(replyTo => {
-				replyTo ? _.pick(replyTo, 'customId, nickname') : replyTo = { customId: null, nickname: null };
-				_.extend(currentComment, { text, replyTo });
-				const comment = new this.commentModel(currentComment);
+				_.extend(comment, { text, replyTo });
 				return comment.save();
 			})
 			.catch(() => {
@@ -119,63 +43,38 @@ class CommentsManager extends AppUnit {
 			});
 	}
 
-	editPostComments(comment, postId) {
-		let currentPostComments;
-
-		return this
-			.postCommentsModel
-			.findOne({ postId })
-			.exec()
-			.then(postComments => {
-				currentPostComments = postComments;
-				return _.map(postComments.comments, currentComment => (currentComment.customId !== comment.customId) ? currentComment : comment);
-			})
-			.then(updatedComments => {
-				currentPostComments.comments = updatedComments;
-				return currentPostComments.save();
-			})
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
-			});
-	}
-
-	removeComment(userId, commentId) {
+	remove(author, commentId) {
 		return this
 			.commentModel
 			.findOne({ customId: commentId })
 			.exec()
 			.then(comment => {
-				if (!comment || comment.author.customId !== parseInt(userId, 10)) throw 'INTERNAL_SERVER_ERROR';
+				if (!comment || comment.author !== author.toString()) throw 'INTERNAL_SERVER_ERROR';
 				if (Date.parse(comment.createdDate) + 900000 < new Date()) throw 'INTERNAL_SERVER_ERROR';
 				comment.isRemoved = !comment.isRemoved;
 				return comment.save();
 			})
-			.then()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 
-	removeFromPostComments(comment, postId) {
-		let currentPostComments;
-
+	findById(commentId) {
 		return this
-			.postCommentsModel
-			.findOne({ postId })
-			.exec()
-			.then(postComments => {
-				currentPostComments = postComments;
-				return _.map(postComments.comments, currentComment => {
-					if (currentComment.customId === comment.customId) currentComment.isRemoved = !currentComment.isRemoved;
-					return currentComment;
-				});
-			})
-			.then(updatedComments => {
-				currentPostComments.comments = updatedComments;
-				return currentPostComments.save();
-			})
+			.commentModel
+			.getCommentById(commentId)
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	obtain(limit, postId, commentId, type) {
+		return this
+			.commentModel
+			.getComments(limit, postId, commentId, type)
+			.then(comments => {
+				if (!comments) throw 'INTERNAL_SERVER_ERROR';
+				return comments;
 			});
 	}
 }

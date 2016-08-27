@@ -21,7 +21,8 @@ module.exports = {
 	comment: {
 		addComment: '/comment/create',
 		editComment: '/comment/edit',
-		removeComment: '/comment/remove'
+		removeComment: '/comment/remove',
+		obtain: '/comments'
 	},
 	company: {
 		edit: '/company/edit',

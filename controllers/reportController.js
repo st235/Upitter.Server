@@ -131,7 +131,7 @@ class ReportsController extends BaseController {
 		case 'comment':
 			this
 				.commentsManager
-				.findComment(targetId)
+				.findById(targetId)
 				.then(comment => this.success(res, commentResponse(comment)))
 				.catch(next);
 			break;
