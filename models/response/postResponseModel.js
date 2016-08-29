@@ -31,16 +31,6 @@ module.exports = (userId, post, lang = 'en', author) => {
 		isFavoriteByMe: favoriteByMe
 	};
 
-	//if (post.comments && post.comments.comments.length > 0) {
-	//	postResponse.comments = _.compact(_.map(post.comments.comments, comment => {
-	//		if (comment.isRemoved === false) return commentResponse(comment);
-	//	}));
-	//	postResponse.commentsAmount = postResponse.comments.length;
-	//} else {
-	//	postResponse.commentsAmount = 0;
-	//	postResponse.comments = [];
-	//}
-
 	if (post.variants.length > 0) {
 		postResponse.variants = _.map(post.variants, variant => {
 			let currentVoted = false;
