@@ -40,7 +40,7 @@ class AppDatabase extends AppUnit {
 
 	_onCreate() {
 		mongoose.connect(databaseConfig.devUri, databaseConfig.options, this._onStart);
-		// mongoose.connect(databaseConfig.prodUri, databaseConfig.options, this._onStart);
+		//mongoose.connect(databaseConfig.prodUri, databaseConfig.options, this._onStart);
 
 		this.categoryModel = categoryModel(mongoose);
 		this.commentModel = commentModel(mongoose);
@@ -61,7 +61,7 @@ class AppDatabase extends AppUnit {
 		this.companiesManager = new CompaniesManager(this.companyModel);
 		this.feedbackManager = new FeedbackManager(this.feedbackModel);
 		this.logsManager = new LogsManager(this.logModel);
-		this.postsManager = new PostsManager(this.postModel, this.companyModel);
+		this.postsManager = new PostsManager(this.postModel, this.companyModel, this.commentModel);
 		this.reportsManager = new ReportsManager(this.reportModel, this.reportReasonModel);
 		this.usersManager = new UsersManager(this.userModel);
 	}

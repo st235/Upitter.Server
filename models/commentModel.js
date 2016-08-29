@@ -14,17 +14,25 @@ module.exports = mongoose => {
 			type: Number,
 			sparse: true
 		},
-		author: {
+		authorUser: {
 			type: String,
 			ref: 'Users'
+		},
+		authorCompany: {
+			type: String,
+			ref: 'Companies'
 		},
 		text: {
 			type: String,
 			required: true
 		},
-		replyTo: {
+		replyToUser: {
 			type: String,
 			ref: 'Users'
+		},
+		replyToCompany: {
+			type: String,
+			ref: 'Companies'
 		},
 		isRemoved: {
 			type: Boolean,
@@ -51,8 +59,10 @@ module.exports = mongoose => {
 	commentSchema.statics.getCommentById = function (customId) {
 		return this
 			.findOne({ customId })
-			.populate('author')
-			.populate('replyTo')
+			.populate('authorUser')
+			.populate('authorCompany')
+			.populate('replyToUser')
+			.populate('replyToCompany')
 			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
@@ -78,10 +88,22 @@ module.exports = mongoose => {
 
 		return this
 			.find(query)
-			.populate('author')
-			.populate('replyTo')
+			.populate('authorUser')
+			.populate('authorCompany')
+			.populate('replyToUser')
+			.populate('replyToCompany')
 			.sort({ createdDate: -1 })
 			.limit(parseInt(limit))
+			.exec()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	};
+
+	commentSchema.statics.countComments = function (postId) {
+		return this
+			.find({ postId, isRemoved: false })
+			.count()
 			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
