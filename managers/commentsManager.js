@@ -17,10 +17,27 @@ class CommentsManager extends AppUnit {
 		this.remove = this.remove.bind(this);
 		this.findById = this.findById.bind(this);
 		this.obtain = this.obtain.bind(this);
+		this.count = this.count.bind(this);
 	}
 
-	create(author, postId, replyTo, text) {
-		const comment = new this.commentModel({ author, postId, replyTo, text, createdDate: Date.now() });
+	create(author, authorId, postId, replyTo, replyToId, text) {
+		const authorUser = parseInt(authorId, 10) > 0 ? author : null;
+		const authorCompany = parseInt(authorId, 10) < 0 ? author : null;
+		const replyToUser = parseInt(replyToId, 10) > 0 ? replyTo : null;
+		const replyToCompany = parseInt(replyToId, 10) < 0 ? replyTo : null;
+
+		const comment = new this.
+			commentModel({
+				authorUser,
+				authorCompany,
+				replyToUser,
+				replyToCompany,
+				postId,
+				text,
+				createdDate: Date.now()
+			});
+
+
 		return comment
 			.save()
 			.catch(() => {
@@ -28,14 +45,23 @@ class CommentsManager extends AppUnit {
 			});
 	}
 
-	edit(author, replyTo, text, commentId) {
+	edit(author, authorId, replyTo, replyToId, text, commentId) {
 		return this
 			.commentModel
 			.findOne({ customId: parseInt(commentId, 10) })
 			.then(comment => {
-				if (!comment || comment.author !== author.toString()) throw 'INTERNAL_SERVER_ERROR'; //TODO переделать ошибки
-				if (Date.parse(comment.createdDate) + 900000 < new Date()) throw 'INTERNAL_SERVER_ERROR';
-				_.extend(comment, { text, replyTo });
+				if (!comment || authorId > 0 ? comment.authorUser !== author.toString() : comment.authorCompany !== author.toString()) throw 'ACCESS_DENIED';
+				if (Date.parse(comment.createdDate) + 900000 < new Date()) throw 'ACCESS_DENIED';
+
+				let replyToUser;
+				let replyToCompany;
+				if (replyTo && replyToId) {
+					replyToUser = parseInt(replyToId, 10) > 0 ? replyTo : null;
+					replyToCompany = parseInt(replyToId, 10) < 0 ? replyTo : null;
+					_.extend(comment, { replyToUser, replyToCompany });
+				}
+
+				_.extend(comment, { text });
 				return comment.save();
 			})
 			.catch(() => {
@@ -43,14 +69,14 @@ class CommentsManager extends AppUnit {
 			});
 	}
 
-	remove(author, commentId) {
+	remove(author, authorId, commentId) {
 		return this
 			.commentModel
 			.findOne({ customId: commentId })
 			.exec()
 			.then(comment => {
-				if (!comment || comment.author !== author.toString()) throw 'INTERNAL_SERVER_ERROR';
-				if (Date.parse(comment.createdDate) + 900000 < new Date()) throw 'INTERNAL_SERVER_ERROR';
+				if (!comment || authorId > 0 ? comment.authorUser !== author.toString() : comment.authorCompany !== author.toString()) throw 'ACCESS_DENIED';
+				if (Date.parse(comment.createdDate) + 900000 < new Date()) throw 'ACCESS_DENIED';
 				comment.isRemoved = !comment.isRemoved;
 				return comment.save();
 			})
@@ -76,6 +102,12 @@ class CommentsManager extends AppUnit {
 				if (!comments) throw 'INTERNAL_SERVER_ERROR';
 				return comments;
 			});
+	}
+
+	count(postId) {
+		return this
+			.commentModel
+			.countComments(postId);
 	}
 }
 

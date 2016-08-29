@@ -5,10 +5,11 @@ const AppUnit = require('../app/unit');
 
 
 class PostsManager extends AppUnit {
-	constructor(postModel, companyModel) {
+	constructor(postModel, companyModel, commentModel) {
 		super({
 			postModel,
-			companyModel
+			companyModel,
+			commentModel
 		});
 	}
 
@@ -133,6 +134,9 @@ class PostsManager extends AppUnit {
 			.then(posts => _.map(posts, post => this.companyModel.findById(post.author)))
 			.then(promises => Promise.all(promises))
 			.then(companies => _.each(companies, (company, i) => resultPosts[i].author = company))
+			.then(() => _.map(resultPosts, post => this.commentModel.countComments(post.customId)))
+			.then(promises => Promise.all(promises))
+			.then(amounts => _.each(amounts, (amount, i) => resultPosts[i].commentsAmount = amount))
 			.then(() => {
 				if (!activity || !activity.length) return resultPosts;
 				return _.filter(resultPosts, singlePost => {
@@ -156,6 +160,9 @@ class PostsManager extends AppUnit {
 			.then(posts => _.map(posts, post => this.companyModel.findById(post.author)))
 			.then(promises => Promise.all(promises))
 			.then(companies => _.each(companies, (company, i) => resultPosts[i].author = company))
+			.then(() => _.map(resultPosts, post => this.commentModel.countComments(post.customId)))
+			.then(promises => Promise.all(promises))
+			.then(amounts => _.each(amounts, (amount, i) => resultPosts[i].commentsAmount = amount))
 			.then(() => {
 				if (!activity || !activity.length) return resultPosts;
 				return _.filter(resultPosts, singlePost => {
@@ -178,6 +185,9 @@ class PostsManager extends AppUnit {
 			.then(posts => _.map(posts, post => this.companyModel.findById(post.author)))
 			.then(promises => Promise.all(promises))
 			.then(companies => _.each(companies, (company, i) => resultPosts[i].author = company))
+			.then(() => _.map(resultPosts, post => this.commentModel.countComments(post.customId)))
+			.then(promises => Promise.all(promises))
+			.then(amounts => _.each(amounts, (amount, i) => resultPosts[i].commentsAmount = amount))
 			.then(() => {
 				if (!activity || !activity.length) return resultPosts;
 				return _.filter(resultPosts, singlePost => {
@@ -188,6 +198,7 @@ class PostsManager extends AppUnit {
 
 	obtainByCompany(companyId, limit, postId, type) {
 		let resultPosts;
+		let resultCount;
 
 		return this
 			.postModel
@@ -207,9 +218,15 @@ class PostsManager extends AppUnit {
 				return this.postModel.count();
 			})
 			.then(count => {
+				resultCount = count;
+				return _.map(resultPosts, post => this.commentModel.countComments(post.customId));
+			})
+			.then(promises => Promise.all(promises))
+			.then(amounts => _.each(amounts, (amount, i) => resultPosts[i].commentsAmount = amount))
+			.then(() => {
 				return {
 					posts: resultPosts,
-					count
+					count: resultCount
 				};
 			});
 	}

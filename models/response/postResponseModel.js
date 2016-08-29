@@ -25,20 +25,11 @@ module.exports = (userId, post, lang = 'en', author) => {
 		votersAmount: post.votersForVariants.length,
 		watchesAmount: post.watches,
 		favoritesAmount: (post.favoriteVoters && post.favoriteVoters.length) ? post.favoriteVoters.length : 0,
+		commentsAmount: post.commentsAmount,
 		isLikedByMe: likedByMe,
 		isVotedByMe: votedByMe,
 		isFavoriteByMe: favoriteByMe
 	};
-
-	//if (post.comments && post.comments.comments.length > 0) {
-	//	postResponse.comments = _.compact(_.map(post.comments.comments, comment => {
-	//		if (comment.isRemoved === false) return commentResponse(comment);
-	//	}));
-	//	postResponse.commentsAmount = postResponse.comments.length;
-	//} else {
-	//	postResponse.commentsAmount = 0;
-	//	postResponse.comments = [];
-	//}
 
 	if (post.variants.length > 0) {
 		postResponse.variants = _.map(post.variants, variant => {

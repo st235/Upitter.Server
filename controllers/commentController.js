@@ -7,10 +7,11 @@ const _ = require('underscore');
 const commentResponse = require('../models/response/commentResponseModel');
 
 class CommentsController extends BaseController {
-	constructor(commentsManager, usersManager) {
+	constructor(commentsManager, usersManager, companiesManager) {
 		super({
 			commentsManager,
-			usersManager
+			usersManager,
+			companiesManager
 		});
 	}
 
@@ -39,14 +40,17 @@ class CommentsController extends BaseController {
 		const { text, postId, replyTo } = req.body;
 		let authorObjectId;
 
-		this
-			.usersManager
-			.getObjectId(userId)
+		Promise
+			.resolve(userId > 0 ? this.usersManager.getObjectId(userId) : this.companiesManager.getObjectId(userId))
 			.then(userObjectId => {
 				authorObjectId = userObjectId;
-				return replyTo ? this.usersManager.getObjectId(replyTo) : null;
+				if (replyTo) {
+					return parseInt(replyTo, 10) > 0 ? this.usersManager.getObjectId(replyTo) : this.companiesManager.getObjectId(replyTo);
+				} else {
+					return null;
+				}
 			})
-			.then(userObjectId => this.commentsManager.create(authorObjectId, postId, userObjectId, text))
+			.then(userObjectId => this.commentsManager.create(authorObjectId, userId, postId, userObjectId, replyTo, text))
 			.then(comment => this.commentsManager.findById(comment.customId))
 			.then(comment => this.success(res, commentResponse(comment)))
 			.catch(next);
@@ -64,14 +68,17 @@ class CommentsController extends BaseController {
 		const { text, replyTo, commentId } = req.body;
 		let authorObjectId;
 
-		this
-			.usersManager
-			.getObjectId(userId)
+		Promise
+			.resolve(userId > 0 ? this.usersManager.getObjectId(userId) : this.companiesManager.getObjectId(userId))
 			.then(userObjectId => {
 				authorObjectId = userObjectId;
-				return replyTo ? this.usersManager.getObjectId(replyTo) : null;
+				if (replyTo) {
+					return parseInt(replyTo, 10) > 0 ? this.usersManager.getObjectId(replyTo) : this.companiesManager.getObjectId(replyTo);
+				} else {
+					return null;
+				}
 			})
-			.then(userObjectId => this.commentsManager.edit(authorObjectId, userObjectId, text, commentId))
+			.then(userObjectId => this.commentsManager.edit(authorObjectId, userId, userObjectId, replyTo, text, commentId))
 			.then(comment => this.commentsManager.findById(comment.customId))
 			.then(comment => this.success(res, commentResponse(comment)))
 			.catch(next);
@@ -86,11 +93,9 @@ class CommentsController extends BaseController {
 
 		const { userId } = req;
 		const { commentId } = req.body;
-
-		this
-			.usersManager
-			.getObjectId(userId)
-			.then(userObjectId => this.commentsManager.remove(userObjectId, commentId))
+		Promise
+			.resolve(userId > 0 ? this.usersManager.getObjectId(userId) : this.companiesManager.getObjectId(userId))
+			.then(userObjectId => this.commentsManager.remove(userObjectId, userId, commentId))
 			.then(comment => comment.isRemoved ? { removed: true } : this.commentsManager.findById(comment.customId))
 			.then(result => result.removed ? this.success(res, result) : this.success(res, commentResponse(result)))
 			.catch(next);
@@ -104,12 +109,17 @@ class CommentsController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const { limit = 20, postId, commentId, type } = req.query;
+		let currentComments;
 
 		this
 			.commentsManager
 			.obtain(limit, postId, commentId, type)
 			.then(comments => _.map(comments, comment => commentResponse(comment)))
-			.then(response => this.success(res, { comments: response }))
+			.then(comments => {
+				currentComments = comments;
+				return this.commentsManager.count(postId);
+			})
+			.then(amount => this.success(res, { amount, comments: currentComments }))
 			.catch(next);
 	}
 }
