@@ -107,6 +107,7 @@ class AppRoutes extends AppUnit {
 
 	registerCategory(app, paths, controller) {
 		app.get(paths.obtain, controller.getCategories);
+		app.post(paths.obtainTitles, controller.obtainTitles);
 		app.get(paths.find, this.checkAuthorization, controller.findCategory);
 		app.get(paths.getParent, this.checkAuthorization, controller.getParent);
 	}

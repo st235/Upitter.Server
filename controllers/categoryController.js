@@ -5,7 +5,7 @@ const _ = require('underscore');
 const BaseController = require('./baseController');
 const ValidationUtils = require('../utils/validationUtils');
 
-const CategoryResponse = require('../models/response/categoryResponseModel');
+const categoryResponse = require('../models/response/categoryResponseModel');
 
 class CategoriesController extends BaseController {
 	constructor(categoriesManager) {
@@ -17,6 +17,7 @@ class CategoriesController extends BaseController {
 		this.getCategories = this.getCategories.bind(this);
 		this.findCategory = this.findCategory.bind(this);
 		this.getParent = this.getParent.bind(this);
+		this.obtainTitles = this.obtainTitles.bind(this);
 	}
 
 	_onCreate() {
@@ -28,7 +29,7 @@ class CategoriesController extends BaseController {
 		this
 			.categoriesManager
 			.getCategories(req.ln)
-			.then(categories => _.map(categories, category => CategoryResponse(category, req.ln)))
+			.then(categories => _.map(categories, category => categoryResponse(category, req.ln)))
 			.then(categories => this.success(res, categories))
 			.catch(next);
 	}
@@ -39,7 +40,7 @@ class CategoriesController extends BaseController {
 		this
 			.categoriesManager
 			.findCategory(id)
-			.then(category => CategoryResponse(category, req.ln))
+			.then(category => categoryResponse(category, req.ln))
 			.then(category => this.success(res, category))
 			.catch(next);
 	}
@@ -50,8 +51,23 @@ class CategoriesController extends BaseController {
 		this
 			.categoriesManager
 			.findCategory(id)
-			.then(category => CategoryResponse(category, req.ln))
+			.then(category => categoryResponse(category, req.ln))
 			.then(category => this.success(res, category))
+			.catch(next);
+	}
+
+	obtainTitles(req, res, next) {
+		const invalid = this.validate(req)
+			.add('activity').should.exist().and.have.type('Array')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
+		const { activity } = req.body;
+
+		Promise
+			.resolve(_.map(activity, category => categoryResponse({ customId: category }, req.ln)))
+			.then(activity => this.success(res, activity))
 			.catch(next);
 	}
 }

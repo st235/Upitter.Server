@@ -15,6 +15,7 @@ module.exports = {
 	},
 	category: {
 		obtain: '/categories',
+		obtainTitles: '/categories/obtainTitles',
 		find: '/categories/find/:id',
 		getParent: '/categories/get/parent/:id'
 	},
