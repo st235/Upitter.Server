@@ -215,7 +215,7 @@ class PostsManager extends AppUnit {
 			.then(promises => Promise.all(promises))
 			.then(posts => {
 				resultPosts = posts;
-				return this.postModel.count();
+				return this.postModel.find({ author: companyId, isRemoved: false }).count.exec();
 			})
 			.then(count => {
 				resultCount = count;
