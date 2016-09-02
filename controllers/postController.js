@@ -31,6 +31,7 @@ class PostsController extends BaseController {
 		this.obtainOld = this.obtainOld.bind(this);
 
 		this.obtainByCompany = this.obtainByCompany.bind(this);
+		this.obtainByAlias = this.obtainByAlias.bind(this);
 
 		this.obtainFavorites = this.obtainFavorites.bind(this);
 		this.obtainOldFavorites = this.obtainOldFavorites.bind(this);
@@ -295,6 +296,29 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.obtainByCompany(companyId, limit, postId, type)
+			.then(result => {
+				count = result.count;
+				return _.map(result.posts, post => postResponse(req.userId, post, req.ln));
+			})
+			.then(response => this.success(res, { count, posts: response }))
+			.catch(next);
+	}
+
+	obtainByAlias(req, res, next) {
+		const invalid = this.validate(req)
+			.add('alias').should.exist().and.have.type('String')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
+		const { type } = req.params;
+		const { alias, limit = 20, postId } = req.query;
+		let count;
+
+		this
+			.companiesManager
+			.findByAlias(alias)
+			.then(company => this.postsManager.obtainByCompany(company.customId, limit, postId, type))
 			.then(result => {
 				count = result.count;
 				return _.map(result.posts, post => postResponse(req.userId, post, req.ln));

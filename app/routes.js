@@ -151,6 +151,7 @@ class AppRoutes extends AppUnit {
 		app.get(paths.obtainFavorites, this.checkAuthorization, controller.obtainFavorites);
 		app.get(paths.obtainOldFavorites, this.checkAuthorization, controller.obtainOldFavorites);
 		app.get(paths.obtainByCompany, this.getUser, controller.obtainByCompany);
+		app.get(paths.obtainByAlias, this.getUser, controller.obtainByAlias);
 		app.post(paths.create, this.checkAuthorization, controller.create);
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
 	}

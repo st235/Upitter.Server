@@ -44,6 +44,7 @@ module.exports = {
 		obtainFavorites: '/post/favorites',
 		obtainOldFavorites: '/post/favoritesOld',
 		obtainByCompany: '/post/obtainByCompany/:type',
+		obtainByAlias: '/post/obtainByAlias/:type',
 		vote: '/post/vote/:postId/:variantIndex'
 	},
 	report: {
