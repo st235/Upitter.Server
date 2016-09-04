@@ -94,14 +94,15 @@ class PostsController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const postId = req.params.postId;
-		let postResponseResult;
+		let commentsAmount;
 
 		this
-			.postsManager
-			.findById(postId)
-			.then(({ post, author }) => postResponseResult = postResponse(req.userId, post, req.ln, companyResponse(author)))
-			.then(() => this.commentsManager.count(postId))
-			.then(commentsAmount => this.success(res, { post: postResponseResult, commentsAmount: commentsAmount || 0 }))
+			.commentsManager
+			.count(postId)
+			.then(commentsCount => commentsAmount = commentsCount)
+			.then(() => this.postsManager.findById(postId))
+			.then(({ post, author }) => postResponse(req.userId, post, req.ln, companyResponse(author), commentsAmount))
+			.then(result => this.success(res, result))
 			.catch(next);
 	}
 
