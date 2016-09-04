@@ -9,11 +9,12 @@ const postResponse = require('../models/response/postResponseModel');
 const companyResponse = require('../models/response/companyResponseModel');
 
 class PostsController extends BaseController {
-	constructor(postsManager, usersManager, companiesManager) {
+	constructor(postsManager, usersManager, companiesManager, commentsManager) {
 		super({
 			postsManager,
 			usersManager,
-			companiesManager
+			companiesManager,
+			commentsManager
 		});
 	}
 
@@ -93,20 +94,14 @@ class PostsController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const postId = req.params.postId;
+		let postResponseResult;
 
 		this
 			.postsManager
 			.findById(postId)
-			.then(({ post, author }) => {
-				try {
-					const company = companyResponse(author);
-					return postResponse(req.userId, post, req.ln, company);
-				} catch (e) {
-					console.log(e);
-					if (e) throw e;
-				}
-			})
-			.then(response => this.success(res, response))
+			.then(({ post, author }) => postResponseResult = postResponse(req.userId, post, req.ln, companyResponse(author)))
+			.then(() => this.commentsManager.count(postId))
+			.then(commentsAmount => this.success(res, { post: postResponseResult, commentsAmount: commentsAmount || 0 }))
 			.catch(next);
 	}
 

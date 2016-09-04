@@ -5,7 +5,7 @@ const moment = require('moment');
 const commentResponse = require('./commentResponseModel');
 const companyResponse = require('./companyResponseModel');
 
-module.exports = (userId, post, lang = 'en', author) => {
+module.exports = (userId, post, lang = 'en', author, commentsAmount) => {
 	const likedByMe = !!_.find(post.likeVoters, voterId => voterId === userId);
 	const favoriteByMe = !!_.find(post.favoriteVoters, voterId => voterId === userId);
 	const votedByMe = !!_.find(post.votersForVariants, voterId => voterId === userId);
@@ -25,7 +25,7 @@ module.exports = (userId, post, lang = 'en', author) => {
 		votersAmount: post.votersForVariants.length,
 		watchesAmount: post.watches,
 		favoritesAmount: (post.favoriteVoters && post.favoriteVoters.length) ? post.favoriteVoters.length : 0,
-		commentsAmount: post.commentsAmount,
+		commentsAmount: commentsAmount || 0,
 		isLikedByMe: likedByMe,
 		isVotedByMe: votedByMe,
 		isFavoriteByMe: favoriteByMe

@@ -58,7 +58,7 @@ class AppRoutes extends AppUnit {
 		this.companyController = new CompanyController(this.managers.companies);
 		this.feedbackController = new FeedbackController(this.managers.feedback);
 		this.logController = new LogController(this.managers.logs);
-		this.postController = new PostController(this.managers.posts, this.managers.users, this.managers.companies);
+		this.postController = new PostController(this.managers.posts, this.managers.users, this.managers.companies, this.managers.comments);
 		this.fileController = new FileController();
 		this.generalController = new GeneralController();
 		this.serviceController = new ServiceController();
