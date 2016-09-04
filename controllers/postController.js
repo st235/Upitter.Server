@@ -98,8 +98,13 @@ class PostsController extends BaseController {
 			.postsManager
 			.findById(postId)
 			.then(({ post, author }) => {
-				const company = companyResponse(author);
-				return postResponse(req.userId, post, req.ln, company);
+				try {
+					const company = companyResponse(author);
+					return postResponse(req.userId, post, req.ln, company);
+				} catch (e) {
+					console.log(e);
+					if (e) throw e;
+				}
 			})
 			.then(response => this.success(res, response))
 			.catch(next);
