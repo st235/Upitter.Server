@@ -65,20 +65,11 @@ class CommentsController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const { userId } = req;
-		const { text, replyTo, commentId } = req.body;
-		let authorObjectId;
+		const { text, commentId } = req.body;
 
 		Promise
 			.resolve(userId > 0 ? this.usersManager.getObjectId(userId) : this.companiesManager.getObjectId(userId))
-			.then(userObjectId => {
-				authorObjectId = userObjectId;
-				if (replyTo) {
-					return parseInt(replyTo, 10) > 0 ? this.usersManager.getObjectId(replyTo) : this.companiesManager.getObjectId(replyTo);
-				} else {
-					return null;
-				}
-			})
-			.then(userObjectId => this.commentsManager.edit(authorObjectId, userId, userObjectId, replyTo, text, commentId))
+			.then(authorObjectId => this.commentsManager.edit(authorObjectId, userId, text, commentId))
 			.then(comment => this.commentsManager.findById(comment.customId))
 			.then(comment => this.success(res, commentResponse(comment)))
 			.catch(next);

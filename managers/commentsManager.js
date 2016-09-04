@@ -45,21 +45,13 @@ class CommentsManager extends AppUnit {
 			});
 	}
 
-	edit(author, authorId, replyTo, replyToId, text, commentId) {
+	edit(author, authorId, text, commentId) {
 		return this
 			.commentModel
 			.findOne({ customId: parseInt(commentId, 10) })
 			.then(comment => {
 				if (!comment || authorId > 0 ? comment.authorUser !== author.toString() : comment.authorCompany !== author.toString()) throw 'ACCESS_DENIED';
 				if (Date.parse(comment.createdDate) + 900000 < new Date()) throw 'ACCESS_DENIED';
-
-				let replyToUser;
-				let replyToCompany;
-				if (replyTo && replyToId) {
-					replyToUser = parseInt(replyToId, 10) > 0 ? replyTo : null;
-					replyToCompany = parseInt(replyToId, 10) < 0 ? replyTo : null;
-					_.extend(comment, { replyToUser, replyToCompany });
-				}
 
 				_.extend(comment, { text });
 				return comment.save();
