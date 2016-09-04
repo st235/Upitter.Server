@@ -89,7 +89,7 @@ class PostsManager extends AppUnit {
 		return this
 			.postModel
 			.findOne({ customId: postId })
-			.populate('comments')
+			.populate('postComments')
 			.then(post => {
 				let postResponse = null;
 				if (!post) return postResponse;
