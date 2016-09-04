@@ -2,6 +2,7 @@
 
 const userResponse = require('./userResponseModel');
 const companyResponse = require('./companyResponseModel');
+const commentAuthorResponse = require('./commentAuthorResponseModel');
 
 module.exports = comment => {
 	const commentResponse = {
@@ -9,8 +10,8 @@ module.exports = comment => {
 		text: comment.text,
 		createdDate: comment.createdDate
 	};
-	if (comment.authorUser) commentResponse.author = userResponse(comment.authorUser);
-	if (comment.authorCompany) commentResponse.author = companyResponse(comment.authorCompany);
+	if (comment.authorUser) commentResponse.author = commentAuthorResponse(comment.authorUser, 'User');
+	if (comment.authorCompany) commentResponse.author = commentAuthorResponse(comment.authorCompany, 'Company');
 
 	if (comment.replyToUser) commentResponse.replyTo = userResponse(comment.replyToUser);
 	if (comment.replyToCompany) commentResponse.replyTo = companyResponse(comment.replyToCompany);
