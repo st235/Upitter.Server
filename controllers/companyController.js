@@ -63,9 +63,12 @@ class CompanyController extends BaseController {
 	}
 
 	getSubscribers(req, res, next) {
+		const { limit = 20, subId } = req.body;
+
+
 		this
 			.companiesManager
-			.getSubscribers(req.userId)
+			.getSubscribers(req.userId, limit, subId)
 			.then(company => this.success(res, subscribersResponseModel(company)))
 			.catch(next);
 	}

@@ -109,12 +109,27 @@ class CompaniesManager extends AppUnit {
 			});
 	}
 
-	getSubscribers(customId) {
+	getSubscribers(customId, limit, subId) {
+		let subscribers;
+		let index = 0;
+		let currentCompany;
+
 		return this
 			.companyModel
 			.findOne({ customId })
 			.populate('subscribers')
 			.exec()
+			.then(company => {
+				currentCompany = company;
+				subscribers = company.subscribers;
+				return subId ? _.each(subscribers, (user, i) => (user.customId === parseInt(subId, 10)) ? index = i + 1 : index) : subscribers;
+			})
+			.then(promises => Promise.all(promises))
+			.then(() => {
+				subscribers = subscribers.splice(index, limit);
+				currentCompany.subscribers = subscribers;
+				return currentCompany;
+			})
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
