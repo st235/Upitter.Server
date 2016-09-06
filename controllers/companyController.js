@@ -63,7 +63,7 @@ class CompanyController extends BaseController {
 	}
 
 	getSubscribers(req, res, next) {
-		const { limit = 20, subId } = req.body;
+		const { limit = 20, subId } = req.query;
 
 
 		this

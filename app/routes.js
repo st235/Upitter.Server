@@ -123,7 +123,7 @@ class AppRoutes extends AppUnit {
 		app.get(paths.findByAlias, controller.findByAlias);
 
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
-		app.post(paths.getSubscribers, this.checkAuthorization, controller.getSubscribers);
+		app.get(paths.getSubscribers, this.checkAuthorization, controller.getSubscribers);
 	}
 
 	registerFeedback(app, paths, controller) {
