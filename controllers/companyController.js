@@ -63,12 +63,17 @@ class CompanyController extends BaseController {
 	}
 
 	getSubscribers(req, res, next) {
-		const { limit = 20, subId } = req.query;
+		const invalid = this.validate(req)
+			.add('companyId').should.exist().and.have.type('String')
+			.validate();
 
+		if (invalid) return next(invalid.name);
+
+		const { limit = 20, companyId, subId } = req.query;
 
 		this
 			.companiesManager
-			.getSubscribers(req.userId, limit, subId)
+			.getSubscribers(companyId, limit, subId)
 			.then(company => this.success(res, subscribersResponseModel(company)))
 			.catch(next);
 	}
