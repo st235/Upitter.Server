@@ -120,10 +120,9 @@ class AppRoutes extends AppUnit {
 	}
 
 	registerCompany(app, paths, controller) {
-		app.get(paths.findByAlias, controller.findByAlias);
-
-		app.post(paths.edit, this.checkAuthorization, controller.edit);
 		app.get(paths.getSubscribers, this.checkAuthorization, controller.getSubscribers);
+		app.post(paths.edit, this.checkAuthorization, controller.edit);
+		app.get(paths.findByAlias, controller.findByAlias);
 	}
 
 	registerFeedback(app, paths, controller) {
