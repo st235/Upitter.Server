@@ -12,7 +12,7 @@ module.exports = (subscribers, amount) => {
 			return {
 				customId: subscriber.customId,
 				nickname: subscriber.nickname,
-				avatar: subscriber.picture ? subscriber.picture : null
+				logoUrl: subscriber.picture ? subscriber.picture : null
 			};
 		});
 	}
