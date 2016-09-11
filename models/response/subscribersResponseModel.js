@@ -4,7 +4,8 @@ const _ = require('underscore');
 
 module.exports = (subscribers, amount) => {
 	const subscribersResponse = {
-		amount
+		amount,
+		subscribers: [] 
 	};
 
 	if (subscribers && subscribers.length > 0 && subscribers[0].customId) {
