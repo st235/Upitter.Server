@@ -109,14 +109,14 @@ class CompaniesManager extends AppUnit {
 			});
 	}
 
-	getSubscribers(customId, limit, subId) {
+	getSubscribers(alias, limit, subId) {
 		let subscribers;
 		let index = 0;
 		let amount;
 
 		return this
 			.companyModel
-			.findOne({ customId })
+			.findOne({ alias })
 			.populate('subscribers')
 			.exec()
 			.then(currentCompany => {
@@ -148,10 +148,10 @@ class CompaniesManager extends AppUnit {
 			});
 	}
 
-	getFavorites(alias) {
+	getFavorites(customId) {
 		return this
 			.companyModel
-			.findOne({ alias })
+			.findOne({ customId })
 			.populate('favorites')
 			.exec()
 			.then(company => company.favorites)
