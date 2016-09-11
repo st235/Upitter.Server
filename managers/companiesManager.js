@@ -148,10 +148,10 @@ class CompaniesManager extends AppUnit {
 			});
 	}
 
-	getFavorites(customId) {
+	getFavorites(alias) {
 		return this
 			.companyModel
-			.findOne({ customId })
+			.findOne({ alias })
 			.populate('favorites')
 			.exec()
 			.then(company => company.favorites)
