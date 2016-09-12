@@ -109,14 +109,14 @@ class CompaniesManager extends AppUnit {
 			});
 	}
 
-	getSubscribers(customId, limit, subId) {
+	getSubscribers(alias, limit, subId) {
 		let subscribers;
 		let index = 0;
 		let amount;
 
 		return this
 			.companyModel
-			.findOne({ customId })
+			.findOne({ alias })
 			.populate('subscribers')
 			.exec()
 			.then(currentCompany => {
