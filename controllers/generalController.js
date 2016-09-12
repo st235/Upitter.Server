@@ -17,7 +17,7 @@ class GeneralController extends BaseController {
 	}
 
 	getSocialInfo(req, res) {
-		return res.json(socialConfig);
+		return this.success(res, socialConfig);
 	}
 
 }
