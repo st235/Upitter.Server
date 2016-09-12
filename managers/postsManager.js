@@ -233,6 +233,7 @@ class PostsManager extends AppUnit {
 
 	like(userId, postId) {
 		let resultPost;
+		let isLiked;
 
 		return this
 			.postModel
@@ -244,9 +245,11 @@ class PostsManager extends AppUnit {
 				if (find) {
 					post.likeVoters = _.without(post.likeVoters, userId);
 					post.likes--;
+					isLiked = false;
 				} else {
 					post.likeVoters.push(userId);
 					post.likes++;
+					isLiked = true;
 				}
 
 				return post.save();
@@ -255,8 +258,13 @@ class PostsManager extends AppUnit {
 				resultPost = post;
 				return this.companyModel.findById(post.author);
 			})
-			.then(user => {
-				resultPost.author = user;
+			.then(company => {
+				if (!company) throw 'INTERNAL_SERVER_ERROR';
+				isLiked ? company.rating++ : company.rating--;
+				return company.save();
+			})
+			.then(company => {
+				resultPost.author = company;
 				return resultPost;
 			})
 			.catch(() => {
