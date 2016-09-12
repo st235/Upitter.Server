@@ -1,34 +1,42 @@
 module.exports = [
 	{
 		title: 'vk',
-		icon: "http://webtort.ru/graphics/icons/icons/social/social20/vk_v_kruge.png"
+		icon: "http://webtort.ru/graphics/icons/icons/social/social20/vk_v_kruge.png",
+		customId: 0
 	},
 	{
 		title: 'facebook',
-		icon: "https://image.freepik.com/free-icon/facebook-logo_318-75191.png"
+		icon: "https://image.freepik.com/free-icon/facebook-logo_318-75191.png",
+		customId: 1
 	},
 	{
 		title: 'skype',
-		icon: ""
+		icon: "",
+		customId: 2
 	},
 	{
 		title: 'instagram',
-		icon: ""
+		icon: "",
+		customId: 3
 	},
 	{
 		title: 'twitter',
-		icon: ""
+		icon: "",
+		customId: 4
 	},
 	{
 		title: 'youtube',
-		icon: ""
+		icon: "",
+		customId: 5
 	},
 	{
 		title: 'googlePlus',
-		icon: ""
+		icon: "",
+		customId: 6
 	},
 	{
 		title: 'ok',
-		icon: ""
+		icon: "",
+		customId: 7
 	}
 ];
