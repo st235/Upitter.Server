@@ -9,6 +9,7 @@ module.exports = company => {
 		activity: company.activity,
 		name: company.name,
 		isVerify: company.isVerify,
+		rating: company.rating,
 		moderatorsList: company.moderatorsList,
 		coordinates: _.map(company.coordinates, coordinates => {
 			return {

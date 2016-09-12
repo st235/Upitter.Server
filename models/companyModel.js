@@ -87,7 +87,11 @@ module.exports = mongoose => {
 		favorites: [{
 			type: String,
 			ref: 'Posts'
-		}]
+		}],
+		rating: {
+			type: Number,
+			default: 0
+		}
 	});
 
 	companySchema.pre('save', function (next) {
