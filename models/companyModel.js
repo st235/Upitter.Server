@@ -60,10 +60,18 @@ module.exports = mongoose => {
 			type: String
 		},
 		socialLinks: [{
+			customId: {
+				type: String,
+				required: true
+			},
 			type: {
 				type: String,
 				required: true,
 				enum: socialList
+			},
+			icon: {
+				type: String,
+				required: true
 			},
 			link: {
 				type: String,
