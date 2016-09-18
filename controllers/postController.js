@@ -40,6 +40,8 @@ class PostsController extends BaseController {
 		this.like = this.like.bind(this);
 		this.voteForVariant = this.voteForVariant.bind(this);
 		this.watch = this.watch.bind(this);
+
+		this.obtainPostsBySubscriptions = this.obtainPostsBySubscriptions.bind(this);
 	}
 
 	_onCreate() {
@@ -382,6 +384,39 @@ class PostsController extends BaseController {
 			.postsManager
 			.voteForVariant(userId, postId, variantIndex)
 			.then(post => postResponse(req.userId, post, req.ln))
+			.then(response => this.success(res, response))
+			.catch(next);
+	}
+
+	obtainPostsBySubscriptions(req, res, next) {
+		const { userId, ln } = req;
+		const { limit = 20 } = req.query;
+		const { type } = req.params;
+
+		this
+			.usersManager
+			.getSubscriptions(parseInt(userId, 10))
+			.then(user => _.map(user.subscriptions, company => {
+				return this
+					.postsManager
+					.obtainAllPostsByCompany(company.customId)
+					.then(posts => _.map(posts, post => postResponse(userId, post, ln, company)));
+			}))
+			.then(promises => Promise.all(promises))
+			.then(posts => _.flatten(_.compact(posts)))
+			.then(posts => _.sortBy(posts, post => post.createdDate))
+			.then(promises => Promise.all(promises))
+			.then(posts => posts.splice(0, limit))
+			.then(posts => _.map(posts, post => {
+				return this
+					.commentsManager
+					.count(post.customId)
+					.then(commentsAmount => {
+						post.commentsAmount = commentsAmount;
+						return post;
+					});
+			}))
+			.then(promises => Promise.all(promises))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}

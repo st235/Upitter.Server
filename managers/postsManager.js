@@ -27,6 +27,7 @@ class PostsManager extends AppUnit {
 		this.voteForVariant = this.voteForVariant.bind(this);
 		this.getObjectId = this.getObjectId.bind(this);
 		this.favorite = this.favorite.bind(this);
+		this.obtainAllPostsByCompany = this.obtainAllPostsByCompany.bind(this);
 	}
 
 	create(companyId, title, text, category, latitude, longitude, variants, images) {
@@ -368,6 +369,16 @@ class PostsManager extends AppUnit {
 				resultPost.author = user;
 				return resultPost;
 			})
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	obtainAllPostsByCompany(companyId) {
+		return this
+			.postModel
+			.find({ author: companyId })
+			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});

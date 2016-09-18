@@ -45,7 +45,8 @@ module.exports = {
 		obtainOldFavorites: '/post/favoritesOld',
 		obtainByCompany: '/post/obtainByCompany/:type',
 		obtainByAlias: '/post/obtainByAlias/:type',
-		vote: '/post/vote/:postId/:variantIndex'
+		vote: '/post/vote/:postId/:variantIndex',
+		obtainPostsBySubscriptions: '/post/obtainBySubscriptions/:type'
 	},
 	report: {
 		create: '/report/create',

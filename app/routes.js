@@ -153,6 +153,7 @@ class AppRoutes extends AppUnit {
 		app.get(paths.obtainByAlias, this.getUser, controller.obtainByAlias);
 		app.post(paths.create, this.checkAuthorization, controller.create);
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
+		app.get(paths.obtainPostsBySubscriptions, this.checkAuthorization, controller.obtainPostsBySubscriptions);
 	}
 
 	registerFile(app, paths, controller) {

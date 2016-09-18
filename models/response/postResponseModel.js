@@ -21,6 +21,7 @@ module.exports = (userId, post, lang = 'en', author, commentsAmount) => {
 			longitude: post.location[1]
 		},
 		fromNow: moment(post.createdDate).locale(lang).format('DD.MM.YYYY'),
+		createdDate: post.createdDate,
 		likesAmount: post.likes,
 		votersAmount: post.votersForVariants.length,
 		watchesAmount: post.watches,
