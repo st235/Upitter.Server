@@ -46,7 +46,7 @@ module.exports = {
 		obtainByCompany: '/post/obtainByCompany/:type',
 		obtainByAlias: '/post/obtainByAlias/:type',
 		vote: '/post/vote/:postId/:variantIndex',
-		obtainPostsBySubscriptions: '/post/obtainBySubscriptions/:type'
+		obtainPostsBySubscriptions: '/post/obtainBySubscriptions'
 	},
 	report: {
 		create: '/report/create',

@@ -390,8 +390,11 @@ class PostsController extends BaseController {
 
 	obtainPostsBySubscriptions(req, res, next) {
 		const { userId, ln } = req;
-		const { limit = 20 } = req.query;
-		const { type } = req.params;
+		const { limit = 20, postId } = req.query;
+
+		let currentPosts;
+		let amount;
+		let index = 0;
 
 		this
 			.usersManager
@@ -406,7 +409,13 @@ class PostsController extends BaseController {
 			.then(posts => _.flatten(_.compact(posts)))
 			.then(posts => _.sortBy(posts, post => post.createdDate))
 			.then(promises => Promise.all(promises))
-			.then(posts => posts.splice(0, limit))
+			.then(posts => {
+				currentPosts = posts;
+				amount = posts.length;
+				return postId ? _.each(posts, (post, i) => (post.customId === parseInt(postId, 10)) ? index = i + 1 : index) : posts;
+			})
+			.then(promises => Promise.all(promises))
+			.then(() => currentPosts.splice(index, limit))
 			.then(posts => _.map(posts, post => {
 				return this
 					.commentsManager
@@ -417,7 +426,7 @@ class PostsController extends BaseController {
 					});
 			}))
 			.then(promises => Promise.all(promises))
-			.then(response => this.success(res, response))
+			.then(posts => this.success(res, { amount, posts }))
 			.catch(next);
 	}
 }
