@@ -14,7 +14,14 @@ module.exports = (user, limit, companyId) => {
 		let index = 0;
 		if (companyId) _.each(user.subscriptions, (company, i) => (company.customId === companyId) ? index = i + 1 : index);
 		const subscriptions = user.subscriptions.splice(index, limit);
-		subscriptionsResponse.subscriptions = _.map(subscriptions, subscription => companyResponse(subscription));
+		subscriptionsResponse.subscriptions = _.map(subscriptions, subscription => {
+			return {
+				customId: subscription.customId,
+				alias: subscription.alias,
+				name: subscription.name,
+				logoUrl: subscription.logoUrl
+			}
+		});
 	}
 
 	return subscriptionsResponse;
