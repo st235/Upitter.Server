@@ -30,24 +30,12 @@ class UsersController extends BaseController {
 	}
 
 	edit(req, res, next) {
-		const invalid = this.validate(req)
-			//.add('nickname').should.have.type('String').and.be.in.rangeOf(2, 20)
-			//.add('name').should.have.type('String').and.be.in.rangeOf(2, 20)
-			//.add('surname').should.have.type('String').and.be.in.rangeOf(2, 30)
-			//.add('email').should.have.type('String').and.be.in.rangeOf(2, 30)
-			//.add('sex').should.have.type('String').and.be.in.rangeOf(0, 2)
-			//.add('description').should.have.type('String').and.be.in.rangeOf(4, 400)
-			.validate();
-
-		if (invalid) return next(invalid.name);
-
-		const body = req.body;
+		const { nickname, name, surname, sex, picture } = req.body;
 
 		this
 			.usersManager
-			.edit(req.userId, body)
-			.then(user => userResponse(user))
-			.then(response => this.success(res, response))
+			.edit(req.userId, nickname, name, surname, sex, picture)
+			.then(user => this.success(res, userResponse(user)))
 			.catch(next);
 	}
 

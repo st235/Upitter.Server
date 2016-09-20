@@ -78,17 +78,24 @@ class UsersManager extends AppUnit {
 			});
 	}
 
-	edit(customId, data) {
+	edit(customId, nickname, name, surname, sex, picture) {
 		return this
 			.userModel
 			.findOne({ customId })
 			.exec()
 			.then(user => {
 				if (!user) throw 'INTERNAL_SERVER_ERROR';
-				let validatedData = _.omit(data, 'customId', 'isVerify', 'createdDate', 'socialId');
-				_.extend(user, validatedData);
+				const data = {
+					nickname: nickname || user.nickname,
+					name: name || user.name,
+					surname: surname || user.surname,
+					sex: sex || user.sex,
+					picture: picture || user.picture
+				};
+				Object.assign(user, data);
 				return user.save();
-			}).catch(() => {
+			})
+			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
