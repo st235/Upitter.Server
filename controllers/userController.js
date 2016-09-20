@@ -84,7 +84,7 @@ class UsersController extends BaseController {
 
 	getSubscriptions(req, res, next) {
 		const userId = req.userId;
-		const { limit = 20, companyId = 0 } = req.query;
+		const { limit = 20, companyId} = req.query;
 
 		this
 			.usersManager
