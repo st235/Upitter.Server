@@ -6,7 +6,8 @@ const companyResponse = require('./companyResponseModel');
 module.exports = (user, limit, companyId) => {
 	const subscriptionsResponse = {
 		customId: user.customId,
-		count: 0
+		count: 0,
+		subscriptions: []
 	};
 
 	if (user.subscriptions && user.subscriptions.length > 0 && user.subscriptions[0].customId) {
