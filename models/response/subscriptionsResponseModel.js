@@ -1,6 +1,7 @@
 'use strict';
 
 const _ = require('underscore');
+const companyResponse = require('./companyResponseModel');
 
 module.exports = (user, companyId) => {
 	const subscriptionsResponse = {
@@ -10,17 +11,7 @@ module.exports = (user, companyId) => {
 
 	if (user.subscriptions && user.subscriptions.length > 0 && user.subscriptions[0].customId) {
 		subscriptionsResponse.count = user.subscriptions.length;
-		subscriptionsResponse.subscriptions = _.map(user.subscriptions, subscription => {
-			if (companyId) {
-				subscriptionsResponse.companyInSubscriptions = !!(!subscriptionsResponse.userInSubscribers && subscription.customId === companyId);
-			}
-
-			return {
-				customId: subscription.customId,
-				name: subscription.name,
-				logoUrl: subscription.logoUrl
-			};
-		});
+		subscriptionsResponse.subscriptions = _.map(user.subscriptions, subscription => companyResponse(companyResponse));
 	}
 
 	return subscriptionsResponse;
