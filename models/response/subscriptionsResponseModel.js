@@ -3,7 +3,7 @@
 const _ = require('underscore');
 const companyResponse = require('./companyResponseModel');
 
-module.exports = (user, companyId) => {
+module.exports = (user, limit, companyId) => {
 	const subscriptionsResponse = {
 		customId: user.customId,
 		count: 0
@@ -11,7 +11,10 @@ module.exports = (user, companyId) => {
 
 	if (user.subscriptions && user.subscriptions.length > 0 && user.subscriptions[0].customId) {
 		subscriptionsResponse.count = user.subscriptions.length;
-		subscriptionsResponse.subscriptions = _.map(user.subscriptions, subscription => companyResponse(companyResponse));
+		let index = 0;
+		if (companyId) _.each(user.subscriptions, (company, i) => (company.customId === companyId) ? index = i + 1 : index);
+		const subscriptions = user.subscriptions.splice(index, limit);
+		subscriptionsResponse.subscriptions = _.map(subscriptions, subscription => companyResponse(subscription));
 	}
 
 	return subscriptionsResponse;

@@ -84,11 +84,12 @@ class UsersController extends BaseController {
 
 	getSubscriptions(req, res, next) {
 		const userId = req.userId;
+		const { limit = 20, companyId = 0 } = req.query;
 
 		this
 			.usersManager
 			.getSubscriptions(userId)
-			.then(user => subscriptionsResponseModel(user))
+			.then(user => subscriptionsResponseModel(user, parseInt(limit, 10), parseInt(companyId, 10)))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
