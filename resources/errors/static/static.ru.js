@@ -5,8 +5,8 @@ module.exports = {
 	},
 
 	INTERNAL_SERVER_ERROR: {
-		internalDescription: 'Внутрення ошибка сервера',
-		externalDescription: 'Внутрення ошибка сервера'
+		internalDescription: 'Внутренняя ошибка сервера',
+		externalDescription: 'Внутренняя ошибка сервера'
 	},
 
 	INTERNAL_REDIS_ERROR: {
