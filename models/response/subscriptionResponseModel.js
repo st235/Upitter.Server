@@ -2,7 +2,7 @@
 
 module.exports = (company, subscribe) => {
 	const subscribersResponse = {
-		subscribersAmount: 0,
+		subscribersAmount: '0',
 		subscribe
 	};
 
