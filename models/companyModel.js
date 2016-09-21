@@ -61,21 +61,17 @@ module.exports = mongoose => {
 		},
 		socialLinks: [{
 			customId: {
-				type: String,
-				required: true
+				type: String
 			},
 			type: {
 				type: String,
-				required: true,
 				enum: socialList
 			},
 			icon: {
-				type: String,
-				required: true
+				type: String
 			},
 			link: {
-				type: String,
-				required: true
+				type: String
 			}
 		}],
 		coordinates: [{

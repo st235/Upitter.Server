@@ -236,6 +236,7 @@ class PostsManager extends AppUnit {
 		let resultPost;
 		let isLiked;
 
+		console.log(postId, userId)
 		return this
 			.postModel
 			.findOne({ customId: postId })
@@ -262,7 +263,7 @@ class PostsManager extends AppUnit {
 			.then(company => {
 				if (!company) throw 'INTERNAL_SERVER_ERROR';
 				isLiked ? company.rating++ : company.rating--;
-				return company.save();
+				return company.save().catch(e => console.log(e));
 			})
 			.then(company => {
 				resultPost.author = company;
