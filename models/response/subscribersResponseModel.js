@@ -2,16 +2,20 @@
 
 const _ = require('underscore');
 
-module.exports = (company, subscribe) => {
+module.exports = (subscribers, amount) => {
 	const subscribersResponse = {
-		subscribersAmount: 0,
-		subscribe
+		amount,
+		subscribers: []
 	};
 
-	if (company.subscribers && company.subscribers.length) {
-		if (company.subscribers.length < 1000) subscribersResponse.subscribersAmount = company.subscribers.length.toString();
-		else if (company.subscribers.length < 1000000) subscribersResponse.subscribersAmount = Math.round(company.subscribers.length / 1000) + 'k';
-		else subscribersResponse.subscribersAmount = Math.round(company.subscribers.length / 1000000) + 'M';
+	if (subscribers && subscribers.length > 0 && subscribers[0].customId) {
+		subscribersResponse.subscribers = _.map(subscribers, subscriber => {
+			return {
+				customId: subscriber.customId,
+				nickname: subscriber.nickname,
+				logoUrl: subscriber.picture ? subscriber.picture : null
+			};
+		});
 	}
 
 	return subscribersResponse;
