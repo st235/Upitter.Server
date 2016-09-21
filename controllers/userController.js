@@ -69,7 +69,7 @@ class UsersController extends BaseController {
 				subscribe = sub;
 				return this.companiesManager.toggleUserSubscription(ids.userObjectId, ids.companyId)
 			})
-			.then(response => this.success(res, subscribe))
+			.then(response => this.success(res, { subscribe }))
 			.catch(next);
 	}
 
