@@ -127,6 +127,7 @@ class UsersManager extends AppUnit {
 	}
 
 	toggleCompanySubscription(userId, companyId) {
+		let subscribe;
 		return this
 			.userModel
 			.findOne({ customId: userId })
@@ -136,10 +137,15 @@ class UsersManager extends AppUnit {
 				const companyIdString = companyId.toString();
 				if (_.indexOf(user.subscriptions, companyIdString) !== -1) {
 					user.subscriptions = _.without(user.subscriptions, companyIdString);
+					subscribe = false;
 				} else {
 					user.subscriptions.push(companyIdString);
+					subscribe = true;
 				}
 				return user.save();
+			})
+			.then(() => {
+				return subscribe;
 			})
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
