@@ -178,7 +178,7 @@ class AppRoutes extends AppUnit {
 
 	registerUser(app, paths, controller) {
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
-		app.post(paths.toggleSubscription, this.checkAuthorization, controller.toggleSubscription);
+		app.get(paths.toggleSubscription, this.checkAuthorization, controller.toggleSubscription);
 		app.get(paths.getSubscriptions, this.checkAuthorization, controller.getSubscriptions);
 	}
 
