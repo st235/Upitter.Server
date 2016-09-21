@@ -64,11 +64,11 @@ class UsersController extends BaseController {
 
 		this
 			._getObjectsIds(ids)
-			.then(result => {
-				subscribe = result;
-				return this.usersManager.toggleCompanySubscription(ids.userId, ids.companyObjectId)
+			.then(() => this.usersManager.toggleCompanySubscription(ids.userId, ids.companyObjectId))
+			.then(sub => {
+				subscribe = sub;
+				return this.companiesManager.toggleUserSubscription(ids.userObjectId, ids.companyId)
 			})
-			.then(() => this.companiesManager.toggleUserSubscription(ids.userObjectId, ids.companyId))
 			.then(response => this.success(res, subscribe))
 			.catch(next);
 	}
