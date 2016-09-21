@@ -1,7 +1,6 @@
 'use strict';
 
 const _ = require('underscore');
-const companyResponse = require('./companyResponseModel');
 
 module.exports = (user, limit, companyId) => {
 	if (user.subscriptions && user.subscriptions.length > 0 && user.subscriptions[0].customId) {

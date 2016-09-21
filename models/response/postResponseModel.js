@@ -2,7 +2,6 @@
 
 const _ = require('underscore');
 const moment = require('moment');
-const commentResponse = require('./commentResponseModel');
 const companyResponse = require('./companyResponseModel');
 
 module.exports = (userId, post, lang = 'en', author, commentsAmount) => {

@@ -2,7 +2,9 @@
 
 const _ = require('underscore');
 
-module.exports = company => {
+module.exports = (company, user) => {
+	const isMySubscription = user ? !!_.find(company.subscribers, subscriber => subscriber.toString() === user._id.toString()) : false;
+
 	const companyResponse = {
 		customId: company.customId,
 		alias: company.alias,
@@ -18,7 +20,8 @@ module.exports = company => {
 				longitude: coordinates.longitude
 			};
 		}),
-		subscribersAmount: '0'
+		subscribersAmount: '0',
+		isMySubscription
 	};
 
 	if (company.logoUrl) companyResponse.logoUrl = company.logoUrl;

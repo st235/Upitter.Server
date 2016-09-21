@@ -8,8 +8,11 @@ const subscribersResponseModel = require('../models/response/subscribersResponse
 const _ = require('underscore');
 
 class CompanyController extends BaseController {
-	constructor(companiesManager) {
-		super({ companiesManager });
+	constructor(companiesManager, usersManager) {
+		super({
+			companiesManager,
+			usersManager
+		});
 	}
 
 	_onBind() {
@@ -53,11 +56,17 @@ class CompanyController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const { alias } = req.params;
+		const { userId } = req;
+		let company;
 
 		this
 			.companiesManager
 			.findByAlias(alias)
-			.then(company => companyResponseModel(company))
+			.then(currentCompany => {
+				company = currentCompany;
+				return this.usersManager.findById(userId);
+			})
+			.then(user => companyResponseModel(company, user))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
