@@ -18,7 +18,6 @@ module.exports = company => {
 				longitude: coordinates.longitude
 			};
 		}),
-		subscribersAmount: 0
 	};
 
 	if (company.logoUrl) companyResponse.logoUrl = company.logoUrl;
@@ -28,6 +27,7 @@ module.exports = company => {
 	if (company.accessToken) companyResponse.accessToken = company.accessToken;
 	if (company.socialLinks) companyResponse.socialLinks = company.socialLinks;
 	if (company.subscribers && company.subscribers.length && company.subscribers[0].customId) {
+		company.subscribersAmount = 0;
 		if (company.subscribers.length < 1000) companyResponse.subscribersAmount = company.subscribers.length.toString();
 		else if (company.subscribers.length < 1000000) companyResponse.subscribersAmount = Math.round(company.subscribers.length / 1000) + "k";
 		else companyResponse.subscribersAmount = Math.round(company.subscribers.length / 1000000) + "M";
