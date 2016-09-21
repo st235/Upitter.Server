@@ -17,7 +17,8 @@ module.exports = company => {
 				latitude: coordinates.latitude,
 				longitude: coordinates.longitude
 			};
-		})
+		}),
+		subscribersAmount: 0
 	};
 
 	if (company.logoUrl) companyResponse.logoUrl = company.logoUrl;
@@ -41,6 +42,9 @@ module.exports = company => {
 			return obj;
 		});
 	}
+	if (company.subscribers.length < 1000) companyResponse.subscribersAmount = company.subscribers.length.toString();
+	else if (company.subscribers.length < 1000000) companyResponse.subscribersAmount = Math.round(company.subscribers.length / 1000) + "k";
+	else companyResponse.subscribersAmount = Math.round(company.subscribers.length / 1000000) + "M";
 
 	return companyResponse;
 };
