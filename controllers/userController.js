@@ -5,7 +5,7 @@ const ValidationUtils = require('../utils/validationUtils');
 const _ = require('underscore');
 
 const userResponse = require('../models/response/userResponseModel');
-const subscribersResponseModel = require('../models/response/subscribersResponseModel');
+const subscribersResponse = require('../models/response/subscribersResponseModel');
 const subscriptionsResponseModel = require('../models/response/subscriptionsResponseModel');
 
 class UsersController extends BaseController {
@@ -67,9 +67,9 @@ class UsersController extends BaseController {
 			.then(() => this.usersManager.toggleCompanySubscription(ids.userId, ids.companyObjectId))
 			.then(sub => {
 				subscribe = sub;
-				return this.companiesManager.toggleUserSubscription(ids.userObjectId, ids.companyId)
+				return this.companiesManager.toggleUserSubscription(ids.userObjectId, ids.companyId);
 			})
-			.then(response => this.success(res, { subscribe }))
+			.then(company => this.success(res, subscribersResponse(company, subscribe)))
 			.catch(next);
 	}
 
