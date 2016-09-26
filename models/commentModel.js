@@ -40,6 +40,10 @@ module.exports = mongoose => {
 		},
 		createdDate: {
 			type: Date
+		},
+		reportVoters: {
+			type: [String],
+			default: []
 		}
 	});
 

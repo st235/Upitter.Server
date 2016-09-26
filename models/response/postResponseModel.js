@@ -8,6 +8,7 @@ module.exports = (userId, post, lang = 'en', author, commentsAmount) => {
 	const likedByMe = !!_.find(post.likeVoters, voterId => voterId === userId);
 	const favoriteByMe = !!_.find(post.favoriteVoters, voterId => voterId === userId);
 	const votedByMe = !!_.find(post.votersForVariants, voterId => voterId === userId);
+	const reportedByMe = !!_.find(post.reportVoters, voter => voter === userId);
 
 	const postResponse = {
 		customId: post.customId,
@@ -28,7 +29,8 @@ module.exports = (userId, post, lang = 'en', author, commentsAmount) => {
 		commentsAmount: commentsAmount || 0,
 		isLikedByMe: likedByMe,
 		isVotedByMe: votedByMe,
-		isFavoriteByMe: favoriteByMe
+		isFavoriteByMe: favoriteByMe,
+		isReportedByMe: reportedByMe
 	};
 
 	if (post.variants.length > 0) {

@@ -124,6 +124,21 @@ module.exports = {
 		externalDescription: 'Вы еще не подписаны на эту компанию'
 	},
 
+	REPORT_ERROR_1: {
+		internalDescription: 'Пользователь уже оставлял жалобу на эту компанию',
+		externalDescription: 'Вы уже оставляли жалобу на эту компанию'
+	},
+
+	REPORT_ERROR_2: {
+		internalDescription: 'Пользователь уже оставлял жалобу на это сообщение',
+		externalDescription: 'Вы уже оставляли жалобу на это сообщение'
+	},
+
+	REPORT_ERROR_3: {
+		internalDescription: 'Пользователь уже оставлял жалобу на этот комментарий',
+		externalDescription: 'Вы уже оставляли жалобу на этот комментарий'
+	},
+
 	ACCESS_DENIED: {
 		internalDescription: 'Доступ запрещен',
 		externalDescription: 'Доступ запрещен'

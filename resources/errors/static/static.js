@@ -124,6 +124,22 @@ module.exports = {
 		externalDescription: 'You have not subscribed to this company'
 	},
 
+
+	REPORT_ERROR_1: {
+		internalDescription: 'The user has left a report on this company',
+		externalDescription: 'You are already left a complaint on this company'
+	},
+
+	REPORT_ERROR_2: {
+		internalDescription: 'The user has left a report on this post',
+		externalDescription: 'You are already left a complaint on this post'
+	},
+
+	REPORT_ERROR_3: {
+		internalDescription: 'The user has left a report on this comment',
+		externalDescription: 'You are already left a complaint on this comment'
+	},
+
 	ACCESS_DENIED: {
 		internalDescription: 'Access denied',
 		externalDescription: 'Access denied'

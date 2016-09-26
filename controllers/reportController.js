@@ -46,6 +46,8 @@ class ReportsController extends BaseController {
 		const { userId } = req;
 		const { reasonId, targetId } = req.body;
 		let currentAuthor;
+		let currentReason;
+		let currentType;
 
 		this
 			.usersManager
@@ -55,10 +57,11 @@ class ReportsController extends BaseController {
 				return this.reportsManager.findReasonById(reasonId);
 			})
 			.then(reason => {
-				const currentReason = _.pick(reason, 'customId', 'title');
-				const type = reason.type;
-				return this.reportsManager.create(currentAuthor, type, currentReason, targetId);
+				currentReason = _.pick(reason, 'customId', 'title');
+				currentType = reason.type;
+				return this.reportsManager.checkReportByThisUser(userId, currentType, targetId);
 			})
+			.then(() => this.reportsManager.create(currentAuthor, currentType, currentReason, targetId))
 			.then(report => reportResponse(report))
 			.then(report => this.success(res, report))
 			.catch(next);

@@ -5,22 +5,26 @@ const reportsConfig = require('../config/reportReasons');
 const _ = require('underscore');
 
 class ReportsManager extends AppUnit {
-	constructor(reportModel, reportReasonModel) {
+	constructor(reportModel, reportReasonModel, companyModel, commentModel, postModel) {
 		super({
 			reportModel,
-			reportReasonModel
+			reportReasonModel,
+			companyModel,
+			commentModel,
+			postModel
 		});
 	}
 
 	_onBind() {
 		this._createReason = this._createReason.bind(this);
 		this.createDefaultReportReasons = this.createDefaultReportReasons.bind(this);
+		this.create = this.create.bind(this);
+		this.checkReportByThisUser = this.checkReportByThisUser.bind(this);
 		this.obtainReportReasons = this.obtainReportReasons.bind(this);
 		this.obtainReports = this.obtainReports.bind(this);
 		this.obtainReportsByType = this.obtainReportsByType.bind(this);
 		this.obtainAllReports = this.obtainAllReports.bind(this);
 		this.findReasonById = this.findReasonById.bind(this);
-
 	}
 
 	_createReason(data, customId, type) {
@@ -56,16 +60,60 @@ class ReportsManager extends AppUnit {
 			});
 	}
 
+	checkReportByThisUser(userId, type, targetId) {
+		switch (type) {
+		case 'post':
+			return this
+				.postModel
+				.findOne({ customId: targetId })
+				.exec()
+				.then(post => {
+					if (!post) throw 'INTERNAL_SERVER_ERROR';
+					const find = !_.find(post.reportVoters, reportVoter => reportVoter === userId);
+					if (find) post.reportVoters.push(userId);
+					else throw 'REPORT_ERROR_2';
+					return post.save();
+				});
+			break;
+		case 'company':
+			return this
+				.companyModel
+				.findOne({ customId: targetId })
+				.exec()
+				.then(company => {
+					if (!company) throw 'INTERNAL_SERVER_ERROR';
+					const find = !_.find(company.reportVoters, reportVoter => reportVoter === userId);
+					if (find) company.reportVoters.push(userId);
+					else throw 'REPORT_ERROR_1';
+					return company.save();
+				});
+			break;
+		case 'comment':
+			return this
+				.commentModel
+				.findOne({ customId: targetId })
+				.exec()
+				.then(comment => {
+					if (!comment) throw 'INTERNAL_SERVER_ERROR';
+					const find = !_.find(comment.reportVoters, reportVoter => reportVoter === userId);
+					if (find) comment.reportVoters.push(userId);
+					else throw 'REPORT_ERROR_3';
+					return comment.save();
+				});
+			break;
+		default:
+			throw 'INTERNAL_SERVER_ERROR';
+		}
+	}
+
 	create(author, type, reason, targetId) {
-		const data = {
+		const report = new this.reportModel({
 			author,
 			type,
 			reason,
 			targetId,
 			createdDate: Date.now()
-		};
-
-		const report = new this.reportModel(data);
+		});
 
 		return report
 			.save()

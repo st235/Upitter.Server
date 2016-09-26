@@ -125,7 +125,11 @@ module.exports = mongoose => {
 		votersForVariants: [{
 			type: [String],
 			default: []
-		}]
+		}],
+		reportVoters: {
+			type: [String],
+			default: []
+		}
 	});
 
 	postSchema.pre('save', function (next) {

@@ -95,6 +95,10 @@ module.exports = mongoose => {
 		rating: {
 			type: Number,
 			default: 0
+		},
+		reportVoters: {
+			type: [String],
+			default: []
 		}
 	});
 

@@ -4,6 +4,7 @@ const _ = require('underscore');
 
 module.exports = (company, user) => {
 	const isMySubscription = user ? !!_.find(company.subscribers, subscriber => subscriber.toString() === user._id.toString()) : false;
+	const isReportedByMe = user ? !!_.find(company.reportVoters, voter => voter === user.customId.toString()) : false;
 
 	const companyResponse = {
 		customId: company.customId,
@@ -21,7 +22,8 @@ module.exports = (company, user) => {
 			};
 		}),
 		subscribersAmount: '0',
-		isMySubscription
+		isMySubscription,
+		isReportedByMe
 	};
 
 	if (company.logoUrl) companyResponse.logoUrl = company.logoUrl;

@@ -3,12 +3,16 @@
 const userResponse = require('./userResponseModel');
 const companyResponse = require('./companyResponseModel');
 const commentAuthorResponse = require('./commentAuthorResponseModel');
+const _ = require('underscore');
 
-module.exports = comment => {
+module.exports = (comment, userId) => {
+	const isReportedByMe = userId ? !!_.find(comment.reportVoters, voter => voter === userId) : false;
+
 	const commentResponse = {
 		customId: comment.customId,
 		text: comment.text,
-		createdDate: comment.createdDate
+		createdDate: comment.createdDate,
+		isReportedByMe
 	};
 	if (comment.authorUser) commentResponse.author = commentAuthorResponse(comment.authorUser, 'User');
 	if (comment.authorCompany) commentResponse.author = commentAuthorResponse(comment.authorCompany, 'Company');
