@@ -45,10 +45,9 @@ class ReportsManager extends AppUnit {
 	}
 
 	obtainReportReasons(type) {
-		const query = type === "all" ? {} : { type };
 		return this
 			.reportReasonModel
-			.find(query)
+			.find()
 			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
