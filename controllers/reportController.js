@@ -6,6 +6,7 @@ const _ = require('underscore');
 
 const pagingConfig = require('../config/pagingConfig');
 const reportResponse = require('../models/response/reportResponseModel');
+const reportReasonResponse = require('../models/response/reportReasonResponseModel');
 const companyResponse = require('../models/response/companyResponseModel');
 const postResponse = require('../models/response/postResponseModel');
 const commentResponse = require('../models/response/commentResponseModel');
@@ -95,7 +96,7 @@ class ReportsController extends BaseController {
 		this
 			.reportsManager
 			.obtainReportReasons(type, language)
-			.then(reasons => _.map(reasons, reason => reportResponseModel(reason, language)))
+			.then(reasons => _.map(reasons, reason => reportReasonResponse(reason, language)))
 			.then(reasons => this.success(res, reasons))
 			.catch(next);
 	}

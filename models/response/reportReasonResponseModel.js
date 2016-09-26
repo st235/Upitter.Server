@@ -6,7 +6,8 @@ module.exports = (reason, language) => {
 
 	const reasonResponse = {
 		customId: reason.customId,
-		title: LocaleService.getString(`REASON_${reason.customId}`, language)
+		title: LocaleService.getString(`REASON_${reason.customId}`, language),
+		type: reason.type
 	};
 
 	return reasonResponse;
