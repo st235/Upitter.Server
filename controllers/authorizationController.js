@@ -166,7 +166,7 @@ class AuthorizationController extends BaseController {
 
 	twitterVerify(req, res, next) {
 		const invalid = this.validate(req)
-			.add('accessToken').should.exist().and.have.type('String')
+			.add('secret').should.exist().and.have.type('String')
 			.add('token').should.exist().and.have.type('String')
 			.validate();
 
