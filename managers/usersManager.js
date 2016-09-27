@@ -45,7 +45,7 @@ class UsersManager extends AppUnit {
 			result.sex = data.sex;
 			result.name = data.first_name;
 			result.surname = data.last_name;
-			result.picture = data.picture;
+			result.picture = data.photo_200;
 			break;
 		default:
 			throw 'INTERNAL_SERVER_ERROR';
