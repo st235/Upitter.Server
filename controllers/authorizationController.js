@@ -144,13 +144,12 @@ class AuthorizationController extends BaseController {
 
 		if (invalid) return next(invalid.name);
 
-		const { accessToken, user_id } = req.body;
-		let currentUser = null;
-		let userModel = null;
+		const { accessToken } = req.body;
+		let userModel;
 
 		socialRequestUtils
 			.getVk(TokenInfo.vk, { access_token: accessToken })
-			.then(user =>  this.usersManager.checkSocialExistence('vk', currentUser))
+			.then(user => this.usersManager.checkSocialExistence('vk', user.response[0]))
 			.then(user => {
 				userModel = user;
 				return userModel;
