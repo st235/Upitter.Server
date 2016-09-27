@@ -46,6 +46,8 @@ class UsersManager extends AppUnit {
 			result.name = data.first_name;
 			result.surname = data.last_name;
 			result.picture = data.photo_200;
+			if (data.sex === 1) result.sex = '1';
+			else if (data.sex === 2) result.sex = '0';
 			break;
 		default:
 			throw 'INTERNAL_SERVER_ERROR';
