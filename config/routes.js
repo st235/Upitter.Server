@@ -6,7 +6,7 @@ module.exports = {
 		facebookVerify: '/authorization/facebook/verify',
 		twitterVerify: '/authorization/twitter/verify',
 		vkVerify: '/authorization/vk/verify',
-
+		twitterAuth: '/authorization/twitter/web',
 		authorizeByPhone: '/authorization/phone/set/:number/:countryCode',
 		verifyCode: '/authorization/phone/verify/:number/:countryCode',
 		//DEBUG ROOT

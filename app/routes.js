@@ -3,10 +3,13 @@
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const routesConfig = require('../config/routes');
+const passport = require('passport');
+const expressSession = require('express-session');
 
 const AppUnit = require('./unit');
 
 const AuthorizationMiddleware = require('../controllers/middlewares/authorizationMiddlerware');
+const SocialAuthorizationMiddleware = require('../controllers/middlewares/socialAuthorizationMiddleware');
 const LanguageMiddleware = require('../controllers/middlewares/languageMiddleware');
 const ErrorMiddleware = require('../controllers/middlewares/errorMiddleware');
 const DebugMiddleware = require('../controllers/middlewares/debugMiddleware');
@@ -51,6 +54,7 @@ class AppRoutes extends AppUnit {
 		this.obtainLanguage = new LanguageMiddleware().obtainLanguage;
 		this.errorHandler = new ErrorMiddleware();
 		this.checkIfDebug = new DebugMiddleware().checkIfDebug;
+		this.socialAuthorization = new SocialAuthorizationMiddleware();
 
 		this.authorizationController = new AuthorizationController(this.managers.users, this.managers.companies);
 		this.categoryController = new CategoryController(this.managers.categories);
@@ -80,6 +84,7 @@ class AppRoutes extends AppUnit {
 		this.registerService(this.app, routesConfig.service, this.serviceController);
 		this.registerReport(this.app, routesConfig.report, this.reportController);
 		this.registerUser(this.app, routesConfig.user, this.userController);
+		this.registerTwitterAuth(this.app, routesConfig.authorization, this.authorizationController)
 		this.registerFooter(this.app);
 	}
 
@@ -87,6 +92,10 @@ class AppRoutes extends AppUnit {
 		app.use(cors());
 		app.use(bodyParser.json());
 		app.use(bodyParser.urlencoded({ extended: true }));
+		app.use(expressSession({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+		app.use(passport.initialize());
+		app.use(passport.session());
+		this.socialAuthorization.twitterAuth();
 		app.use(this.obtainLanguage);
 	}
 
@@ -103,6 +112,10 @@ class AppRoutes extends AppUnit {
 		//DEBUG ROOT
 		app.post(paths.verifyDevelopmentCode, this.checkIfDebug, controller.verifyDevelopmentCode);
 		app.post(paths.addInfo, controller.addInfo);
+	}
+
+	registerTwitterAuth(app, paths, controller) {
+		app.get(paths.twitterAuth, passport.authenticate('twitter'));
 	}
 
 	registerCategory(app, paths, controller) {
