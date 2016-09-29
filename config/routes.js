@@ -6,12 +6,15 @@ module.exports = {
 		facebookVerify: '/authorization/facebook/verify',
 		twitterVerify: '/authorization/twitter/verify',
 		vkVerify: '/authorization/vk/verify',
-		twitterAuth: '/authorization/twitter/web',
 		authorizeByPhone: '/authorization/phone/set/:number/:countryCode',
 		verifyCode: '/authorization/phone/verify/:number/:countryCode',
 		//DEBUG ROOT
 		verifyDevelopmentCode: '/debug/authorization/phone/verify_development/:number/:countryCode',
-		addInfo: '/authorization/phone/add_info/:number/:countryCode'
+		addInfo: '/authorization/phone/add_info/:number/:countryCode',
+		web: {
+			twitterAuth: '/authorization/twitter/web',
+			twitterWebVerify: '/authorization/twitter/web/verify'
+		}
 	},
 	category: {
 		obtain: '/categories',

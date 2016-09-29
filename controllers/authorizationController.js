@@ -27,6 +27,7 @@ class AuthorizationController extends BaseController {
 		this.facebookVerify = this.facebookVerify.bind(this);
 		this.vkVerify = this.vkVerify.bind(this);
 		this.twitterVerify = this.twitterVerify.bind(this);
+		this.twitterWebVerify = this.twitterWebVerify.bind(this);
 
 		this.authorizeByPhone = this.authorizeByPhone.bind(this);
 		this.verifyCode = this.verifyCode.bind(this);
@@ -179,6 +180,26 @@ class AuthorizationController extends BaseController {
 		socialRequestUtils
 			.getTwitter(token, secret)
 			.then(response => this.usersManager.checkSocialExistence('twitter', response))
+			.then(user => {
+				userModel = user;
+				return userModel;
+			})
+			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
+			.then(token => {
+				userModel.token = token;
+				return userModel;
+			})
+			.then(user => userResponse(user))
+			.then(response => this.success(res, response))
+			.catch(next);
+	}
+
+	twitterWebVerify(req, res, next) {
+		let userModel;
+
+		this
+			.usersManager
+			.checkSocialExistence('twitterWeb', req.user)
 			.then(user => {
 				userModel = user;
 				return userModel;

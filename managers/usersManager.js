@@ -39,6 +39,11 @@ class UsersManager extends AppUnit {
 			result.nickname = data.name;
 			result.socialId = `twitter_${data.id}`;
 			break;
+		case 'twitterWeb':
+			result.name = data.displayName;
+			result.nickname = data.username;
+			result.socialId = `twitter_${data.id}`;
+			break;
 		case 'vk':
 			result.nickname = data.first_name;
 			result.socialId = `vk_${data.user_id}`;

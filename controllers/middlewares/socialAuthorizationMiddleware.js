@@ -14,7 +14,7 @@ class SocialAuthorizationMiddleware extends AppUnit {
 		Passport.use(new Strategy({
 			consumerKey: socialKeys.twitter.consumerKey,
 			consumerSecret: socialKeys.twitter.consumerSecret,
-			callbackURL: '/authorization/twitter/web'
+			callbackURL: '/authorization/twitter/web/verify'
 		}, (token, tokenSecret, profile, cb) => {
 			return cb(null, profile);
 		}));

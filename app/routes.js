@@ -84,7 +84,7 @@ class AppRoutes extends AppUnit {
 		this.registerService(this.app, routesConfig.service, this.serviceController);
 		this.registerReport(this.app, routesConfig.report, this.reportController);
 		this.registerUser(this.app, routesConfig.user, this.userController);
-		this.registerTwitterAuth(this.app, routesConfig.authorization, this.authorizationController)
+		this.registerTwitterAuth(this.app, routesConfig.authorization.web, this.authorizationController);
 		this.registerFooter(this.app);
 	}
 
@@ -95,6 +95,12 @@ class AppRoutes extends AppUnit {
 		app.use(expressSession({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 		app.use(passport.initialize());
 		app.use(passport.session());
+		passport.serializeUser(function(user, cb) {
+			cb(null, user);
+		});
+		passport.deserializeUser(function(obj, cb) {
+			cb(null, obj);
+		});
 		this.socialAuthorization.twitterAuth();
 		app.use(this.obtainLanguage);
 	}
@@ -115,7 +121,8 @@ class AppRoutes extends AppUnit {
 	}
 
 	registerTwitterAuth(app, paths, controller) {
-		app.get(paths.twitterAuth, passport.authenticate('twitter'));
+		app.get(paths.twitterAuth, passport.authenticate('twitter'), controller.twitterWebVerify);
+		app.get(paths.twitterWebVerify, passport.authenticate('twitter', { failureRedirect: '/login' }), controller.twitterWebVerify);
 	}
 
 	registerCategory(app, paths, controller) {
