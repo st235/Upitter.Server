@@ -123,9 +123,9 @@ class AppRoutes extends AppUnit {
 
 	registerWebAuth(app, paths, controller) {
 		app.get(paths.twitter.auth, passport.authenticate('twitter'));
-		app.get(paths.twitter.verify, passport.authenticate('twitter', { failureRedirect: '/login' }), controller.twitterWebVerify);
+		app.get(paths.twitter.verify, passport.authenticate('twitter', { failureRedirect: '/' }), controller.twitterWebVerify);
 		app.get(paths.vk.auth, passport.authenticate('vkontakte'), controller.vkWebVeify);
-		app.get(paths.vk.verify, passport.authenticate('vkontakte', { failureRedirect: '/login' }), controller.vkWebVeify);
+		app.get(paths.vk.verify, passport.authenticate('vkontakte', { failureRedirect: '/' }), controller.vkWebVeify);
 	}
 
 	registerCategory(app, paths, controller) {
