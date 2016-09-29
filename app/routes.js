@@ -84,7 +84,7 @@ class AppRoutes extends AppUnit {
 		this.registerService(this.app, routesConfig.service, this.serviceController);
 		this.registerReport(this.app, routesConfig.report, this.reportController);
 		this.registerUser(this.app, routesConfig.user, this.userController);
-		this.registerTwitterAuth(this.app, routesConfig.authorization.web, this.authorizationController);
+		this.registerWebAuth(this.app, routesConfig.authorization.web, this.authorizationController);
 		this.registerFooter(this.app);
 	}
 
@@ -101,7 +101,8 @@ class AppRoutes extends AppUnit {
 		passport.deserializeUser(function(obj, cb) {
 			cb(null, obj);
 		});
-		this.socialAuthorization.twitterAuth();
+		this.socialAuthorization.twitterWebAuth();
+		this.socialAuthorization.vkWebAuth();
 		app.use(this.obtainLanguage);
 	}
 
@@ -120,9 +121,11 @@ class AppRoutes extends AppUnit {
 		app.post(paths.addInfo, controller.addInfo);
 	}
 
-	registerTwitterAuth(app, paths, controller) {
-		app.get(paths.twitterAuth, passport.authenticate('twitter'), controller.twitterWebVerify);
-		app.get(paths.twitterWebVerify, passport.authenticate('twitter', { failureRedirect: '/login' }), controller.twitterWebVerify);
+	registerWebAuth(app, paths, controller) {
+		app.get(paths.twitter.auth, passport.authenticate('twitter'));
+		app.get(paths.twitter.verify, passport.authenticate('twitter', { failureRedirect: '/login' }), controller.twitterWebVerify);
+		app.get(paths.vk.auth, passport.authenticate('vkontakte'), controller.vkWebVeify);
+		app.get(paths.vk.verify, passport.authenticate('vkontakte', { failureRedirect: '/login' }), controller.vkWebVeify);
 	}
 
 	registerCategory(app, paths, controller) {

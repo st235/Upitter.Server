@@ -12,8 +12,14 @@ module.exports = {
 		verifyDevelopmentCode: '/debug/authorization/phone/verify_development/:number/:countryCode',
 		addInfo: '/authorization/phone/add_info/:number/:countryCode',
 		web: {
-			twitterAuth: '/authorization/twitter/web',
-			twitterWebVerify: '/authorization/twitter/web/verify'
+			twitter: {
+				auth: '/authorization/twitter/web',
+				verify: '/authorization/twitter/web/verify'
+			},
+			vk: {
+				auth: '/authorization/vk/web',
+				verify: '/authorization/vk/web/verify'
+			}
 		}
 	},
 	category: {

@@ -16,7 +16,10 @@ const devConfig = require('../config/development');
 
 class AuthorizationController extends BaseController {
 	constructor(usersManager, companiesManager) {
-		super({ usersManager, companiesManager });
+		super({
+			usersManager,
+			companiesManager
+		});
 	}
 
 	_onBind() {
@@ -27,7 +30,9 @@ class AuthorizationController extends BaseController {
 		this.facebookVerify = this.facebookVerify.bind(this);
 		this.vkVerify = this.vkVerify.bind(this);
 		this.twitterVerify = this.twitterVerify.bind(this);
+
 		this.twitterWebVerify = this.twitterWebVerify.bind(this);
+		this.vkWebVeify = this.vkWebVeify.bind(this);
 
 		this.authorizeByPhone = this.authorizeByPhone.bind(this);
 		this.verifyCode = this.verifyCode.bind(this);
@@ -213,6 +218,27 @@ class AuthorizationController extends BaseController {
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
+
+	vkWebVeify(req, res, next) {
+		let userModel;
+
+		this
+			.usersManager
+			.checkSocialExistence('vkWeb', req.user._json)
+			.then(user => {
+				userModel = user;
+				return userModel;
+			})
+			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
+			.then(token => {
+				userModel.token = token;
+				return userModel;
+			})
+			.then(user => userResponse(user))
+			.then(response => this.success(res, response))
+			.catch(next);
+	}
+
 
 	authorizeByPhone(req, res, next) {
 		const invalid = this.validate(req)
