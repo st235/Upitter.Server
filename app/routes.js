@@ -9,7 +9,7 @@ const expressSession = require('express-session');
 const AppUnit = require('./unit');
 
 const AuthorizationMiddleware = require('../controllers/middlewares/authorizationMiddlerware');
-const SocialAuthorizationMiddleware = require('../controllers/middlewares/socialAuthorizationMiddleware');
+const SocialWebAuthorizationMiddleware = require('../controllers/middlewares/socialWebAuthorizationMiddleware');
 const LanguageMiddleware = require('../controllers/middlewares/languageMiddleware');
 const ErrorMiddleware = require('../controllers/middlewares/errorMiddleware');
 const DebugMiddleware = require('../controllers/middlewares/debugMiddleware');
@@ -54,7 +54,7 @@ class AppRoutes extends AppUnit {
 		this.obtainLanguage = new LanguageMiddleware().obtainLanguage;
 		this.errorHandler = new ErrorMiddleware();
 		this.checkIfDebug = new DebugMiddleware().checkIfDebug;
-		this.socialAuthorization = new SocialAuthorizationMiddleware();
+		this.socialWebAuthorization = new SocialWebAuthorizationMiddleware();
 
 		this.authorizationController = new AuthorizationController(this.managers.users, this.managers.companies);
 		this.categoryController = new CategoryController(this.managers.categories);
@@ -101,8 +101,10 @@ class AppRoutes extends AppUnit {
 		passport.deserializeUser(function(obj, cb) {
 			cb(null, obj);
 		});
-		this.socialAuthorization.twitterWebAuth();
-		this.socialAuthorization.vkWebAuth();
+		this.socialWebAuthorization.twitter();
+		this.socialWebAuthorization.vk();
+		this.socialWebAuthorization.facebook();
+		this.socialWebAuthorization.google();
 		app.use(this.obtainLanguage);
 	}
 
@@ -123,9 +125,16 @@ class AppRoutes extends AppUnit {
 
 	registerWebAuth(app, paths, controller) {
 		app.get(paths.twitter.auth, passport.authenticate('twitter'));
-		app.get(paths.twitter.verify, passport.authenticate('twitter', { failureRedirect: '/' }), controller.twitterWebVerify);
-		app.get(paths.vk.auth, passport.authenticate('vkontakte'), controller.vkWebVeify);
-		app.get(paths.vk.verify, passport.authenticate('vkontakte', { failureRedirect: '/' }), controller.vkWebVeify);
+		app.get(paths.twitter.verify, passport.authenticate('twitter', { failureRedirect: '/login' }), controller.twitterWebVerify);
+
+		app.get(paths.vk.auth, passport.authenticate('vkontakte'));
+		app.get(paths.vk.verify, passport.authenticate('vkontakte', { failureRedirect: '/login' }), controller.vkWebVerify);
+
+		app.get(paths.facebook.auth, passport.authenticate('facebook'));
+		app.get(paths.facebook.auth, passport.authenticate('facebook', { failureRedirect: '/login' }), controller.facebookWebVerify);
+
+		app.get(paths.google.auth, passport.authenticate('google', { scope: ['profile'] }));
+		app.get(paths.google.auth, passport.authenticate('google', { failureRedirect: '/login' }), controller.googleWebVerify);
 	}
 
 	registerCategory(app, paths, controller) {

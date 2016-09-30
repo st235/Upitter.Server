@@ -32,7 +32,9 @@ class AuthorizationController extends BaseController {
 		this.twitterVerify = this.twitterVerify.bind(this);
 
 		this.twitterWebVerify = this.twitterWebVerify.bind(this);
-		this.vkWebVeify = this.vkWebVeify.bind(this);
+		this.vkWebVerify = this.vkWebVerify.bind(this);
+		this.facebookWebVerify = this.facebookWebVerify.bind(this);
+		this.googleWebVerify = this.googleWebVerify.bind(this);
 
 		this.authorizeByPhone = this.authorizeByPhone.bind(this);
 		this.verifyCode = this.verifyCode.bind(this);
@@ -219,7 +221,7 @@ class AuthorizationController extends BaseController {
 			.catch(next);
 	}
 
-	vkWebVeify(req, res, next) {
+	vkWebVerify(req, res, next) {
 		let userModel;
 
 		this
@@ -239,6 +241,45 @@ class AuthorizationController extends BaseController {
 			.catch(next);
 	}
 
+	facebookWebVerify(req, res, next) {
+		let userModel;
+
+		this
+			.usersManager
+			.checkSocialExistence('facebookWeb', req.user)
+			.then(user => {
+				userModel = user;
+				return userModel;
+			})
+			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
+			.then(token => {
+				userModel.token = token;
+				return userModel;
+			})
+			.then(user => userResponse(user))
+			.then(response => this.success(res, response))
+			.catch(next);
+	}
+
+	googleWebVerify(req, res, next) {
+		let userModel;
+
+		this
+			.usersManager
+			.checkSocialExistence('googleWeb', req.user)
+			.then(user => {
+				userModel = user;
+				return userModel;
+			})
+			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
+			.then(token => {
+				userModel.token = token;
+				return userModel;
+			})
+			.then(user => userResponse(user))
+			.then(response => this.success(res, response))
+			.catch(next);
+	}
 
 	authorizeByPhone(req, res, next) {
 		const invalid = this.validate(req)

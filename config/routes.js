@@ -19,6 +19,14 @@ module.exports = {
 			vk: {
 				auth: '/authorization/vk/web',
 				verify: '/authorization/vk/web/verify'
+			},
+			facebook: {
+				auth: '/authorization/facebook/web',
+				verify: '/authorization/facebook/web/verify'
+			},
+			google: {
+				auth: '/authorization/google/web',
+				verify: '/authorization/google/web/verify'
 			}
 		}
 	},

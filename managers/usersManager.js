@@ -31,7 +31,16 @@ class UsersManager extends AppUnit {
 			result.nickname = data.name;
 			result.socialId = `google_${data.email}`;
 			break;
+		case 'googleWeb':
+			result.picture = data.picture;
+			result.nickname = data.name;
+			result.socialId = `google_${data.email}`;
+			break;
 		case 'facebook':
+			result.nickname = data.name;
+			result.socialId = `facebook_${data.id}`;
+			break;
+		case 'facebookWeb':
 			result.nickname = data.name;
 			result.socialId = `facebook_${data.id}`;
 			break;
