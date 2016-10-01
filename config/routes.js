@@ -79,6 +79,7 @@ module.exports = {
 		getFeedback: '/support/feedback/get'
 	},
 	user: {
+		profile: '/profile',
 		edit: '/user/edit',
 		toggleSubscription: '/user/toggle_subscription/:companyId',
 		getSubscriptions: '/user/subscriptions'

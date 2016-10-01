@@ -21,6 +21,7 @@ class UsersController extends BaseController {
 		this._getObjectsIds = this._getObjectsIds.bind(this);
 		this.toggleSubscription = this.toggleSubscription.bind(this);
 		this.getSubscriptions = this.getSubscriptions.bind(this);
+		this.getProfile = this.getProfile.bind(this);
 	}
 
 	_onCreate() {
@@ -73,7 +74,7 @@ class UsersController extends BaseController {
 	}
 
 	getSubscriptions(req, res, next) {
-		const userId = req.userId;
+		const { userId } = req;
 		const { limit = 20, companyId } = req.query;
 
 		this
@@ -81,6 +82,16 @@ class UsersController extends BaseController {
 			.getSubscriptions(userId)
 			.then(user => subscriptionsResponseModel(user, parseInt(limit, 10), parseInt(companyId, 10)))
 			.then(response => this.success(res, response))
+			.catch(next);
+	}
+
+	getProfile(req, res, next) {
+		const { userId } = req;
+
+		this
+			.usersManager
+			.getProfile(userId)
+			.then(user => this.success(res, userResponse(user)))
 			.catch(next);
 	}
 }

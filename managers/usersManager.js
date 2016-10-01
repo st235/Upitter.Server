@@ -18,10 +18,11 @@ class UsersManager extends AppUnit {
 		this.getSubscriptions = this.getSubscriptions.bind(this);
 		this.findById = this.findById.bind(this);
 		this.getFavorites = this.getFavorites.bind(this);
+		this.getProfile = this.getProfile.bind(this);
 	}
 
 	_formSocialData(type, data) {
-		let result = {
+		const result = {
 			createdDate: Date.now()
 		};
 
@@ -204,6 +205,16 @@ class UsersManager extends AppUnit {
 			.populate('favorites')
 			.exec()
 			.then(user => user.favorites)
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	getProfile(userId) {
+		return this
+			.userModel
+			.findOne({ customId: userId })
+			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
