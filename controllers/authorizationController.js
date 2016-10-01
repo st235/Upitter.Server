@@ -13,6 +13,7 @@ const socialRequestUtils = require('../utils/socialRequestUtils');
 const TokenInfo = require('../config/methods');
 
 const devConfig = require('../config/development');
+const webDomainConfig = require('../config/webDomain');
 
 class AuthorizationController extends BaseController {
 	constructor(usersManager, companiesManager) {
@@ -212,12 +213,7 @@ class AuthorizationController extends BaseController {
 				return userModel;
 			})
 			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
-			.then(token => {
-				userModel.token = token;
-				return userModel;
-			})
-			.then(user => userResponse(user))
-			.then(response => this.success(res, response))
+			.then(accessToken => res.redirect(`${webDomainConfig.domain + webDomainConfig.success}?accessToken=${accessToken}`))
 			.catch(next);
 	}
 

@@ -3,6 +3,7 @@
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const routesConfig = require('../config/routes');
+const webDomainConfig = require('../config/webDomain');
 const passport = require('passport');
 const expressSession = require('express-session');
 
@@ -125,16 +126,16 @@ class AppRoutes extends AppUnit {
 
 	registerWebAuth(app, paths, controller) {
 		app.get(paths.twitter.auth, passport.authenticate('twitter'));
-		app.get(paths.twitter.verify, passport.authenticate('twitter', { failureRedirect: '/login' }), controller.twitterWebVerify);
+		app.get(paths.twitter.verify, passport.authenticate('twitter', { failureRedirect: webDomainConfig.domain + webDomainConfig.failure }), controller.twitterWebVerify);
 
 		app.get(paths.vk.auth, passport.authenticate('vkontakte'));
-		app.get(paths.vk.verify, passport.authenticate('vkontakte', { failureRedirect: '/login' }), controller.vkWebVerify);
+		app.get(paths.vk.verify, passport.authenticate('vkontakte', { failureRedirect: webDomainConfig.domain + webDomainConfig.failure }), controller.vkWebVerify);
 
 		app.get(paths.facebook.auth, passport.authenticate('facebook'));
-		app.get(paths.facebook.auth, passport.authenticate('facebook', { failureRedirect: '/login' }), controller.facebookWebVerify);
+		app.get(paths.facebook.verify, passport.authenticate('facebook', { failureRedirect: webDomainConfig.domain + webDomainConfig.failure }), controller.facebookWebVerify);
 
-		app.get(paths.google.auth, passport.authenticate('google', { scope: ['profile'] }));
-		app.get(paths.google.auth, passport.authenticate('google', { failureRedirect: '/login' }), controller.googleWebVerify);
+		app.get(paths.google.auth, passport.authenticate('google'));
+		app.get(paths.google.verify, passport.authenticate('google', { failureRedirect: webDomainConfig.domain + webDomainConfig.failure }), controller.googleWebVerify);
 	}
 
 	registerCategory(app, paths, controller) {

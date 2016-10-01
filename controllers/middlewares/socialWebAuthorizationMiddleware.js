@@ -22,7 +22,10 @@ class SocialAuthorizationMiddleware extends AppUnit {
 			consumerKey: socialKeys.twitter.clientID,
 			consumerSecret: socialKeys.twitter.clientSecret,
 			callbackURL: '/authorization/twitter/web/verify'
-		}, (token, tokenSecret, profile, cb) => cb(null, profile)));
+		}, (token, tokenSecret, profile, cb) => {
+			profile.socialName = 'twitter';
+			return cb(null, profile);
+		}));
 	}
 
 	vk() {
