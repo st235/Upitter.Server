@@ -134,7 +134,7 @@ class AppRoutes extends AppUnit {
 		app.get(paths.facebook.auth, passport.authenticate('facebook'));
 		app.get(paths.facebook.verify, passport.authenticate('facebook', { failureRedirect: webDomainConfig.domain + webDomainConfig.failure }), controller.facebookWebVerify);
 
-		app.get(paths.google.auth, passport.authenticate('google'));
+		app.get(paths.google.auth, passport.authenticate('google', { scope: ['profile'] }));
 		app.get(paths.google.verify, passport.authenticate('google', { failureRedirect: webDomainConfig.domain + webDomainConfig.failure }), controller.googleWebVerify);
 	}
 

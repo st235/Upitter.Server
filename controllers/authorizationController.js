@@ -228,12 +228,7 @@ class AuthorizationController extends BaseController {
 				return userModel;
 			})
 			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
-			.then(token => {
-				userModel.token = token;
-				return userModel;
-			})
-			.then(user => userResponse(user))
-			.then(response => this.success(res, response))
+			.then(accessToken => res.redirect(`${webDomainConfig.domain + webDomainConfig.success}?accessToken=${accessToken}`))
 			.catch(next);
 	}
 
@@ -248,12 +243,7 @@ class AuthorizationController extends BaseController {
 				return userModel;
 			})
 			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
-			.then(token => {
-				userModel.token = token;
-				return userModel;
-			})
-			.then(user => userResponse(user))
-			.then(response => this.success(res, response))
+			.then(accessToken => res.redirect(`${webDomainConfig.domain + webDomainConfig.success}?accessToken=${accessToken}`))
 			.catch(next);
 	}
 
@@ -268,12 +258,7 @@ class AuthorizationController extends BaseController {
 				return userModel;
 			})
 			.then(user => authUtils.createToken(this.authorizationClient, user.customId))
-			.then(token => {
-				userModel.token = token;
-				return userModel;
-			})
-			.then(user => userResponse(user))
-			.then(response => this.success(res, response))
+			.then(accessToken => res.redirect(`${webDomainConfig.domain + webDomainConfig.success}?accessToken=${accessToken}`))
 			.catch(next);
 	}
 
