@@ -12,7 +12,7 @@ class UsersController extends BaseController {
 		super({
 			usersManager,
 			companiesManager,
-			notificationManager
+				notificationManager
 		});
 	}
 
@@ -74,7 +74,9 @@ class UsersController extends BaseController {
 			})
 			.then(currentCompany => {
 				company = currentCompany;
-				return this.notificationManager.create('like', ids.userObjectId, null, [ids.companyId], 'user');
+				return subscribe
+					? this.notificationManager.create('subscribe', ids.userObjectId, null, [ids.companyId], 'user')
+					: null;
 			})
 			.then(() => this.success(res, subscriptionResponse(company, subscribe)))
 			.catch(next);

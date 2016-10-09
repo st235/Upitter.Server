@@ -422,7 +422,7 @@ class PostsController extends BaseController {
 			}))
 			.then(promises => Promise.all(promises))
 			.then(posts => _.flatten(_.compact(posts)))
-			.then(posts => _.sortBy(posts, post => post.createdDate))
+			.then(posts => _.sortBy(posts, post => - post.createdDate))
 			.then(promises => Promise.all(promises))
 			.then(posts => {
 				currentPosts = posts;
