@@ -68,7 +68,7 @@ class AppRoutes extends AppUnit {
 		this.generalController = new GeneralController();
 		this.serviceController = new ServiceController();
 		this.reportController = new ReportController(this.managers.reports, this.managers.users, this.managers.posts, this.managers.companies, this.managers.comments);
-		this.userController = new UserController(this.managers.users, this.managers.companies);
+		this.userController = new UserController(this.managers.users, this.managers.companies, this.managers.notifications);
 	}
 
 	register() {
@@ -96,12 +96,8 @@ class AppRoutes extends AppUnit {
 		app.use(expressSession({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 		app.use(passport.initialize());
 		app.use(passport.session());
-		passport.serializeUser(function(user, cb) {
-			cb(null, user);
-		});
-		passport.deserializeUser(function(obj, cb) {
-			cb(null, obj);
-		});
+		passport.serializeUser((user, cb) => cb(null, user));
+		passport.deserializeUser((obj, cb) => cb(null, obj));
 		this.socialWebAuthorization.twitter();
 		this.socialWebAuthorization.vk();
 		this.socialWebAuthorization.facebook();

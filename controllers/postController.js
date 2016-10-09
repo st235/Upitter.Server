@@ -240,7 +240,12 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.obtain(latitude, longitude, radius, limit, category, activity)
-			.then(posts => _.map(posts, post => postResponse(req.userId, post, req.ln)))
+			.then(posts => _.map(posts, post => this
+					.commentsManager
+					.count(post.customId)
+					.then(commentsAmount => postResponse(req.userId, post, req.ln, null, commentsAmount))
+			))
+			.then(promises => Promise.all(promises))
 			.then(response => this.success(res, { posts: response }))
 			.catch(next);
 	}
@@ -259,7 +264,12 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.obtainNew(postId, latitude, longitude, radius, category, activity)
-			.then(posts => _.map(posts, post => postResponse(req.userId, post, req.ln)))
+			.then(posts => _.map(posts, post => this
+				.commentsManager
+				.count(post.customId)
+				.then(commentsAmount => postResponse(req.userId, post, req.ln, null, commentsAmount))
+			))
+			.then(promises => Promise.all(promises))
 			.then(response => this.success(res, { posts: response }))
 			.catch(next);
 	}
@@ -280,7 +290,12 @@ class PostsController extends BaseController {
 		this
 			.postsManager
 			.obtainOld(postId, latitude, longitude, radius, category, limit, activity)
-			.then(posts => _.map(posts, post => postResponse(req.userId, post, req.ln)))
+			.then(posts => _.map(posts, post => this
+				.commentsManager
+				.count(post.customId)
+				.then(commentsAmount => postResponse(req.userId, post, req.ln, null, commentsAmount))
+			))
+			.then(promises => Promise.all(promises))
 			.then(response => this.success(res, { posts: response }))
 			.catch(next);
 	}

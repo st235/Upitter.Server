@@ -8,14 +8,22 @@ module.exports = mongoose => {
 	const notificationSchema = new Schema({
 		customId: {
 			type: String,
-			unique: true,
-			required: true
+			unique: true
 		},
 		type: {
-			type: String
+			type: String,
+			required: true
 		},
-		description: {
-			type: String
+		authorUser: {
+			type: String,
+			ref: 'Users'
+		},
+		authorCompany: {
+			type: String,
+			ref: 'Companies'
+		},
+		targetId: {
+			type: Number
 		},
 		attachmentIds: {
 			type: [String]

@@ -37,7 +37,7 @@ class BaseController extends AppUnit {
 	}
 
 	unsuccess(res, obj) {
-		res.status(200);
+		res.status(500);
 		res.json(this.responseModel(false, obj));
 	}
 

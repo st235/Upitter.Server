@@ -8,10 +8,11 @@ const subscriptionResponse = require('../models/response/subscriptionResponseMod
 const subscriptionsResponseModel = require('../models/response/subscriptionsResponseModel');
 
 class UsersController extends BaseController {
-	constructor(usersManager, companiesManager) {
+	constructor(usersManager, companiesManager, notificationManager) {
 		super({
 			usersManager,
-			companiesManager
+			companiesManager,
+			notificationManager
 		});
 	}
 
@@ -60,7 +61,9 @@ class UsersController extends BaseController {
 			userId: req.userId,
 			companyId: req.params.companyId
 		};
+
 		let subscribe;
+		let company;
 
 		this
 			._getObjectsIds(ids)
@@ -69,7 +72,11 @@ class UsersController extends BaseController {
 				subscribe = sub;
 				return this.companiesManager.toggleUserSubscription(ids.userObjectId, ids.companyId);
 			})
-			.then(company => this.success(res, subscriptionResponse(company, subscribe)))
+			.then(currentCompany => {
+				company = currentCompany;
+				return this.notificationManager.create('like', ids.userObjectId, null, [ids.companyId], 'user');
+			})
+			.then(() => this.success(res, subscriptionResponse(company, subscribe)))
 			.catch(next);
 	}
 

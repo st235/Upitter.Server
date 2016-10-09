@@ -10,6 +10,7 @@ const CommentsManager = require('../managers/commentsManager');
 const CompaniesManager = require('../managers/companiesManager');
 const FeedbackManager = require('../managers/feedbackManager');
 const LogsManager = require('../managers/logsManager');
+const NotificationManager = require('../managers/notificationManager')
 const PostsManager = require('../managers/postsManager');
 const ReportsManager = require('../managers/reportsManager');
 const UsersManager = require('../managers/usersManager');
@@ -40,7 +41,7 @@ class AppDatabase extends AppUnit {
 
 	_onCreate() {
 		mongoose.connect(databaseConfig.devUri, databaseConfig.options, this._onStart);
-		//mongoose.connect(databaseConfig.prodUri, databaseConfig.options, this._onStart);
+		// mongoose.connect(databaseConfig.prodUri, databaseConfig.options, this._onStart);
 
 		this.categoryModel = categoryModel(mongoose);
 		this.commentModel = commentModel(mongoose);
@@ -61,6 +62,7 @@ class AppDatabase extends AppUnit {
 		this.companiesManager = new CompaniesManager(this.companyModel);
 		this.feedbackManager = new FeedbackManager(this.feedbackModel);
 		this.logsManager = new LogsManager(this.logModel);
+		this.notificationManager = new NotificationManager(this.notificationModel);
 		this.postsManager = new PostsManager(this.postModel, this.companyModel, this.commentModel);
 		this.reportsManager = new ReportsManager(this.reportModel, this.reportReasonModel, this.companyModel, this.commentModel, this.postModel);
 		this.usersManager = new UsersManager(this.userModel);
@@ -87,6 +89,7 @@ class AppDatabase extends AppUnit {
 			companies: this.companiesManager,
 			feedback: this.feedbackManager,
 			logs: this.logsManager,
+			notifications: this.notificationManager,
 			posts: this.postsManager,
 			reports: this.reportsManager,
 			users: this.usersManager
