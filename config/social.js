@@ -1,42 +1,42 @@
 module.exports = [
 	{
 		title: 'vk',
-		icon: "http://webtort.ru/graphics/icons/icons/social/social20/vk_v_kruge.png",
+		icon: "https://raw.githubusercontent.com/FlyOrDie/soc/master/ic_white_social_vk.png",
 		customId: 0
 	},
 	{
 		title: 'facebook',
-		icon: "https://image.freepik.com/free-icon/facebook-logo_318-75191.png",
+		icon: "https://raw.githubusercontent.com/FlyOrDie/soc/master/ic_white_social_facebook.png",
 		customId: 1
 	},
 	{
 		title: 'skype',
-		icon: "",
+		icon: "https://raw.githubusercontent.com/FlyOrDie/soc/master/ic_white_social_skype.png",
 		customId: 2
 	},
 	{
 		title: 'instagram',
-		icon: "",
+		icon: "https://raw.githubusercontent.com/FlyOrDie/soc/master/ic_white_social_instagram.png",
 		customId: 3
 	},
 	{
 		title: 'twitter',
-		icon: "",
+		icon: "https://raw.githubusercontent.com/FlyOrDie/soc/master/ic_white_social_twitter.png",
 		customId: 4
 	},
 	{
 		title: 'youtube',
-		icon: "",
+		icon: "https://raw.githubusercontent.com/FlyOrDie/soc/master/ic_white_social_you-tube.png",
 		customId: 5
 	},
 	{
 		title: 'googlePlus',
-		icon: "",
+		icon: "https://raw.githubusercontent.com/FlyOrDie/soc/master/ic_white_social_google.png",
 		customId: 6
 	},
 	{
 		title: 'ok',
-		icon: "",
+		icon: "https://raw.githubusercontent.com/FlyOrDie/soc/master/ic_white_social_ok.png",
 		customId: 7
 	}
 ];
