@@ -236,7 +236,6 @@ class PostsManager extends AppUnit {
 		let resultPost;
 		let isLiked;
 
-		console.log(postId, userId)
 		return this
 			.postModel
 			.findOne({ customId: postId })
