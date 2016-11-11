@@ -339,7 +339,7 @@ class PostsController extends BaseController {
 			.then(company => this.postsManager.obtainByCompany(company.customId, limit, postId, type))
 			.then(result => {
 				count = result.count;
-				return _.map(result.posts, post => postResponse(req.userId, post, req.ln));
+				return _.map(result.posts, (post, i) => postResponse(req.userId, post, req.ln, result.author, result.commentsAmount[i]));
 			})
 			.then(response => this.success(res, { count, posts: response }))
 			.catch(next);

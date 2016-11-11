@@ -200,6 +200,7 @@ class PostsManager extends AppUnit {
 	obtainByCompany(companyId, limit, postId, type) {
 		let resultPosts;
 		let resultCount;
+		let resultAuthor;
 
 		return this
 			.postModel
@@ -209,25 +210,19 @@ class PostsManager extends AppUnit {
 				resultPosts = posts;
 				return this.companyModel.findById(parseInt(companyId, 10));
 			})
-			.then(author => _.map(resultPosts, post => {
-				post.author = author;
-				return post;
-			}))
-			.then(promises => Promise.all(promises))
-			.then(posts => {
-				resultPosts = posts;
-				return this.postModel.find({ author: companyId, isRemoved: false }).count().exec();
-			})
+			.then(author => resultAuthor = author)
+			.then(() => this.postModel.find({ author: companyId, isRemoved: false }).count().exec())
 			.then(count => {
 				resultCount = count;
 				return _.map(resultPosts, post => this.commentModel.countComments(post.customId));
 			})
 			.then(promises => Promise.all(promises))
-			.then(amounts => _.each(amounts, (amount, i) => resultPosts[i].commentsAmount = amount))
-			.then(() => {
+			.then(commentsAmount => {
 				return {
 					posts: resultPosts,
-					count: resultCount
+					count: resultCount,
+					author: resultAuthor,
+					commentsAmount
 				};
 			});
 	}
@@ -262,7 +257,7 @@ class PostsManager extends AppUnit {
 			.then(company => {
 				if (!company) throw 'INTERNAL_SERVER_ERROR';
 				isLiked ? company.rating++ : company.rating--;
-				return company.save().catch(e => console.log(e));
+				return company.save();
 			})
 			.then(company => {
 				resultPost.author = company;
