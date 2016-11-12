@@ -4,6 +4,6 @@ module.exports = (author, type) => {
 	return {
 		customId: author.customId,
 		name: (type === 'User') ? author.nickname : author.name,
-		logoUrl: author.logoUrl
+		logoUrl: author.picture || author.logoUrl
 	};
 };
