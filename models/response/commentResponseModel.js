@@ -11,7 +11,7 @@ module.exports = (comment, userId) => {
 	const commentResponse = {
 		customId: comment.customId,
 		text: comment.text,
-		createdDate: comment.createdDate,
+		createdDate: new Date(comment.createdDate).getTime(),
 		isReportedByMe
 	};
 	if (comment.authorUser) commentResponse.author = commentAuthorResponse(comment.authorUser, 'User');
