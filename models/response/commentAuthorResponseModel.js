@@ -1,9 +1,11 @@
 'use strict';
 
 module.exports = (author, type) => {
-	return {
+	const response = {
 		customId: author.customId,
 		name: (type === 'User') ? author.nickname : author.name,
-		logoUrl: (type === 'User') ? author.picture : author.logoUrl
+		logoUrl: (type === 'User') ? author.picture || null : author.logoUrl || null
 	};
+
+	return response;
 };
