@@ -1,6 +1,7 @@
 'use strict';
 
 const AppUnit = require('../app/unit');
+const _ = require('underscore');
 
 class NotificationManager extends AppUnit {
 	constructor(notificationModel) {
@@ -11,6 +12,7 @@ class NotificationManager extends AppUnit {
 
 	_onBind() {
 		this.create = this.create.bind(this);
+		this.obtain = this.obtain.bind(this);
 	}
 
 	create(type, author, targetId, attachmentIds, authorType) {
@@ -30,6 +32,22 @@ class NotificationManager extends AppUnit {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
+
+	obtain(limit, userId, type, notificationId) {
+		return this
+			.notificationModel
+			.obtainNotifications(type, notificationId)
+			.then(notifications => {
+				if (!notifications) throw 'INTERNAL_SERVER_ERROR';
+				return _.map(notifications, notification => {
+					if (_.contains(notification.attachmentIds, userId)) return notification;
+				});
+			})
+			.then(promises => Promise.all(promises))
+			.then(notifications => _.compact(notifications))
+			.then(notifications => notifications.splice(0, limit));
+	}
+
 }
 
 module.exports = NotificationManager;

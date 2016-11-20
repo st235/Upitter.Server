@@ -12,7 +12,7 @@ class UsersController extends BaseController {
 		super({
 			usersManager,
 			companiesManager,
-				notificationManager
+			notificationManager
 		});
 	}
 

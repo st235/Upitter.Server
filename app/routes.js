@@ -27,6 +27,7 @@ const ServiceController = require('../controllers/serviceController');
 const GeneralController = require('../controllers/generalController');
 const ReportController = require('../controllers/reportController');
 const UserController = require('../controllers/userController');
+const NotificationController = require('../controllers/notificationController');
 
 class AppRoutes extends AppUnit {
 	constructor(app, managers) {
@@ -63,12 +64,13 @@ class AppRoutes extends AppUnit {
 		this.companyController = new CompanyController(this.managers.companies, this.managers.users);
 		this.feedbackController = new FeedbackController(this.managers.feedback);
 		this.logController = new LogController(this.managers.logs);
-		this.postController = new PostController(this.managers.posts, this.managers.users, this.managers.companies, this.managers.comments);
+		this.postController = new PostController(this.managers.posts, this.managers.users, this.managers.companies, this.managers.comments, this.managers.notifications);
 		this.fileController = new FileController();
 		this.generalController = new GeneralController();
 		this.serviceController = new ServiceController();
 		this.reportController = new ReportController(this.managers.reports, this.managers.users, this.managers.posts, this.managers.companies, this.managers.comments);
 		this.userController = new UserController(this.managers.users, this.managers.companies, this.managers.notifications);
+		this.notificationController = new NotificationController(this.managers.notifications);
 	}
 
 	register() {
@@ -86,6 +88,7 @@ class AppRoutes extends AppUnit {
 		this.registerReport(this.app, routesConfig.report, this.reportController);
 		this.registerUser(this.app, routesConfig.user, this.userController);
 		this.registerWebAuth(this.app, routesConfig.authorization.web, this.authorizationController);
+		this.registerNotification(this.app, routesConfig.notification, this.notificationController);
 		this.registerFooter(this.app);
 	}
 
@@ -210,6 +213,10 @@ class AppRoutes extends AppUnit {
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
 		app.get(paths.toggleSubscription, this.checkAuthorization, controller.toggleSubscription);
 		app.get(paths.getSubscriptions, this.checkAuthorization, controller.getSubscriptions);
+	}
+
+	registerNotification(app, paths, controller) {
+		app.get(paths.obtainNotifications, this.checkAuthorization, controller.obtainNotifications);
 	}
 
 	registerFooter(app) {

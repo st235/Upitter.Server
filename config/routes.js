@@ -71,6 +71,9 @@ module.exports = {
 		obtainReasons: '/report/reasons/:type',
 		obtainTarget: '/report/:type/:targetId'
 	},
+	notification: {
+		obtainNotifications: '/notification'
+	},
 	support: {
 		support: '/support',
 		log: '/support/:systemType/:id',

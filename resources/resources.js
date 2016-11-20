@@ -161,7 +161,12 @@ module.exports = {
 	REASON_202: 'ETC',
 	REASON_300: 'Extremism',
 	REASON_301: 'Offensive language',
-	REASON_302: 'ETC'
+	REASON_302: 'ETC',
+
+	// Notifications
+	like: 'liked your post.',
+	subscribe: 'subscribed to your updates.',
+	post: 'published a new post.'
 
 	//  Endregion
 };

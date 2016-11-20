@@ -261,7 +261,10 @@ class PostsManager extends AppUnit {
 			})
 			.then(company => {
 				resultPost.author = company;
-				return resultPost;
+				return {
+					post: resultPost,
+					isLiked
+				};
 			})
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';

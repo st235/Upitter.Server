@@ -18,6 +18,7 @@ class CompaniesManager extends AppUnit {
 		this.getObjectId = this.getObjectId.bind(this);
 		this.toggleUserSubscription = this.toggleUserSubscription.bind(this);
 		this.getSubscribers = this.getSubscribers.bind(this);
+		this.getSebscrubersIds = this.getSebscrubersIds.bind(this);
 		this.favorite = this.favorite.bind(this);
 		this.getFavorites = this.getFavorites.bind(this);
 	}
@@ -129,6 +130,19 @@ class CompaniesManager extends AppUnit {
 				subscribers = subscribers.splice(index, limit);
 				return { subscribers, amount };
 			})
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	getSebscrubersIds(companyId)
+	{
+		return this
+			.companyModel
+			.findOne({ customId: companyId })
+			.populate('subscribers')
+			.exec()
+			.then(company => _.map(company.subscribers, subscriber => subscriber.customId))
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});

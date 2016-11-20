@@ -46,5 +46,31 @@ module.exports = mongoose => {
 			.catch(error => next(error));
 	});
 
+	notificationSchema.statics.obtainNotifications = function (type, notificationId) {
+		let query = {};
+		if (notificationId) {
+			switch (type) {
+			case 'old':
+				query.customId = { $lt: notificationId };
+				break;
+			case 'new':
+				query.customId = { $gt: notificationId };
+				break;
+			default:
+				break;
+			}
+		}
+
+		return this
+			.find(query)
+			.populate('authorUser')
+			.populate('authorCompany')
+			.sort({ createdDate: -1 })
+			.exec()
+			.catch(() => {
+				throw 'INTERNAL_SERVER_ERROR';
+			});
+	};
+
 	return mongoose.model('Notifications', notificationSchema);
 };

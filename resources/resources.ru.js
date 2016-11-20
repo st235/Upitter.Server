@@ -161,7 +161,12 @@ module.exports = {
 	REASON_202: 'ИТД',
 	REASON_300: 'Экстремизм',
 	REASON_301: 'Оскорбления',
-	REASON_302: 'ИТД'
+	REASON_302: 'ИТД',
+
+	// Notifications
+	like: 'понравилась ваша запись.',
+	subscribe: 'подписался на ваши обновления.',
+	post: 'опубликовал новую запись.'
 
 	//  Endregion
 };

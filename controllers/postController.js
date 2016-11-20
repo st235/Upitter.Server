@@ -9,12 +9,13 @@ const postResponse = require('../models/response/postResponseModel');
 const companyResponse = require('../models/response/companyResponseModel');
 
 class PostsController extends BaseController {
-	constructor(postsManager, usersManager, companiesManager, commentsManager) {
+	constructor(postsManager, usersManager, companiesManager, commentsManager, notificationManager) {
 		super({
 			postsManager,
 			usersManager,
 			companiesManager,
-			commentsManager
+			commentsManager,
+			notificationManager
 		});
 	}
 
@@ -50,12 +51,30 @@ class PostsController extends BaseController {
 	}
 
 	_savePost(companyId, title, text, category, latitude, longitude, variants, images, userId, ln, res, next) {
+		let currentPost;
 		return this
 			.postsManager
 			.create(companyId, title, text, category, latitude, longitude, variants, images)
-			.then(post => postResponse(userId, post, ln))
+			.then(post => {
+				currentPost = post;
+				return this.createNotification(post, companyId);
+			})
+			.then(() => postResponse(userId, currentPost, ln))
 			.then(response => this.success(res, response))
 			.catch(next);
+	}
+
+	createNotification(post, companyId) {
+		let currentObjId;
+
+		return this
+			.companiesManager
+			.getObjectId(companyId)
+			.then(objId => {
+				currentObjId = objId;
+				return this.companiesManager.getSebscrubersIds(companyId);
+			})
+			.then(subscribersIds => this.notificationManager.create('post', currentObjId, post.customId, subscribersIds, 'company'));
 	}
 
 	create(req, res, next) {
@@ -355,11 +374,22 @@ class PostsController extends BaseController {
 
 		const { userId } = req;
 		const { postId } = req.params;
+		let currentResult;
 
 		this
 			.postsManager
 			.like(userId, postId)
-			.then(post => postResponse(req.userId, post, req.ln))
+			.then(result => {
+				currentResult = result;
+				return (userId > 0) ? this.usersManager.getObjectId(userId) : this.companiesManager.getObjectId(userId);
+			})
+			.then(objectId => {
+				if (currentResult.isLiked) {
+					return (userId > 0) ? this.notificationManager.create('like', objectId, postId, [currentResult.post.author.customId], 'user')
+										: this.notificationManager.create('like', objectId, postId, [currentResult.post.author.customId], 'company');
+				}
+			})
+			.then(() => postResponse(req.userId, currentResult.post, req.ln))
 			.then(response => this.success(res, response))
 			.catch(next);
 	}
