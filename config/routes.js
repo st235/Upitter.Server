@@ -72,7 +72,7 @@ module.exports = {
 		obtainTarget: '/report/:type/:targetId'
 	},
 	notification: {
-		obtainNotifications: '/notification'
+		obtainNotifications: '/notifications'
 	},
 	support: {
 		support: '/support',
