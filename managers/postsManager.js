@@ -67,7 +67,7 @@ class PostsManager extends AppUnit {
 	edit(companyId, postId, data) {
 		return this
 			.postModel
-			.findOne({ customId: postId })
+			.findOne({ customId: postId, isRemoved: false })
 			.then(post => {
 				if (!post || post.isRemoved) throw 'INTERNAL_SERVER_ERROR';
 				if (companyId !== post.author) throw 'ACCESS_DENIED';
@@ -89,7 +89,7 @@ class PostsManager extends AppUnit {
 
 		return this
 			.postModel
-			.findOne({ customId: postId })
+			.findOne({ customId: postId, isRemoved: false })
 			.populate('postComments')
 			.then(post => {
 				let postResponse = null;
@@ -233,7 +233,7 @@ class PostsManager extends AppUnit {
 
 		return this
 			.postModel
-			.findOne({ customId: postId })
+			.findOne({ customId: postId, isRemoved: false })
 			.then(post => {
 				if (!post) throw 'INTERNAL_SERVER_ERROR';
 				const find = !!_.find(post.likeVoters, voterId => voterId === userId);
@@ -276,7 +276,7 @@ class PostsManager extends AppUnit {
 
 		return this
 			.postModel
-			.findOne({ customId: postId })
+			.findOne({ customId: postId, isRemoved: false })
 			.then(post => {
 				if (!post) throw 'INTERNAL_SERVER_ERROR';
 				const found = !!_.find(post.watchers, watcherId => watcherId === userId);
@@ -306,7 +306,7 @@ class PostsManager extends AppUnit {
 
 		return this
 			.postModel
-			.findOne({ customId: postId })
+			.findOne({ customId: postId, isRemoved: false })
 			.then(post => {
 				if (!post) throw 'INTERNAL_SERVER_ERROR';
 				if (_.find(post.votersForVariants, voterId => voterId === userId)) throw 'USER_ALREADY_VOTED';
@@ -344,7 +344,7 @@ class PostsManager extends AppUnit {
 
 		return this
 			.postModel
-			.findOne({ customId: postId })
+			.findOne({ customId: postId, isRemoved: false })
 			.then(post => {
 				if (!post) throw 'INTERNAL_SERVER_ERROR';
 				const found = !!_.find(post.favoriteVoters, watcherId => watcherId === userId);

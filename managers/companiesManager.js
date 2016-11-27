@@ -5,8 +5,11 @@ const _ = require('underscore');
 const AppUnit = require('../app/unit');
 
 class CompaniesManager extends AppUnit {
-	constructor(companyModel) {
-		super({ companyModel });
+	constructor(companyModel, postModel) {
+		super({
+			companyModel,
+			postModel
+		});
 	}
 
 	_onBind() {
@@ -59,6 +62,7 @@ class CompaniesManager extends AppUnit {
 
 	edit(customId, companyInfo) {
 		const data = _.omit(companyInfo, field => _.isUndefined(field));
+		if (companyInfo.coordinates) this.updatePostCoords(customId, companyInfo.coordinates);
 
 		//TODO: Добавить проверку по соц сетям
 		return this
@@ -66,6 +70,36 @@ class CompaniesManager extends AppUnit {
 			.findOneAndUpdate({ customId }, data, { new: true })
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
+			});
+	}
+
+	updatePostCoords(companyId, coordinates) {
+		let oldCoordinates;
+		return this
+			.companyModel
+			.findById(companyId)
+			.then(company => {
+				oldCoordinates = company.coordinates;
+				return _.each(company.coordinates, (coord, i) => {
+					_.each(coordinates, newCoord => {
+						if (parseFloat(coord.longitude) === parseFloat(newCoord.longitude) && parseFloat(coord.latitude) === parseFloat(newCoord.latitude)) delete oldCoordinates[i];
+					});
+				});
+			})
+			.then(promises => Promise.all(promises))
+			.then(() => {
+				return _.each(_.compact(oldCoordinates), coord => {
+					this
+						.postModel
+						.find({ location: [coord.latitude, coord.longitude] })
+						.exec()
+						.then(posts => {
+							return _.each(posts, post => {
+								post.location = null;
+								post.save();
+							});
+						});
+				});
 			});
 	}
 

@@ -119,7 +119,6 @@ module.exports = mongoose => {
 		}],
 		location: {
 			type: [Number],
-			required: true,
 			index: '2dsphere'
 		},
 		votersForVariants: [{
@@ -231,7 +230,10 @@ module.exports = mongoose => {
 	};
 
 	postSchema.statics.getPostsByCompany = function (companyId, limit, postId, type) {
-		const query = { author: companyId };
+		const query = {
+			author: companyId,
+			isRemoved: false
+		};
 
 		if (postId) {
 			switch (type) {
