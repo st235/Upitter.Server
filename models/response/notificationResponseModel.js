@@ -1,7 +1,5 @@
 'use strict';
 const LocaleService = require('default-locale');
-const userResponseModel = require('./userResponseModel');
-const companyResponseModel = require('./companyResponseModel');
 
 module.exports = (notification, language) => {
 	const notificationResponse = {
@@ -13,11 +11,19 @@ module.exports = (notification, language) => {
 	};
 
 	if (notification.authorCompany) {
-		notificationResponse.company = companyResponseModel(notification.authorCompany);
+		notificationResponse.author = {
+			authorId: notification.authorCompany.customId,
+			name: notification.authorCompany.name,
+			avatar: notification.authorCompany.logoUrl
+		};
 		notificationResponse.text = `${notification.authorCompany.name} ${LocaleService.getString(`${notification.type}`, language)}`;
 	}
 	if (notification.authorUser) {
-		notificationResponse.user = userResponseModel(notification.authorUser);
+		notificationResponse.author = {
+			authorId: notification.authorUser.customId,
+			name: notification.authorUser.nickname,
+			avatar: notification.authorUser.picture
+		};
 		notificationResponse.text = `${notification.authorUser.nickname} ${LocaleService.getString(`${notification.type}`, language)}`;
 	}
 	if (notification.type === 'like' || notification.type === 'post') notificationResponse.postId = notification.targetId;
