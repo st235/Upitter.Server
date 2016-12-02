@@ -106,7 +106,7 @@ module.exports = mongoose => {
 
 	commentSchema.statics.countComments = function (postId) {
 		return this
-			.find({ postId, isRemoved: false })
+			.find({ postId: parseInt(postId, 10), isRemoved: false })
 			.count()
 			.exec()
 			.catch(() => {

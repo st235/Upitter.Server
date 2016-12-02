@@ -3,15 +3,17 @@
 const userResponse = require('./userResponseModel');
 const companyResponse = require('./companyResponseModel');
 const commentAuthorResponse = require('./commentAuthorResponseModel');
+const moment = require('moment');
 const _ = require('underscore');
 
-module.exports = (comment, userId) => {
+module.exports = (comment, ln = 'en', userId) => {
 	const isReportedByMe = userId ? !!_.find(comment.reportVoters, voter => voter === userId) : false;
 
 	const commentResponse = {
 		customId: comment.customId,
 		text: comment.text,
-		createdDate: new Date(comment.createdDate).getTime(),
+		createdDate: moment(comment.createdDate).locale(ln).calendar(),
+		createdTime: moment(comment.createdDate).locale(ln).format('LT'),
 		isReportedByMe
 	};
 	if (comment.authorUser) commentResponse.author = commentAuthorResponse(comment.authorUser, 'User');
