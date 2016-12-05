@@ -44,6 +44,7 @@ module.exports = {
 	},
 	company: {
 		edit: '/company/edit',
+		updateAddresses: '/company/updateAddress',
 		getSubscribers: '/company/subscribers',
 		findByAlias: '/company/:alias'
 	},

@@ -19,6 +19,7 @@ class CompanyController extends BaseController {
 		super._onBind();
 
 		this.edit = this.edit.bind(this);
+		this.updateAddresses = this.updateAddresses.bind(this);
 		this.getSubscribers = this.getSubscribers.bind(this);
 		this.findByAlias = this.findByAlias.bind(this);
 	}
@@ -39,13 +40,31 @@ class CompanyController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const { userId } = req;
-		const { alias, description, logoUrl, site, contactPhones, activity, coordinates, socialLinks, name } = req.body;
+		const { alias, description, logoUrl, site, contactPhones, activity, socialLinks, name } = req.body;
 		if (alias && typeof alias === 'string' && (alias.length < 4 || alias.length > 25)) throw 'INTERNAL_SERVER_ERROR';
 
 		this
 			.companiesManager
-			.edit(userId, { alias, description, logoUrl, site, contactPhones, activity, coordinates, socialLinks, name })
+			.edit(userId, { alias, description, logoUrl, site, contactPhones, activity, socialLinks, name })
 			.then(businessUser => this.success(res, companyResponseModel(businessUser)))
+			.catch(next);
+	}
+
+	updateAddresses(req, res, next) {
+		//TODO: Проверка на наличие хотя бы одного строкового символа
+		const invalid = this.validate(req)
+			.add('coordinates').should.have.type('Array')
+			.validate();
+
+		if (invalid) return next(invalid.name);
+
+		const { userId } = req;
+		const { coordinates } = req.body;
+
+		this
+			.companiesManager
+			.edit(userId, { coordinates })
+			.then(() => this.success(res, true))
 			.catch(next);
 	}
 

@@ -154,6 +154,7 @@ class AppRoutes extends AppUnit {
 	registerCompany(app, paths, controller) {
 		app.get(paths.getSubscribers, this.checkAuthorization, controller.getSubscribers);
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
+		app.post(paths.updateAddresses, this.checkAuthorization, controller.updateAddresses);
 		app.get(paths.findByAlias, this.getUser, controller.findByAlias);
 	}
 
