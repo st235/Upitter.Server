@@ -88,6 +88,7 @@ class PostsController extends BaseController {
 			.validate();
 
 		if (invalid) return next(invalid.name);
+		if (text.length > 1400) return next('PROPERTY_OUT_OF_RANGE');
 
 		const companyId = req.userId;
 		const { variants } = req.body;
