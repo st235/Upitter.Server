@@ -88,16 +88,15 @@ class PostsController extends BaseController {
 			.validate();
 
 		if (invalid) return next(invalid.name);
-		if (text.length > 1400) return next('PROPERTY_OUT_OF_RANGE');
 
 		const companyId = req.userId;
-		const { variants } = req.body;
+		const { title, text, category, latitude, longitude, images, variants } = req.body;
 
 		if (variants &&
 			variants.length < 0 &&
 			!this.validationUtils.checkArray(variants, 1, 12)) return next('PROPERTY_NOT_SUPPLIED');
 
-		const { title, text, category, latitude, longitude, images } = req.body;
+		if (text.length > 1400) return next('PROPERTY_OUT_OF_RANGE');
 
 		if (images && images.length) {
 			return fileServerUtils.getInfoByFidsArray(companyId, images).then(images => {

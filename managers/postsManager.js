@@ -92,17 +92,14 @@ class PostsManager extends AppUnit {
 			.findOne({ customId: postId, isRemoved: false })
 			.populate('postComments')
 			.then(post => {
-				let postResponse = null;
-				if (!post) return postResponse;
+				console.log(post);
+				if (!post) throw 'POST_DELETED';
 				currentPost = post;
 				const authorId = parseInt(post.author, 10);
 				return this.companyModel.findOne({ customId: authorId });
 			})
 			.then(author => {
 				return { post: currentPost, author };
-			})
-			.catch(() => {
-				throw 'INTERNAL_SERVER_ERROR';
 			});
 	}
 
@@ -111,7 +108,7 @@ class PostsManager extends AppUnit {
 			.postModel
 			.findOneAndUpdate({ customId: postId }, { isRemoved: true }, { new: true })
 			.then(post => {
-				if (!post || post.isRemoved) throw 'INTERNAL_SERVER_ERROR';
+				if (!post || !post.isRemoved) throw 'INTERNAL_SERVER_ERROR';
 				if (companyId !== post.author) throw 'ACCESS_DENIED';
 
 				return post

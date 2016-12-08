@@ -143,5 +143,10 @@ module.exports = {
 	ACCESS_DENIED: {
 		internalDescription: 'Access denied',
 		externalDescription: 'Access denied'
+	},
+
+	POST_DELETED: {
+		internalDescription: 'The requested post has been deleted',
+		externalDescription: 'The requested post has been deleted'
 	}
 };

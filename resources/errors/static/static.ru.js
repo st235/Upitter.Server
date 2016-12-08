@@ -142,5 +142,10 @@ module.exports = {
 	ACCESS_DENIED: {
 		internalDescription: 'Доступ запрещен',
 		externalDescription: 'Доступ запрещен'
+	},
+
+	POST_DELETED: {
+		internalDescription: 'Запрашиваемое сообщение было удалено',
+		externalDescription: 'Запрашиваемое сообщение было удалено'
 	}
 };

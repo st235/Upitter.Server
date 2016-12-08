@@ -184,5 +184,11 @@ module.exports = {
 		INNER_CODE: 3011,
 		EXTERNAL_CODE: 500,
 		TO_LOG: false
+	},
+
+	POST_DELETED: {
+		INNER_CODE: 3012,
+		EXTERNAL_CODE: 500,
+		TO_LOG: false
 	}
 };
