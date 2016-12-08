@@ -61,7 +61,7 @@ class CategoriesController extends BaseController {
 			.add('activity').should.exist().and.have.type('Array')
 			.validate();
 
-		if (invalid) return next(invalid.name);
+		//if (invalid) return next(invalid.name);
 
 		const { activity } = req.body;
 
