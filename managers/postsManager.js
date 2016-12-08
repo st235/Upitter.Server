@@ -89,11 +89,11 @@ class PostsManager extends AppUnit {
 
 		return this
 			.postModel
-			.findOne({ customId: postId, isRemoved: false })
+			.findOne({ customId: postId })
 			.populate('postComments')
 			.then(post => {
-				console.log(post);
-				if (!post) throw 'POST_DELETED';
+				if (!post) throw 'INTERNAL_SERVER_ERROR';
+				if (post.isRemoved) throw 'POST_DELETED';
 				currentPost = post;
 				const authorId = parseInt(post.author, 10);
 				return this.companyModel.findOne({ customId: authorId });

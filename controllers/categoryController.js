@@ -61,13 +61,13 @@ class CategoriesController extends BaseController {
 			.add('activity').should.exist().and.have.type('Array')
 			.validate();
 
-		//if (invalid) return next(invalid.name);
+		if (invalid) return next(invalid.name);
 
 		const { activity } = req.body;
 
 		Promise
-			.resolve(_.map(activity, category => categoryResponse({ customId: category }, req.ln)))
-			.then(activity => this.success(res, activity))
+			.resolve(_.compact(_.map(activity, category => categoryResponse({ customId: category }, req.ln))))
+			.then(result => this.success(res, result))
 			.catch(next);
 	}
 }

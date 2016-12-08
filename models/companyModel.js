@@ -123,7 +123,11 @@ module.exports = mongoose => {
 
 	companySchema.statics.findByAlias = function (alias) {
 		return this
-			.findOne({ alias })
+			.findOne({
+				alias: {
+					$regex: new RegExp(alias, 'i')
+				}
+			})
 			.exec();
 	};
 
