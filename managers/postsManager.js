@@ -375,7 +375,7 @@ class PostsManager extends AppUnit {
 	obtainAllPostsByCompany(companyId) {
 		return this
 			.postModel
-			.find({ author: companyId })
+			.find({ author: companyId, isRemoved: false  })
 			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
