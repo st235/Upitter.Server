@@ -81,7 +81,7 @@ class PostsController extends BaseController {
 		const invalid = this.validate(req)
 			.add('accessToken').should.exist().and.have.type('String')
 			.add('title').should.exist().and.have.type('String').and.be.in.rangeOf(3, 63)
-			.add('text').should.exist().and.have.type('String').and.be.in.rangeOf(3, 1000)
+			.add('text').should.exist().and.have.type('String').and.be.in.rangeOf(3, 1400)
 			.add('category').should.exist().and.have.type('String')
 			.add('latitude').should.exist().and.have.type('Number')
 			.add('longitude').should.exist().and.have.type('Number')
@@ -95,8 +95,6 @@ class PostsController extends BaseController {
 		if (variants &&
 			variants.length < 0 &&
 			!this.validationUtils.checkArray(variants, 1, 12)) return next('PROPERTY_NOT_SUPPLIED');
-
-		if (text.length > 1400) return next('PROPERTY_OUT_OF_RANGE');
 
 		if (images && images.length) {
 			return fileServerUtils.getInfoByFidsArray(companyId, images).then(images => {
