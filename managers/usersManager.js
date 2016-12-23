@@ -205,7 +205,7 @@ class UsersManager extends AppUnit {
 			.populate('favorites')
 			.exec()
 			.then(user => {
-				this.userModel.populate(user, {
+				return this.userModel.populate(user, {
 					path: 'favorites.comments',
 					model: 'Posts'
 				})
