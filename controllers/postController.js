@@ -185,7 +185,15 @@ class PostsController extends BaseController {
 			})
 			.then(favorites => _.map(favorites, post => this.companiesManager.findById(post.author)))
 			.then(promises => Promise.all(promises))
-			.then(companies => _.each(companies, (company, i) => resultPosts[i] = postResponse(userId, resultPosts[i], ln, company)))
+			.then(companies => _.each(companies, (company, i) => {
+				const currentPost = resultPosts[i]
+				return resultPosts[i] = postResponse(
+					userId,
+					currentPost,
+					ln,
+					company,
+					(currentPost.comments && currentPost.comments.length) ? currentPost.comments.length : 0)
+			}))
 			.then(() => resultPosts.splice(0, limit))
 			.then(posts => this.success(res, { posts }))
 			.catch(next);

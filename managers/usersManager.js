@@ -204,6 +204,12 @@ class UsersManager extends AppUnit {
 			.findOne({ customId: userId })
 			.populate('favorites')
 			.exec()
+			.then(user => {
+				this.userModel.populate(user, {
+					path: 'favorites.comments',
+					model: 'Posts'
+				})
+			})
 			.then(user => user.favorites)
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
