@@ -172,6 +172,7 @@ class PostsController extends BaseController {
 		const { limit = 20 } = req.query;
 		const customId = parseInt(userId, 10);
 		let resultPosts;
+		let resultCompanies;
 
 		new Promise((resolve, reject) => resolve(
 				customId > 0
@@ -185,14 +186,19 @@ class PostsController extends BaseController {
 			})
 			.then(favorites => _.map(favorites, post => this.companiesManager.findById(post.author)))
 			.then(promises => Promise.all(promises))
-			.then(companies => _.each(companies, (company, i) => {
-				const currentPost = resultPosts[i]
+			.then(companies => {
+				resultCompanies = companies;
+				return _.map(resultPosts, post => this.commentsManager.count(post.customId));
+			})
+			.then(promises => Promise.all(promises))
+			.then(commentsAmount => _.each(resultPosts, (post, i) => {
 				return resultPosts[i] = postResponse(
 					userId,
-					currentPost,
+					post,
 					ln,
-					company,
-					(currentPost.comments && currentPost.comments.length) ? currentPost.comments.length : 0)
+					resultCompanies[i],
+					commentsAmount[i]
+				);
 			}))
 			.then(() => resultPosts.splice(0, limit))
 			.then(posts => this.success(res, { posts }))
