@@ -107,7 +107,7 @@ class CommentsController extends BaseController {
 			.obtain(limit, postId, commentId, type)
 			.then(comments => _.map(comments, comment => commentResponse(comment, req.ln, req.userId)))
 			.then(comments => {
-				currentComments = comments;
+				currentComments = _.sortBy(comments, 'customId');
 				return this.commentsManager.count(postId);
 			})
 			.then(amount => this.success(res, { amount, comments: currentComments }))

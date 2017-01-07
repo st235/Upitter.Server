@@ -96,7 +96,7 @@ module.exports = mongoose => {
 			.populate('authorCompany')
 			.populate('replyToUser')
 			.populate('replyToCompany')
-			.sort({ createdDate: 1 })
+			.sort({ createdDate: -1 })
 			.limit(parseInt(limit))
 			.exec()
 			.catch(() => {
