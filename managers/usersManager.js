@@ -208,7 +208,7 @@ class UsersManager extends AppUnit {
 				return this.userModel.populate(user, {
 					path: 'favorites.comments',
 					model: 'Posts'
-				})
+				});
 			})
 			.then(user => user.favorites)
 			.catch(() => {

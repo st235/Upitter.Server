@@ -37,6 +37,7 @@ class PostsController extends BaseController {
 
 		this.obtainFavorites = this.obtainFavorites.bind(this);
 		this.obtainOldFavorites = this.obtainOldFavorites.bind(this);
+		this.obtainNewFavorites = this.obtainNewFavorites.bind(this);
 
 		this.like = this.like.bind(this);
 		this.voteForVariant = this.voteForVariant.bind(this);
@@ -181,10 +182,15 @@ class PostsController extends BaseController {
 			)
 			.then(favorites => {
 				if (!favorites) throw 'INTERNAL_SERVER_ERROR';
-				resultPosts = favorites;
-				return favorites;
+				return _.compact(_.map(favorites, post => {
+					if (!post.isRemoved) return post;
+				}));
 			})
-			.then(favorites => _.map(favorites, post => this.companiesManager.findById(post.author)))
+			.then(promises => Promise.all(promises))
+			.then(favorites => {
+				resultPosts = favorites;
+				return _.map(favorites, post => this.companiesManager.findById(post.author));
+			})
 			.then(promises => Promise.all(promises))
 			.then(companies => {
 				resultCompanies = companies;
@@ -205,6 +211,53 @@ class PostsController extends BaseController {
 			.catch(next);
 	}
 
+	obtainNewFavorites(req, res, next) {
+		const { userId, ln } = req;
+		const { postId, limit = 20 } = req.query;
+		const customId = parseInt(userId, 10);
+		let resultPosts;
+		let resultCompanies;
+		let index;
+
+		new Promise((resolve, reject) => resolve(
+			customId > 0
+				? this.usersManager.getFavorites(customId, limit)
+				: this.companiesManager.getFavorites(customId, limit))
+		)
+			.then(favorites => {
+				if (!favorites) throw 'INTERNAL_SERVER_ERROR';
+				return favorites;
+			})
+			.then(favorites => _.compact(_.map(favorites, post => {
+				if (!post.isRemoved) return post;
+			})))
+			.then(promises => Promise.all(promises))
+			.then(favorites => {
+				resultPosts = favorites;
+				return _.map(favorites, post => this.companiesManager.findById(post.author));
+			})
+			.then(promises => Promise.all(promises))
+			.then(companies => {
+				resultCompanies = companies;
+				return _.map(resultPosts, post => this.commentsManager.count(post.customId));
+			})
+			.then(promises => Promise.all(promises))
+			.then(commentsAmount => _.each(resultPosts, (post, i) => {
+				return resultPosts[i] = postResponse(
+					userId,
+					post,
+					ln,
+					resultCompanies[i],
+					commentsAmount[i]
+				);
+			}))
+			.then(() => _.each(resultPosts, (post, i) => (post.customId === parseInt(postId, 10)) ? index = i : index))
+			.then(promises => Promise.all(promises))
+			.then(() => resultPosts.splice(0, index))
+			.then(posts => this.success(res, { posts }))
+			.catch(next);
+	}
+
 	obtainOldFavorites(req, res, next) {
 		const { userId, ln } = req;
 		const { postId, limit = 20 } = req.query;
@@ -220,10 +273,16 @@ class PostsController extends BaseController {
 			)
 			.then(favorites => {
 				if (!favorites) throw 'INTERNAL_SERVER_ERROR';
-				resultPosts = favorites;
 				return favorites;
 			})
-			.then(favorites => _.map(favorites, post => this.companiesManager.findById(post.author)))
+			.then(favorites => _.compact(_.map(favorites, post => {
+				if (!post.isRemoved) return post;
+			})))
+			.then(promises => Promise.all(promises))
+			.then(favorites => {
+				resultPosts = favorites;
+				return _.map(favorites, post => this.companiesManager.findById(post.author));
+			})
 			.then(promises => Promise.all(promises))
 			.then(companies => {
 				resultCompanies = companies;

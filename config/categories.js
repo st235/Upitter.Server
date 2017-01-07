@@ -34,7 +34,7 @@ module.exports = {
 		parentCategory: 100
 	},
 	200: {
-		title: 'Магазины',
+		title: 'Магазины'
 	},
 	201: {
 		title: 'Предметы интерьера',

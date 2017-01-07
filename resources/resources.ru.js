@@ -54,7 +54,7 @@ module.exports = {
 	CATEGORY_404: 'Зоопарки',
 	CATEGORY_405: 'Боулинг',
 	CATEGORY_406: 'Бани,сауны',
-	CATEGORY_407: 'аттракционы',
+	CATEGORY_407: 'Аттракционы',
 	CATEGORY_408: 'Аквапарки',
 	CATEGORY_409: 'Дельфинарии и океанариум',
 	CATEGORY_410: 'Концертные залы',
@@ -123,7 +123,7 @@ module.exports = {
 	CATEGORY_1105: 'Приюты для животных',
 	CATEGORY_1106: 'Салоны для животных',
 	CATEGORY_1200: 'Культура и искуство',
-	CATEGORY_1201: 'музеи',
+	CATEGORY_1201: 'Музеи',
 	CATEGORY_1202: 'Театры',
 	CATEGORY_1203: 'Библиотеки',
 	CATEGORY_1204: 'Концерты',
@@ -166,7 +166,14 @@ module.exports = {
 	// Notifications
 	like: 'понравилась ваша запись.',
 	subscribe: 'подписался на ваши обновления.',
-	post: 'опубликовал новую запись.'
+	post: 'опубликовал новую запись.',
+
+	// Post Categories
+	news: 'новости',
+	services: 'услуги',
+	events: 'события',
+	special: 'особое',
+	sales: 'скидки'
 
 	//  Endregion
 };
