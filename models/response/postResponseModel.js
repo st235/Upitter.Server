@@ -16,7 +16,8 @@ module.exports = (userId, post, lang = 'en', author, commentsAmount) => {
 		author: author ? companyResponse(author) : post.author,
 		title: post.title,
 		text: post.text,
-		category: LocaleService.getString(`${post.category}`, lang),
+		category: post.category,
+		//category: LocaleService.getString(`${post.category}`, lang),
 		coordinates: {
 			latitude: post.location ? post.location[0] : null,
 			longitude: post.location ? post.location[1] : null
