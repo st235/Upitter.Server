@@ -38,7 +38,6 @@ class CategoriesManager extends AppUnit {
 		return this
 			.categoryModel
 			.find()
-			.sort({ title: 1 })
 			.exec()
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';

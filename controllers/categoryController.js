@@ -30,6 +30,7 @@ class CategoriesController extends BaseController {
 			.categoriesManager
 			.getCategories(req.ln)
 			.then(categories => _.map(categories, category => categoryResponse(category, req.ln)))
+			.then(categories => _.sortBy(categories, 'title'))
 			.then(categories => this.success(res, categories))
 			.catch(next);
 	}
