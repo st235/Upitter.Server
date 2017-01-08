@@ -188,6 +188,8 @@ class AppRoutes extends AppUnit {
 		app.post(paths.create, this.checkAuthorization, controller.create);
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
 		app.get(paths.obtainPostsBySubscriptions, this.checkAuthorization, controller.obtainPostsBySubscriptions);
+		app.get(paths.obtainOldPostsBySubscriptions, this.checkAuthorization, controller.obtainOldBySubscriptions);
+		app.get(paths.obtainNewPostsBySubscriptions, this.checkAuthorization, controller.obtainNewBySubscriptions);
 	}
 
 	registerFile(app, paths, controller) {

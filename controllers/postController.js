@@ -44,6 +44,8 @@ class PostsController extends BaseController {
 		this.watch = this.watch.bind(this);
 
 		this.obtainPostsBySubscriptions = this.obtainPostsBySubscriptions.bind(this);
+		this.obtainOldBySubscriptions = this.obtainOldBySubscriptions.bind(this);
+		this.obtainNewBySubscriptions = this.obtainNewBySubscriptions.bind(this);
 	}
 
 	_onCreate() {
@@ -520,7 +522,88 @@ class PostsController extends BaseController {
 
 	obtainPostsBySubscriptions(req, res, next) {
 		const { userId, ln } = req;
+		const { limit = 20 } = req.query;
+
+		let currentPosts;
+		let amount;
+
+		this
+			.usersManager
+			.getSubscriptions(parseInt(userId, 10))
+			.then(user => _.map(user.subscriptions, company => {
+				return this
+					.postsManager
+					.obtainAllPostsByCompany(company.customId)
+					.then(posts => _.map(posts, post => postResponse(userId, post, ln, company)));
+			}))
+			.then(promises => Promise.all(promises))
+			.then(posts => _.flatten(_.compact(posts)))
+			.then(posts => _.sortBy(posts, post => - post.createdDate))
+			.then(promises => Promise.all(promises))
+			.then(posts => {
+				currentPosts = posts;
+				amount = posts.length;
+			})
+			.then(() => currentPosts.splice(0, limit))
+			.then(posts => _.map(posts, post => {
+				return this
+					.commentsManager
+					.count(post.customId)
+					.then(commentsAmount => {
+						post.commentsAmount = commentsAmount;
+						return post;
+					});
+			}))
+			.then(promises => Promise.all(promises))
+			.then(posts => this.success(res, { amount, posts }))
+			.catch(next);
+	}
+
+	obtainOldBySubscriptions(req, res, next) {
+		const { userId, ln } = req;
 		const { limit = 20, postId } = req.query;
+
+		let currentPosts;
+		let amount;
+		let index = 0;
+
+		this
+			.usersManager
+			.getSubscriptions(parseInt(userId, 10))
+			.then(user => _.map(user.subscriptions, company => {
+				return this
+					.postsManager
+					.obtainAllPostsByCompany(company.customId)
+					.then(posts => _.map(posts, post => postResponse(userId, post, ln, company)));
+			}))
+			.then(promises => Promise.all(promises))
+			.then(posts => _.flatten(_.compact(posts)))
+			.then(posts => _.sortBy(posts, post => -post.createdDate))
+			.then(promises => Promise.all(promises))
+			.then(posts => {
+				currentPosts = posts;
+				amount = posts.length;
+				return _.each(posts, (post, i) => (post.customId === parseInt(postId, 10)) ? index = i + 1 : index);
+			})
+			.then(promises => Promise.all(promises))
+			.then(() => currentPosts.splice(index, limit))
+			.then(posts => _.map(posts, post => {
+				return this
+					.commentsManager
+					.count(post.customId)
+					.then(commentsAmount => {
+						post.commentsAmount = commentsAmount;
+						return post;
+					});
+			}))
+			.then(promises => Promise.all(promises))
+			.then(posts => this.success(res, {amount, posts}))
+			.catch(next);
+	}
+
+	obtainNewBySubscriptions(req, res, next) {
+		const { userId, ln } = req;
+		const { postId } = req.query;
 
 		let currentPosts;
 		let amount;
@@ -542,10 +625,10 @@ class PostsController extends BaseController {
 			.then(posts => {
 				currentPosts = posts;
 				amount = posts.length;
-				return postId ? _.each(posts, (post, i) => (post.customId === parseInt(postId, 10)) ? index = i + 1 : index) : posts;
+				return _.each(posts, (post, i) => (post.customId === parseInt(postId, 10)) ? index = i + 1 : index);
 			})
 			.then(promises => Promise.all(promises))
-			.then(() => currentPosts.splice(index, limit))
+			.then(() => currentPosts.splice(0, index-1))
 			.then(posts => _.map(posts, post => {
 				return this
 					.commentsManager
