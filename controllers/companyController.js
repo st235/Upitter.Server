@@ -40,12 +40,12 @@ class CompanyController extends BaseController {
 		if (invalid) return next(invalid.name);
 
 		const { userId } = req;
-		const { alias, description, logoUrl, site, contactPhones, activity, socialLinks, name } = req.body;
+		const { alias, description, logoUrl, site, contactPhones, activity, socialLinks, name, coordinates } = req.body;
 		if (alias && typeof alias === 'string' && (alias.length < 4 || alias.length > 25)) throw 'INTERNAL_SERVER_ERROR';
 
 		this
 			.companiesManager
-			.edit(userId, { alias, description, logoUrl, site, contactPhones, activity, socialLinks, name })
+			.edit(userId, { alias, description, logoUrl, site, contactPhones, activity, socialLinks, name, coordinates })
 			.then(businessUser => this.success(res, companyResponseModel(businessUser)))
 			.catch(next);
 	}
