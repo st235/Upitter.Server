@@ -42,6 +42,8 @@ class CompanyController extends BaseController {
 		const { userId } = req;
 		const { alias, description, logoUrl, site, contactPhones, activity, socialLinks, name, coordinates } = req.body;
 		if (alias && typeof alias === 'string' && (alias.length < 4 || alias.length > 25)) throw 'INTERNAL_SERVER_ERROR';
+		console.log('CONTROLLER: coordinates');
+		console.log(coordinates);
 
 		this
 			.companiesManager

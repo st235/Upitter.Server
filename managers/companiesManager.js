@@ -72,6 +72,8 @@ class CompaniesManager extends AppUnit {
 			.then(company => {
 				company = _.extend(company, data);
 				company.coordinates = coordinates;
+				console.log('MANAGER: AFTER UPDATE');
+				console.log(company);
 				return company.save();
 			})
 			.catch(() => {

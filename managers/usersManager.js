@@ -25,6 +25,8 @@ class UsersManager extends AppUnit {
 		const result = {
 			createdDate: Date.now()
 		};
+		console.log('AUTH RESULT');
+		console.log(data);
 
 		switch (type) {
 		case 'google':

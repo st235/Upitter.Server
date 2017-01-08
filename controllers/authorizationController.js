@@ -155,6 +155,9 @@ class AuthorizationController extends BaseController {
 
 		const { accessToken } = req.body;
 		let userModel;
+		
+		console.log('VK TOKEN');
+		console.log(accessToken);
 
 		socialRequestUtils
 			.getVk(TokenInfo.vk, { access_token: accessToken })
