@@ -60,14 +60,20 @@ class CompaniesManager extends AppUnit {
 			});
 	}
 
-	edit(customId, companyInfo) {
+	edit(customId, companyInfo, coordinates) {
 		const data = _.omit(companyInfo, field => _.isUndefined(field));
-		if (data.coordinates) this.updatePostCoords(customId, data.coordinates);
+		if (coordinates) this.updatePostCoords(customId, coordinates);
 
 		//TODO: Добавить проверку по соц сетям
 		return this
 			.companyModel
-			.findOneAndUpdate({ customId }, data, { new: true })
+			.findOne({ customId })
+			.exec()
+			.then(company => {
+				company = _.extend(company, data);
+				company.coordinates = coordinates;
+				return company.save();
+			})
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});

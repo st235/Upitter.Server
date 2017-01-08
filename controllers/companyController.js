@@ -45,7 +45,7 @@ class CompanyController extends BaseController {
 
 		this
 			.companiesManager
-			.edit(userId, { alias, description, logoUrl, site, contactPhones, activity, socialLinks, name, coordinates })
+			.edit(userId, { alias, description, logoUrl, site, contactPhones, activity, socialLinks, name }, coordinates)
 			.then(businessUser => this.success(res, companyResponseModel(businessUser)))
 			.catch(next);
 	}

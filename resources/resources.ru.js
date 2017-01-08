@@ -173,7 +173,7 @@ module.exports = {
 	discount: 'скидки',
 	special: 'особое',
 	sales: 'распродажи',
-	hires: 'прокат',
+	hires: 'вакансии',
 	events: 'события',
 	services: 'услуги'
 
