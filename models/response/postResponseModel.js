@@ -2,6 +2,7 @@
 
 const _ = require('underscore');
 const moment = require('moment');
+const LocaleService = require('default-locale');
 const companyResponse = require('./companyResponseModel');
 
 module.exports = (userId, post, lang = 'en', author, commentsAmount) => {
@@ -15,7 +16,7 @@ module.exports = (userId, post, lang = 'en', author, commentsAmount) => {
 		author: author ? companyResponse(author) : post.author,
 		title: post.title,
 		text: post.text,
-		category: post.category,
+		category: LocaleService.getString(`${post.category}`, lang),
 		coordinates: {
 			latitude: post.location ? post.location[0] : null,
 			longitude: post.location ? post.location[1] : null

@@ -170,10 +170,12 @@ module.exports = {
 
 	// Post Categories
 	news: 'news',
-	services: 'services',
-	events: 'events',
+	discount: 'discount',
 	special: 'special',
-	sales: 'sales'
+	sales: 'sales',
+	hires: 'hires',
+	events: 'events',
+	services: 'services'
 
 	//  Endregion
 };

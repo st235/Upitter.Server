@@ -62,7 +62,7 @@ class CompaniesManager extends AppUnit {
 
 	edit(customId, companyInfo) {
 		const data = _.omit(companyInfo, field => _.isUndefined(field));
-		if (companyInfo.coordinates) this.updatePostCoords(customId, companyInfo.coordinates);
+		if (data.coordinates) this.updatePostCoords(customId, data.coordinates);
 
 		//TODO: Добавить проверку по соц сетям
 		return this

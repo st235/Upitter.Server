@@ -170,10 +170,12 @@ module.exports = {
 
 	// Post Categories
 	news: 'новости',
-	services: 'услуги',
-	events: 'события',
+	discount: 'скидки',
 	special: 'особое',
-	sales: 'скидки'
+	sales: 'распродажи',
+	hires: 'прокат',
+	events: 'события',
+	services: 'услуги'
 
 	//  Endregion
 };
