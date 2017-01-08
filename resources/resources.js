@@ -154,14 +154,19 @@ module.exports = {
 	CATEGORY_1504: 'Travel Agencies',
 
 	// Reports
-	REASON_100: 'Your company SHIT!!!',
-	REASON_101: 'ETC',
-	REASON_200: 'Fake info',
-	REASON_201: 'Child porn',
-	REASON_202: 'ETC',
-	REASON_300: 'Extremism',
-	REASON_301: 'Offensive language',
-	REASON_302: 'ETC',
+	REASON_100: 'Pornography',
+	REASON_101: 'Spamming',
+	REASON_102: 'Abusive conduct',
+	REASON_200: 'Abuse',
+	REASON_201: 'Materials for adults',
+	REASON_202: 'Drugs promotion',
+	REASON_203: 'Child pornography',
+	REASON_204: 'Violence / extremism',
+	REASON_300: 'Abuse',
+	REASON_301: 'Materials for adults',
+	REASON_302: 'Drugs promotion',
+	REASON_303: 'Child pornography',
+	REASON_304: 'Violence / extremism',
 
 	// Notifications
 	like: 'liked your post.',
