@@ -523,6 +523,7 @@ class PostsController extends BaseController {
 	obtainPostsBySubscriptions(req, res, next) {
 		const { userId, ln } = req;
 		const { limit = 20 } = req.query;
+		console.log(userId);
 
 		let currentPosts;
 		let amount;
@@ -628,7 +629,7 @@ class PostsController extends BaseController {
 				return _.each(posts, (post, i) => (post.customId === parseInt(postId, 10)) ? index = i + 1 : index);
 			})
 			.then(promises => Promise.all(promises))
-			.then(() => currentPosts.splice(0, index-1))
+			.then(() => currentPosts.splice(0, index - 1))
 			.then(posts => _.map(posts, post => {
 				return this
 					.commentsManager

@@ -8,10 +8,12 @@ const _ = require('underscore');
 
 module.exports = (comment, ln = 'en', userId) => {
 	const isReportedByMe = userId ? !!_.find(comment.reportVoters, voter => voter === userId) : false;
+	const timeStamp = new Date(comment.createdDate).getTime();
 
 	const commentResponse = {
 		customId: comment.customId,
 		text: comment.text,
+		timeStamp: Math.ceil(timeStamp),
 		createdDate: moment(comment.createdDate).locale(ln).calendar(),
 		createdTime: moment(comment.createdDate).locale(ln).format('LT'),
 		isReportedByMe
