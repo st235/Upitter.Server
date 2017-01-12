@@ -23,8 +23,6 @@ class UsersController extends BaseController {
 		this.toggleSubscription = this.toggleSubscription.bind(this);
 		this.getSubscriptions = this.getSubscriptions.bind(this);
 		this.getProfile = this.getProfile.bind(this);
-
-		this.getUsers = this.getUsers.bind(this);
 	}
 
 	_onCreate() {
