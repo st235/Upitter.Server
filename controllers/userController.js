@@ -105,15 +105,6 @@ class UsersController extends BaseController {
 			.then(user => this.success(res, userResponse(user)))
 			.catch(next);
 	}
-
-	//TODO Dev method
-	getUsers(req, res, next) {
-		this
-			.usersManager
-			.getAllUsers()
-			.then(users => this.success(res, users))
-			.catch(next);
-	}
 }
 
 module.exports = UsersController;

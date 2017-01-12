@@ -89,9 +89,7 @@ module.exports = {
 		profile: '/profile',
 		edit: '/user/edit',
 		toggleSubscription: '/user/toggle_subscription/:companyId',
-		getSubscriptions: '/user/subscriptions',
-		//TODO dev route
-		getUsers: '/dev/users'
+		getSubscriptions: '/user/subscriptions'
 	},
 	file: {
 		verifyFid: '/file/verify_fid'

@@ -5,7 +5,9 @@ const AppUnit = require('../app/unit');
 
 class UsersManager extends AppUnit {
 	constructor(userModel) {
-		super({ userModel });
+		super({
+			userModel
+		});
 	}
 
 	_onBind() {
@@ -19,15 +21,12 @@ class UsersManager extends AppUnit {
 		this.findById = this.findById.bind(this);
 		this.getFavorites = this.getFavorites.bind(this);
 		this.getProfile = this.getProfile.bind(this);
-		this.getAllUsers = this.getAllUsers.bind(this);
 	}
 
 	_formSocialData(type, data) {
 		const result = {
 			createdDate: Date.now()
 		};
-		console.log('AUTH RESULT');
-		console.log(data);
 
 		switch (type) {
 		case 'google':
@@ -58,13 +57,13 @@ class UsersManager extends AppUnit {
 			result.socialId = `twitter_${data.id}`;
 			break;
 		case 'vk':
-			result.socialId = `vk_${data.id}`;
+			result.socialId = `vk_${data.uid}`;
 			result.nickname = data.first_name;
-			// result.name = data.first_name;
-			// result.surname = data.last_name;
-			// result.picture = data.photo_max_orig;
-			// if (data.sex === 1) result.sex = '1';
-			// else if (data.sex === 2) result.sex = '0';
+			result.name = data.first_name;
+			result.surname = data.last_name;
+			result.picture = data.photo_max_orig;
+			if (data.sex === 1) result.sex = '1';
+			else if (data.sex === 2) result.sex = '0';
 			break;
 		case 'vkWeb':
 			result.socialId = `vk_${data.id}`;
@@ -227,14 +226,6 @@ class UsersManager extends AppUnit {
 			.catch(() => {
 				throw 'INTERNAL_SERVER_ERROR';
 			});
-	}
-
-	//TODO dev method
-	getAllUsers() {
-		return this
-			.userModel
-			.find()
-			.exec();
 	}
 }
 

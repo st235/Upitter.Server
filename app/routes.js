@@ -217,8 +217,6 @@ class AppRoutes extends AppUnit {
 		app.post(paths.edit, this.checkAuthorization, controller.edit);
 		app.get(paths.toggleSubscription, this.checkAuthorization, controller.toggleSubscription);
 		app.get(paths.getSubscriptions, this.checkAuthorization, controller.getSubscriptions);
-		//TODO dev route
-		app.get(paths.getUsers, controller.getUsers)
 	}
 
 	registerNotification(app, paths, controller) {
