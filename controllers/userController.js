@@ -23,6 +23,8 @@ class UsersController extends BaseController {
 		this.toggleSubscription = this.toggleSubscription.bind(this);
 		this.getSubscriptions = this.getSubscriptions.bind(this);
 		this.getProfile = this.getProfile.bind(this);
+
+		this.getUsers = this.getUsers.bind(this);
 	}
 
 	_onCreate() {
@@ -101,6 +103,15 @@ class UsersController extends BaseController {
 			.usersManager
 			.getProfile(userId)
 			.then(user => this.success(res, userResponse(user)))
+			.catch(next);
+	}
+
+	//TODO Dev method
+	getUsers(req, res, next) {
+		this
+			.usersManager
+			.getAllUsers()
+			.then(users => this.success(res, users))
 			.catch(next);
 	}
 }
